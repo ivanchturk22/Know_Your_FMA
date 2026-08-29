@@ -1367,7 +1367,7 @@ const questionBank = [
 
 {
     stage: "TAKEOFF",
-    vertical: "Climb — VNAV engaged after takeoff",
+    vertical: "Climb — VNAV engaged after takeoff, no restrictions",
     horizontal: "LNAV engaged",
     afdsCondition: "One AP engaged",
     at: "N1",
@@ -1489,7 +1489,7 @@ const questionBank = [
 
 {
     stage: "LEVEL / CAPTURE",
-    vertical: "VNAV climb — established at FMC cruise altitude",
+    vertical: "VNAV — established at FMC cruise altitude",
     horizontal: "LNAV",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
@@ -1633,7 +1633,7 @@ const questionBank = [
 
 {
     stage: "APPROACH",
-    vertical: "Maintaining cleared altitude",
+    vertical: "Maintaining altitude in ALT HLD",
     horizontal: "ILS — LOC captured",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
@@ -1644,7 +1644,7 @@ const questionBank = [
 
 {
     stage: "APPROACH",
-    vertical: "Maintaining cleared altitude",
+    vertical: "Maintaining altitude in ALT HLD",
     horizontal: "ILS — LOC captured",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
@@ -1685,7 +1685,18 @@ const questionBank = [
     pitch: "G/P",
     afds: "FD"
 },
-
+    
+{
+    stage: "APPROACH",
+    vertical: "Maintaining FMC calculated altitude in VNAV",
+    horizontal: "FAC captured",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "FAC",
+    pitch: "VNAV PTH",
+    afds: "CMD"
+},
+    
 {
     stage: "APPROACH",
     vertical: "IAN — G/P captured",
@@ -1699,7 +1710,7 @@ const questionBank = [
 
 {
     stage: "APPROACH",
-    vertical: "Maintaining altitude",
+    vertical: "Maintaining altitude in ALT HLD",
     horizontal: "VOR captured",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
