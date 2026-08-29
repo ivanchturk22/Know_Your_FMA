@@ -1,448 +1,736 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>737 FMA Trainer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f3f3f3;
-      color: #222;
-    }
+<title>737 FMA Trainer</title>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f3f3;
+    color: #222;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 35px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+
+/* =========================
+   MODE MENUS
+   ========================= */
+
+.mode-select {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mode-select h2 {
+    margin-bottom: 10px;
+}
+
+.mode-select p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.mode-button {
+    padding: 14px 28px;
+    margin: 8px;
+    border: none;
+    border-radius: 7px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.quiz-mode-button {
+    background: #222;
+    color: white;
+}
+
+.practice-mode-button {
+    background: #3877d6;
+    color: white;
+}
+
+.random-button {
+    background: #3877d6;
+    color: white;
+}
+
+.stage-button {
+    background: #187b35;
+    color: white;
+}
+
+.back-button {
+    background: #777;
+    color: white;
+}
+
+
+/* =========================
+   TOP ROW
+   ========================= */
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+.stage-name {
+    text-align: center;
+    min-height: 24px;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #3877d6;
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================
+   QUESTION
+   ========================= */
+
+.scenario {
+    max-width: 700px;
+    margin: 20px auto 35px;
+    min-height: 85px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+.scenario-line {
+    display: block;
+}
+
+.scenario-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.scenario-condition {
+    font-weight: bold;
+    color: #111;
+}
+
+
+/* =========================
+   FMA
+   ========================= */
+
+.fma-labels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 3px;
+
+    max-width: 700px;
+    margin: 0 auto 4px;
+
+    text-align: center;
+
+    font-size: 13px;
+    color: #777;
+}
+
+.fma {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 2px;
+
+    max-width: 700px;
+    margin: auto;
+
+    background: #222;
+    padding: 3px;
+}
+
+.fma select {
+    width: 100%;
+    height: 70px;
+
+    background: #4d4d4d;
+
+    border: none;
+
+    color: #00ff4c;
+
+    font-size: 19px;
+    font-weight: bold;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.fma select:focus {
+    outline: 2px solid #00ff4c;
+}
+
+
+/* =========================
+   FMA COLORS
+   ========================= */
+
+.mode-green {
+    color: #00ff4c !important;
+}
+
+.mode-white {
+    color: #ffffff !important;
+}
+
+.mode-amber {
+    color: #ffbf00 !important;
+}
+
+
+/* =========================
+   CORRECT / WRONG
+   ========================= */
+
+.correct {
+    background: #215d31 !important;
+}
+
+.wrong {
+    background: #772727 !important;
+}
+
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+.button-row {
+    text-align: center;
+    margin-top: 30px;
+}
+
+button {
+    padding: 14px 32px;
+
+    border: none;
+    border-radius: 7px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    margin: 5px;
+}
+
+#checkButton {
+    background: #222;
+    color: white;
+}
+
+#nextButton {
+    background: #3877d6;
+    color: white;
+    display: none;
+}
+
+#restartButton,
+#menuButton {
+    background: #222;
+    color: white;
+    display: none;
+}
+
+
+/* =========================
+   FEEDBACK
+   ========================= */
+
+.feedback {
+    min-height: 35px;
+
+    text-align: center;
+
+    margin-top: 22px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.correct-text {
+    color: #187b35;
+}
+
+.wrong-text {
+    color: #b02727;
+}
+
+.answer-fma {
+    margin-top: 8px;
+    font-size: 20px;
+}
+
+.answer-green {
+    color: #00a63c;
+}
+
+.answer-white {
+    color: #777;
+}
+
+.answer-amber {
+    color: #c88900;
+}
+
+.answer-blank {
+    color: #777;
+}
+
+
+/* =========================
+   RESULTS
+   ========================= */
+
+.final-score {
+    text-align: center;
+
+    font-size: 38px;
+    font-weight: bold;
+
+    margin: 40px 0 15px;
+}
+
+.final-percent {
+    text-align: center;
+
+    font-size: 20px;
+
+    color: #666;
+
+    margin-bottom: 30px;
+}
+
+.practice-finished {
+    text-align: center;
+
+    font-size: 32px;
+    font-weight: bold;
+
+    margin: 40px 0 20px;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 600px) {
 
     .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 30px 20px;
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 35px;
+        padding: 15px 10px;
     }
 
     .card {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    }
-
-    .mode-select {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .mode-select h2 {
-      margin-bottom: 10px;
-    }
-
-    .mode-select p {
-      color: #666;
-      margin-bottom: 20px;
-    }
-
-    .mode-button {
-      padding: 14px 28px;
-      margin: 8px;
-      border: none;
-      border-radius: 7px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .quiz-mode-button {
-      background: #222;
-      color: white;
-    }
-
-    .practice-mode-button {
-      background: #3877d6;
-      color: white;
-    }
-
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 25px;
-      font-size: 16px;
-      color: #666;
+        padding: 20px 10px;
     }
 
     .scenario {
-      max-width: 700px;
-      margin: 25px auto 35px;
-      min-height: 85px;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      font-size: 22px;
-      line-height: 1.6;
-    }
-
-    .scenario-line {
-      display: block;
-    }
-
-    .scenario-label {
-      font-weight: bold;
-      color: #555;
-    }
-
-    .scenario-condition {
-      font-weight: bold;
-      color: #111;
-    }
-
-    .fma-labels {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
-      max-width: 700px;
-      margin: 0 auto 4px;
-      text-align: center;
-      font-size: 13px;
-      color: #777;
-    }
-
-    .fma {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      max-width: 700px;
-      margin: auto;
-      background: #222;
-      padding: 3px;
+        font-size: 18px;
+        line-height: 1.7;
     }
 
     .fma select {
-      width: 100%;
-      height: 70px;
-      background: #4d4d4d;
-      border: none;
-
-      color: #00ff4c;
-
-      font-size: 19px;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .fma select:focus {
-      outline: 2px solid #00ff4c;
-    }
-
-    .mode-green {
-      color: #00ff4c !important;
-    }
-
-    .mode-white {
-      color: #ffffff !important;
-    }
-
-    .mode-amber {
-      color: #ffbf00 !important;
-    }
-
-    .correct {
-      background: #215d31 !important;
-    }
-
-    .wrong {
-      background: #772727 !important;
-    }
-
-    .button-row {
-      text-align: center;
-      margin-top: 30px;
-    }
-
-    button {
-      padding: 14px 32px;
-      border: none;
-      border-radius: 7px;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    #checkButton {
-      background: #222;
-      color: white;
-    }
-
-    #nextButton {
-      background: #3877d6;
-      color: white;
-      display: none;
-    }
-
-    #restartButton,
-    #menuButton {
-      background: #222;
-      color: white;
-      display: none;
-    }
-
-    .feedback {
-      min-height: 35px;
-      text-align: center;
-      margin-top: 22px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .correct-text {
-      color: #187b35;
-    }
-
-    .wrong-text {
-      color: #b02727;
-    }
-
-    .answer-fma {
-      margin-top: 8px;
-      font-size: 20px;
-    }
-
-    .answer-green {
-      color: #00a63c;
-    }
-
-    .answer-white {
-      color: #777;
-    }
-
-    .answer-amber {
-      color: #c88900;
-    }
-
-    .final-score {
-      text-align: center;
-      font-size: 38px;
-      font-weight: bold;
-      margin: 40px 0 15px;
-    }
-
-    .final-percent {
-      text-align: center;
-      font-size: 20px;
-      color: #666;
-      margin-bottom: 30px;
-    }
-
-    .practice-finished {
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-      margin: 40px 0 20px;
-    }
-
-    @media (max-width: 600px) {
-
-      .container {
-        padding: 15px 10px;
-      }
-
-      .card {
-        padding: 20px 10px;
-      }
-
-      .scenario {
-        font-size: 18px;
-        line-height: 1.7;
-      }
-
-      .fma select {
         font-size: 13px;
         height: 65px;
-      }
-
-      .mode-button {
-        width: 90%;
-      }
     }
-  </style>
+
+    .mode-button {
+        width: 90%;
+    }
+}
+
+</style>
+
 </head>
+
 
 <body>
 
 <div class="container">
 
-  <h1>737 FMA Trainer</h1>
+<h1>737 FMA Trainer</h1>
 
-  <div class="subtitle">
+<div class="subtitle">
     Autoflight Mode Practice
-  </div>
+</div>
 
-  <div class="card">
 
-    <!-- MODE MENU -->
+<div class="card">
 
-    <div id="modeMenu" class="mode-select">
 
-      <h2>Select Mode</h2>
+<!-- =====================================================
+     MAIN MENU
+     ===================================================== -->
 
-      <p>
+<div id="modeMenu" class="mode-select">
+
+    <h2>Select Mode</h2>
+
+    <p>
         Quiz: 10 random questions with score.<br>
-        Practice: all questions, no score.
-      </p>
+        Practice: all questions with immediate feedback.
+    </p>
 
-      <button
+
+    <button
         class="mode-button quiz-mode-button"
         onclick="startQuizMode()">
+
         QUIZ MODE
-      </button>
 
-      <button
+    </button>
+
+
+    <button
         class="mode-button practice-mode-button"
-        onclick="startPracticeMode()">
+        onclick="showPracticeMenu()">
+
         PRACTICE MODE
-      </button>
 
-    </div>
+    </button>
+
+</div>
 
 
-    <!-- QUIZ / PRACTICE AREA -->
 
-    <div id="quizArea" style="display:none;">
+<!-- =====================================================
+     PRACTICE MENU
+     ===================================================== -->
 
-      <div class="top-row">
+<div
+    id="practiceMenu"
+    class="mode-select"
+    style="display:none;">
+
+    <h2>Practice Mode</h2>
+
+    <p>
+        Choose how you want to practice.
+    </p>
+
+
+    <button
+        class="mode-button random-button"
+        onclick="startRandomPractice()">
+
+        RANDOM
+
+    </button>
+
+
+    <button
+        class="mode-button stage-button"
+        onclick="startStagePractice()">
+
+        STAGE BY STAGE
+
+    </button>
+
+
+    <br>
+
+
+    <button
+        class="mode-button back-button"
+        onclick="showMainMenu()">
+
+        BACK
+
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     QUESTION AREA
+     ===================================================== -->
+
+<div
+    id="quizArea"
+    style="display:none;">
+
+
+    <div class="top-row">
 
         <div id="questionCounter"></div>
 
         <div id="score"></div>
 
-      </div>
+    </div>
 
-      <div class="scenario" id="scenario"></div>
 
-      <div class="fma-labels">
+    <div
+        class="stage-name"
+        id="stageName">
+    </div>
+
+
+    <div
+        class="scenario"
+        id="scenario">
+    </div>
+
+
+    <div class="fma-labels">
+
         <div>AUTOTHROTTLE</div>
+
         <div>ROLL</div>
+
         <div>PITCH</div>
-      </div>
-
-      <div class="fma">
-
-        <select id="at" onchange="updateModeColor(this)">
-          <option value="">---</option>
-          <option>N1</option>
-          <option>MCP SPD</option>
-          <option>FMC SPD</option>
-          <option>ARM</option>
-          <option>THR HLD</option>
-          <option>RETARD</option>
-          <option>GA</option>
-        </select>
-
-        <select id="roll" onchange="updateModeColor(this)">
-          <option value="">---</option>
-          <option>BLANK</option>
-          <option>HDG SEL</option>
-          <option>LNAV</option>
-          <option>VOR/LOC</option>
-          <option>FAC</option>
-          <option>TO/GA</option>
-          <option>ROLLOUT</option>
-          <option>CWS R</option>
-        </select>
-
-        <select id="pitch" onchange="updateModeColor(this)">
-          <option value="">---</option>
-          <option>MCP SPD</option>
-          <option>V/S</option>
-          <option>ALT ACQ</option>
-          <option>ALT HOLD</option>
-          <option>VNAV SPD</option>
-          <option>VNAV PTH</option>
-          <option>VNAV ALT</option>
-          <option>G/S</option>
-          <option>G/P</option>
-          <option>TO/GA</option>
-          <option>FLARE</option>
-          <option>CWS P</option>
-        </select>
-
-      </div>
-
-      <div class="feedback" id="feedback"></div>
-
-      <div class="button-row">
-
-        <button id="checkButton" onclick="checkAnswer()">
-          CHECK
-        </button>
-
-        <button id="nextButton" onclick="nextQuestion()">
-          NEXT
-        </button>
-
-      </div>
 
     </div>
 
 
-    <!-- RESULTS -->
+    <div class="fma">
 
-    <div id="resultsArea" style="display:none;">
 
-      <div
-        class="final-score"
-        id="finalScore">
-      </div>
+        <!-- AUTOTHROTTLE -->
 
-      <div
-        class="final-percent"
-        id="finalPercent">
-      </div>
+        <select
+            id="at"
+            onchange="updateModeColor(this)">
 
-      <div
-        class="practice-finished"
-        id="practiceFinished"
-        style="display:none;">
-        Practice Complete
-      </div>
+            <option value="">---</option>
 
-      <div class="button-row">
+            <option>N1</option>
 
-        <button
-          id="restartButton"
-          onclick="restartCurrentMode()">
-          TRY AGAIN
-        </button>
+            <option>MCP SPD</option>
 
-        <button
-          id="menuButton"
-          onclick="showMenu()">
-          MODE MENU
-        </button>
+            <option>FMC SPD</option>
 
-      </div>
+            <option>ARM</option>
+
+            <option>THR HLD</option>
+
+            <option>RETARD</option>
+
+            <option>GA</option>
+
+        </select>
+
+
+
+        <!-- ROLL -->
+
+        <select
+            id="roll"
+            onchange="updateModeColor(this)">
+
+            <option value="">---</option>
+
+            <option>HDG SEL</option>
+
+            <option>LNAV</option>
+
+            <option>VOR/LOC</option>
+
+            <option>FAC</option>
+
+            <option>ROLLOUT</option>
+
+            <option>CWS R</option>
+
+        </select>
+
+
+
+        <!-- PITCH -->
+
+        <select
+            id="pitch"
+            onchange="updateModeColor(this)">
+
+            <option value="">---</option>
+
+            <option>MCP SPD</option>
+
+            <option>V/S</option>
+
+            <option>ALT ACQ</option>
+
+            <option>ALT HOLD</option>
+
+            <option>VNAV SPD</option>
+
+            <option>VNAV PTH</option>
+
+            <option>VNAV ALT</option>
+
+            <option>G/S</option>
+
+            <option>G/P</option>
+
+            <option>TO/GA</option>
+
+            <option>FLARE</option>
+
+            <option>CWS P</option>
+
+        </select>
 
     </div>
 
-  </div>
+
+    <div
+        class="feedback"
+        id="feedback">
+    </div>
+
+
+    <div class="button-row">
+
+
+        <button
+            id="checkButton"
+            onclick="checkAnswer()">
+
+            CHECK
+
+        </button>
+
+
+        <button
+            id="nextButton"
+            onclick="nextQuestion()">
+
+            NEXT
+
+        </button>
+
+
+    </div>
 
 </div>
 
 
+
+<!-- =====================================================
+     RESULTS
+     ===================================================== -->
+
+<div
+    id="resultsArea"
+    style="display:none;">
+
+
+    <div
+        class="final-score"
+        id="finalScore">
+    </div>
+
+
+    <div
+        class="final-percent"
+        id="finalPercent">
+    </div>
+
+
+    <div
+        class="practice-finished"
+        id="practiceFinished"
+        style="display:none;">
+
+        Practice Complete
+
+    </div>
+
+
+    <div class="button-row">
+
+
+        <button
+            id="restartButton"
+            onclick="restartCurrentMode()">
+
+            TRY AGAIN
+
+        </button>
+
+
+        <button
+            id="menuButton"
+            onclick="showMainMenu()">
+
+            MODE MENU
+
+        </button>
+
+
+    </div>
+
+</div>
+
+
+</div>
+</div>
+
+
+
 <script>
+
+/* =========================================================
+   STAGE ORDER
+   ========================================================= */
+
+const stageOrder = [
+    "TAKEOFF",
+    "CLIMB",
+    "LEVEL / CAPTURE",
+    "DESCENT",
+    "APPROACH",
+    "GO-AROUND"
+];
+
+
 
 /* =========================================================
    MASTER QUESTION BANK
@@ -450,288 +738,598 @@
 
 const questionBank = [
 
-  /* CLIMB / LEVEL OFF */
 
-  {
-    vertical: "LVL CHG climb",
-    horizontal: "HDG SEL",
+/* =====================================================
+   TAKEOFF
+   ===================================================== */
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "Takeoff — TO/GA just pushed, beginning takeoff roll",
+
+    horizontal:
+    "LNAV armed",
+
     at: "N1",
-    roll: "HDG SEL",
-    pitch: "MCP SPD"
-  },
 
-  {
-    vertical: "V/S climb",
-    horizontal: "LNAV",
-    at: "MCP SPD",
+    roll: "",
+
+    pitch: "TO/GA"
+},
+
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "Takeoff roll — passing 84 kt",
+
+    horizontal:
+    "LNAV armed",
+
+    at: "THR HLD",
+
+    roll: "",
+
+    pitch: "TO/GA"
+},
+
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "After liftoff — below LNAV engagement altitude",
+
+    horizontal:
+    "LNAV armed",
+
+    at: "THR HLD",
+
+    roll: "",
+
+    pitch: "TO/GA"
+},
+
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "Initial climb — below 800 ft RA",
+
+    horizontal:
+    "LNAV engaged",
+
+    at: "THR HLD",
+
     roll: "LNAV",
-    pitch: "V/S"
-  },
 
-  {
-    vertical: "VNAV climb — no altitude restrictions",
-    horizontal: "LNAV",
+    pitch: "TO/GA"
+},
+
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "Initial climb — above 800 ft RA, before climb thrust engages",
+
+    horizontal:
+    "LNAV engaged",
+
+    at: "ARM",
+
+    roll: "LNAV",
+
+    pitch: "TO/GA"
+},
+
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "Climb — climb thrust selected, still in TO/GA pitch mode",
+
+    horizontal:
+    "LNAV engaged",
+
     at: "N1",
+
     roll: "LNAV",
+
+    pitch: "TO/GA"
+},
+
+
+{
+    stage: "TAKEOFF",
+
+    vertical:
+    "Climb — VNAV engaged after takeoff",
+
+    horizontal:
+    "LNAV engaged",
+
+    at: "N1",
+
+    roll: "LNAV",
+
     pitch: "VNAV SPD"
-  },
+},
 
-  {
-    vertical: "VNAV climb — just started capturing an FMC altitude restriction",
-    horizontal: "LNAV",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "ALT ACQ"
-  },
 
-  {
-    vertical: "VNAV climb — level at FMC altitude restriction, established level",
-    horizontal: "LNAV",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "VNAV PTH"
-  },
 
-  {
-    vertical: "VNAV climb — level at MCP altitude due to ATC restriction, established level",
-    horizontal: "LNAV",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "VNAV ALT"
-  },
+/* =====================================================
+   CLIMB
+   ===================================================== */
 
-  {
-    vertical: "LVL CHG climb — just started capturing selected altitude",
-    horizontal: "HDG SEL",
-    at: "MCP SPD",
+{
+    stage: "CLIMB",
+
+    vertical:
+    "LVL CHG climb",
+
+    horizontal:
+    "HDG SEL",
+
+    at: "N1",
+
     roll: "HDG SEL",
-    pitch: "ALT ACQ"
-  },
 
-  {
-    vertical: "After LVL CHG level-off — established at selected altitude",
-    horizontal: "LNAV",
-    at: "MCP SPD",
-    roll: "LNAV",
-    pitch: "ALT HOLD"
-  },
-
-  {
-    vertical: "VNAV climb — established at FMC cruise altitude",
-    horizontal: "LNAV",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "VNAV PTH"
-  },
-
-
-  /* DESCENT */
-
-  {
-    vertical: "LVL CHG descent — just initiated",
-    horizontal: "HDG SEL",
-    at: "RETARD",
-    roll: "HDG SEL",
     pitch: "MCP SPD"
-  },
+},
 
-  {
-    vertical: "LVL CHG descent — established with thrust at idle",
-    horizontal: "LNAV",
-    at: "ARM",
-    roll: "LNAV",
-    pitch: "MCP SPD"
-  },
 
-  {
-    vertical: "V/S descent",
-    horizontal: "HDG SEL",
+{
+    stage: "CLIMB",
+
+    vertical:
+    "V/S climb",
+
+    horizontal:
+    "LNAV",
+
     at: "MCP SPD",
-    roll: "HDG SEL",
+
+    roll: "LNAV",
+
     pitch: "V/S"
-  },
+},
 
-  {
-    vertical: "VNAV descent — established on FMC path",
-    horizontal: "LNAV",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "VNAV PTH"
-  },
 
-  {
-    vertical: "VNAV descent above path — descent just initiated",
-    horizontal: "LNAV",
-    at: "RETARD",
+{
+    stage: "CLIMB",
+
+    vertical:
+    "VNAV climb — no altitude restrictions",
+
+    horizontal:
+    "LNAV",
+
+    at: "N1",
+
     roll: "LNAV",
+
     pitch: "VNAV SPD"
-  },
+},
 
-  {
-    vertical: "VNAV descent above path — established with thrust at idle",
-    horizontal: "LNAV",
-    at: "ARM",
-    roll: "LNAV",
-    pitch: "VNAV SPD"
-  },
 
-  {
-    vertical: "VNAV descent — just started capturing an FMC altitude restriction",
-    horizontal: "LNAV",
+
+/* =====================================================
+   LEVEL / CAPTURE
+   ===================================================== */
+
+{
+    stage: "LEVEL / CAPTURE",
+
+    vertical:
+    "VNAV climb — just started capturing an FMC altitude restriction",
+
+    horizontal:
+    "LNAV",
+
     at: "FMC SPD",
+
     roll: "LNAV",
+
     pitch: "ALT ACQ"
-  },
+},
 
-  {
-    vertical: "VNAV descent — level at FMC altitude restriction, established level",
-    horizontal: "LNAV",
+
+{
+    stage: "LEVEL / CAPTURE",
+
+    vertical:
+    "VNAV climb — level at FMC altitude restriction, established level",
+
+    horizontal:
+    "LNAV",
+
     at: "FMC SPD",
+
     roll: "LNAV",
+
     pitch: "VNAV PTH"
-  },
+},
 
-  {
-    vertical: "VNAV descent — level at MCP altitude due to ATC restriction, established level",
-    horizontal: "LNAV",
+
+{
+    stage: "LEVEL / CAPTURE",
+
+    vertical:
+    "VNAV climb — level at MCP altitude due to ATC restriction, established level",
+
+    horizontal:
+    "LNAV",
+
     at: "FMC SPD",
+
     roll: "LNAV",
+
     pitch: "VNAV ALT"
-  },
+},
 
 
-  /* ALTITUDE CAPTURE */
+{
+    stage: "LEVEL / CAPTURE",
 
-  {
-    vertical: "V/S climb — just started capturing selected altitude",
-    horizontal: "LNAV",
+    vertical:
+    "LVL CHG climb — just started capturing selected altitude",
+
+    horizontal:
+    "HDG SEL",
+
     at: "MCP SPD",
+
+    roll: "HDG SEL",
+
+    pitch: "ALT ACQ"
+},
+
+
+{
+    stage: "LEVEL / CAPTURE",
+
+    vertical:
+    "After LVL CHG level-off — established at selected altitude",
+
+    horizontal:
+    "LNAV",
+
+    at: "MCP SPD",
+
     roll: "LNAV",
-    pitch: "ALT ACQ"
-  },
 
-  {
-    vertical: "V/S descent — just started capturing selected altitude",
-    horizontal: "HDG SEL",
-    at: "MCP SPD",
-    roll: "HDG SEL",
-    pitch: "ALT ACQ"
-  },
-
-  {
-    vertical: "After V/S level-off — established at selected altitude",
-    horizontal: "HDG SEL",
-    at: "MCP SPD",
-    roll: "HDG SEL",
     pitch: "ALT HOLD"
-  },
+},
 
 
-  /* APPROACH */
+{
+    stage: "LEVEL / CAPTURE",
 
-  {
-    vertical: "Maintaining cleared altitude",
-    horizontal: "ILS — LOC captured",
+    vertical:
+    "VNAV climb — established at FMC cruise altitude",
+
+    horizontal:
+    "LNAV",
+
+    at: "FMC SPD",
+
+    roll: "LNAV",
+
+    pitch: "VNAV PTH"
+},
+
+
+{
+    stage: "LEVEL / CAPTURE",
+
+    vertical:
+    "V/S climb — just started capturing selected altitude",
+
+    horizontal:
+    "LNAV",
+
     at: "MCP SPD",
-    roll: "VOR/LOC",
+
+    roll: "LNAV",
+
+    pitch: "ALT ACQ"
+},
+
+
+{
+    stage: "LEVEL / CAPTURE",
+
+    vertical:
+    "After V/S level-off — established at selected altitude",
+
+    horizontal:
+    "HDG SEL",
+
+    at: "MCP SPD",
+
+    roll: "HDG SEL",
+
     pitch: "ALT HOLD"
-  },
+},
 
-  {
-    vertical: "ILS — G/S captured",
-    horizontal: "LOC captured",
+
+
+/* =====================================================
+   DESCENT
+   ===================================================== */
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "LVL CHG descent — just initiated",
+
+    horizontal:
+    "HDG SEL",
+
+    at: "RETARD",
+
+    roll: "HDG SEL",
+
+    pitch: "MCP SPD"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "LVL CHG descent — established with thrust at idle",
+
+    horizontal:
+    "LNAV",
+
+    at: "ARM",
+
+    roll: "LNAV",
+
+    pitch: "MCP SPD"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "V/S descent",
+
+    horizontal:
+    "HDG SEL",
+
     at: "MCP SPD",
+
+    roll: "HDG SEL",
+
+    pitch: "V/S"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "VNAV descent — established on FMC path",
+
+    horizontal:
+    "LNAV",
+
+    at: "FMC SPD",
+
+    roll: "LNAV",
+
+    pitch: "VNAV PTH"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "VNAV descent above path — descent just initiated",
+
+    horizontal:
+    "LNAV",
+
+    at: "RETARD",
+
+    roll: "LNAV",
+
+    pitch: "VNAV SPD"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "VNAV descent above path — established with thrust at idle",
+
+    horizontal:
+    "LNAV",
+
+    at: "ARM",
+
+    roll: "LNAV",
+
+    pitch: "VNAV SPD"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "VNAV descent — just started capturing an FMC altitude restriction",
+
+    horizontal:
+    "LNAV",
+
+    at: "FMC SPD",
+
+    roll: "LNAV",
+
+    pitch: "ALT ACQ"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "VNAV descent — level at FMC altitude restriction, established level",
+
+    horizontal:
+    "LNAV",
+
+    at: "FMC SPD",
+
+    roll: "LNAV",
+
+    pitch: "VNAV PTH"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "VNAV descent — level at MCP altitude due to ATC restriction, established level",
+
+    horizontal:
+    "LNAV",
+
+    at: "FMC SPD",
+
+    roll: "LNAV",
+
+    pitch: "VNAV ALT"
+},
+
+
+{
+    stage: "DESCENT",
+
+    vertical:
+    "V/S descent — just started capturing selected altitude",
+
+    horizontal:
+    "HDG SEL",
+
+    at: "MCP SPD",
+
+    roll: "HDG SEL",
+
+    pitch: "ALT ACQ"
+},
+
+
+
+/* =====================================================
+   APPROACH
+   ===================================================== */
+
+{
+    stage: "APPROACH",
+
+    vertical:
+    "Maintaining cleared altitude",
+
+    horizontal:
+    "ILS — LOC captured",
+
+    at: "MCP SPD",
+
     roll: "VOR/LOC",
+
+    pitch: "ALT HOLD"
+},
+
+
+{
+    stage: "APPROACH",
+
+    vertical:
+    "ILS — G/S captured",
+
+    horizontal:
+    "LOC captured",
+
+    at: "MCP SPD",
+
+    roll: "VOR/LOC",
+
     pitch: "G/S"
-  },
+},
 
-  {
-    vertical: "IAN — G/P captured",
-    horizontal: "FAC captured",
+
+{
+    stage: "APPROACH",
+
+    vertical:
+    "IAN — G/P captured",
+
+    horizontal:
+    "FAC captured",
+
     at: "MCP SPD",
+
     roll: "FAC",
+
     pitch: "G/P"
-  },
+},
 
-  {
-    vertical: "Maintaining altitude",
-    horizontal: "VOR captured",
+
+{
+    stage: "APPROACH",
+
+    vertical:
+    "Maintaining altitude",
+
+    horizontal:
+    "VOR captured",
+
     at: "MCP SPD",
+
     roll: "VOR/LOC",
+
     pitch: "ALT HOLD"
-  },
+},
 
 
-  /* GO-AROUND */
 
-  {
-    vertical: "Go-around — TO/GA switches just pushed",
-    horizontal: "TO/GA",
+/* =====================================================
+   GO-AROUND
+   ===================================================== */
+
+{
+    stage: "GO-AROUND",
+
+    vertical:
+    "Go-around — TO/GA switches just pushed",
+
+    horizontal:
+    "LNAV engaged",
+
     at: "GA",
-    roll: "TO/GA",
-    pitch: "TO/GA"
-  },
 
-
-  /* TAKEOFF */
-
-  {
-    vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
-    horizontal: "LNAV armed",
-    at: "N1",
-    roll: "BLANK",
-    pitch: "TO/GA"
-  },
-
-  {
-    vertical: "Takeoff roll — passing 84 kt",
-    horizontal: "LNAV armed",
-    at: "THR HLD",
-    roll: "BLANK",
-    pitch: "TO/GA"
-  },
-
-  {
-    vertical: "After liftoff — below LNAV engagement altitude",
-    horizontal: "LNAV armed",
-    at: "THR HLD",
-    roll: "BLANK",
-    pitch: "TO/GA"
-  },
-
-  {
-    vertical: "Initial climb — below 800 ft RA",
-    horizontal: "LNAV engaged",
-    at: "THR HLD",
     roll: "LNAV",
-    pitch: "TO/GA"
-  },
 
-  {
-    vertical: "Initial climb — above 800 ft RA, before climb thrust engages",
-    horizontal: "LNAV engaged",
-    at: "ARM",
-    roll: "LNAV",
     pitch: "TO/GA"
-  },
-
-  {
-    vertical: "Climb — climb thrust selected, still in TO/GA pitch mode",
-    horizontal: "LNAV engaged",
-    at: "N1",
-    roll: "LNAV",
-    pitch: "TO/GA"
-  },
-
-  {
-    vertical: "Climb — VNAV engaged after takeoff",
-    horizontal: "LNAV engaged",
-    at: "N1",
-    roll: "LNAV",
-    pitch: "VNAV SPD"
-  }
+}
 
 ];
+
 
 
 /* =========================================================
@@ -749,66 +1347,111 @@ let currentQuestion = 0;
 let score = 0;
 
 
+
 /* =========================================================
-   COLORS
+   FMA COLORS
    ========================================================= */
 
 function getModeColorClass(mode) {
 
-  if (
-    mode === "ARM" ||
-    mode === "THR HLD"
-  ) {
-    return "mode-white";
-  }
+    if (
+        mode === "ARM" ||
+        mode === "THR HLD"
+    ) {
 
-  if (
-    mode === "CWS R" ||
-    mode === "CWS P"
-  ) {
-    return "mode-amber";
-  }
+        return "mode-white";
+    }
 
-  return "mode-green";
+
+    if (
+        mode === "CWS R" ||
+        mode === "CWS P"
+    ) {
+
+        return "mode-amber";
+    }
+
+
+    return "mode-green";
 }
+
 
 
 function updateModeColor(element) {
 
-  element.classList.remove(
-    "mode-green",
-    "mode-white",
-    "mode-amber"
-  );
+    element.classList.remove(
+        "mode-green",
+        "mode-white",
+        "mode-amber"
+    );
 
-  if (element.value === "") {
-    return;
-  }
 
-  element.classList.add(
-    getModeColorClass(element.value)
-  );
+    if (element.value === "") {
+
+        return;
+    }
+
+
+    element.classList.add(
+        getModeColorClass(
+            element.value
+        )
+    );
 }
 
+
+
+/* =========================================================
+   ANSWER DISPLAY
+   ========================================================= */
 
 function answerModeHTML(mode) {
 
-  const colorClass =
-    getModeColorClass(mode);
+    if (mode === "") {
 
-  let answerClass =
-    "answer-green";
+        return `
+        <span class="answer-blank">
+        ---
+        </span>
+        `;
+    }
 
-  if (colorClass === "mode-white") {
-    answerClass = "answer-white";
-  }
 
-  if (colorClass === "mode-amber") {
-    answerClass = "answer-amber";
-  }
+    const colorClass =
+        getModeColorClass(mode);
 
-  return `<span class="${answerClass}">${mode}</span>`;
+
+    let answerClass =
+        "answer-green";
+
+
+    if (
+        colorClass ===
+        "mode-white"
+    ) {
+
+        answerClass =
+            "answer-white";
+    }
+
+
+    if (
+        colorClass ===
+        "mode-amber"
+    ) {
+
+        answerClass =
+            "answer-amber";
+    }
+
+
+    return `
+    <span class="${answerClass}">
+    ${mode}
+    </span>
+    `;
 }
+
 
 
 /* =========================================================
@@ -817,91 +1460,243 @@ function answerModeHTML(mode) {
 
 function shuffle(array) {
 
-  const shuffled = [...array];
+    const shuffled =
+        [...array];
 
-  for (
-    let i = shuffled.length - 1;
-    i > 0;
-    i--
-  ) {
 
-    const j =
-      Math.floor(
-        Math.random() * (i + 1)
-      );
+    for (
+        let i =
+        shuffled.length - 1;
 
-    [
-      shuffled[i],
-      shuffled[j]
-    ] =
-    [
-      shuffled[j],
-      shuffled[i]
-    ];
-  }
+        i > 0;
 
-  return shuffled;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            shuffled[i],
+            shuffled[j]
+        ] =
+        [
+            shuffled[j],
+            shuffled[i]
+        ];
+    }
+
+
+    return shuffled;
 }
 
 
+
 /* =========================================================
-   START MODES
+   MAIN MENU
+   ========================================================= */
+
+function showMainMenu() {
+
+    currentMode = null;
+
+
+    document
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "resultsArea"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "block";
+}
+
+
+
+/* =========================================================
+   PRACTICE MENU
+   ========================================================= */
+
+function showPracticeMenu() {
+
+    document
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "block";
+}
+
+
+
+/* =========================================================
+   QUIZ MODE
    ========================================================= */
 
 function startQuizMode() {
 
-  currentMode = "quiz";
+    currentMode =
+        "quiz";
 
-  activeQuestions =
-    shuffle(questionBank)
-      .slice(
-        0,
-        QUIZ_QUESTION_COUNT
-      );
 
-  startSession();
+    activeQuestions =
+        shuffle(
+            questionBank
+        )
+        .slice(
+            0,
+            QUIZ_QUESTION_COUNT
+        );
+
+
+    startSession();
 }
 
 
-function startPracticeMode() {
 
-  currentMode = "practice";
+/* =========================================================
+   RANDOM PRACTICE
+   ========================================================= */
 
-  /*
-    Use ALL questions,
-    but shuffle their order.
-  */
+function startRandomPractice() {
 
-  activeQuestions =
-    shuffle(questionBank);
+    currentMode =
+        "practice-random";
 
-  startSession();
+
+    activeQuestions =
+        shuffle(
+            questionBank
+        );
+
+
+    startSession();
 }
 
+
+
+/* =========================================================
+   STAGE-BY-STAGE PRACTICE
+   ========================================================= */
+
+function startStagePractice() {
+
+    currentMode =
+        "practice-stage";
+
+
+    activeQuestions = [];
+
+
+    /*
+      Go through stages in the specified order.
+
+      Questions within each stage stay
+      in their logical database order.
+    */
+
+    stageOrder.forEach(
+        stage => {
+
+            const stageQuestions =
+                questionBank.filter(
+                    question =>
+                    question.stage === stage
+                );
+
+
+            activeQuestions.push(
+                ...stageQuestions
+            );
+        }
+    );
+
+
+    startSession();
+}
+
+
+
+/* =========================================================
+   START SESSION
+   ========================================================= */
 
 function startSession() {
 
-  currentQuestion = 0;
+    currentQuestion = 0;
 
-  score = 0;
+    score = 0;
 
-  document
-    .getElementById("modeMenu")
-    .style.display =
-    "none";
 
-  document
-    .getElementById("resultsArea")
-    .style.display =
-    "none";
+    document
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "none";
 
-  document
-    .getElementById("quizArea")
-    .style.display =
-    "block";
 
-  loadQuestion();
+    document
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "resultsArea"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+        "block";
+
+
+    loadQuestion();
 }
+
 
 
 /* =========================================================
@@ -910,95 +1705,194 @@ function startSession() {
 
 function loadQuestion() {
 
-  const q =
-    activeQuestions[currentQuestion];
+    const q =
+        activeQuestions[
+            currentQuestion
+        ];
 
 
-  document
-    .getElementById("scenario")
-    .innerHTML =
-    `
-      <div class="scenario-line">
-        <span class="scenario-label">VERTICAL:</span>
-        <span class="scenario-condition">${q.vertical}</span>
-      </div>
-
-      <div class="scenario-line">
-        <span class="scenario-label">HORIZONTAL:</span>
-        <span class="scenario-condition">${q.horizontal}</span>
-      </div>
-    `;
-
-
-  document
-    .getElementById("questionCounter")
-    .textContent =
-    `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
-
-
-  /*
-    QUIZ shows score.
-    PRACTICE shows mode name instead.
-  */
-
-  if (currentMode === "quiz") {
+    /* QUESTION TEXT */
 
     document
-      .getElementById("score")
-      .textContent =
-      `Score: ${score}`;
+        .getElementById(
+            "scenario"
+        )
+        .innerHTML =
+        `
 
-  } else {
+        <div class="scenario-line">
+
+            <span class="scenario-label">
+            VERTICAL:
+            </span>
+
+            <span class="scenario-condition">
+            ${q.vertical}
+            </span>
+
+        </div>
+
+
+        <div class="scenario-line">
+
+            <span class="scenario-label">
+            HORIZONTAL:
+            </span>
+
+            <span class="scenario-condition">
+            ${q.horizontal}
+            </span>
+
+        </div>
+
+        `;
+
+
+    /* QUESTION COUNTER */
 
     document
-      .getElementById("score")
-      .textContent =
-      "Practice Mode";
-  }
+        .getElementById(
+            "questionCounter"
+        )
+        .textContent =
+        `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
 
 
-  [
-    "at",
-    "roll",
-    "pitch"
-  ].forEach(id => {
 
-    const element =
-      document.getElementById(id);
+    /* SCORE / MODE */
 
-    element.value = "";
+    if (
+        currentMode === "quiz"
+    ) {
 
-    element.disabled = false;
+        document
+            .getElementById(
+                "score"
+            )
+            .textContent =
+            `Score: ${score}`;
 
-    element.classList.remove(
-      "correct",
-      "wrong",
-      "mode-green",
-      "mode-white",
-      "mode-amber"
+    }
+
+    else if (
+        currentMode ===
+        "practice-stage"
+    ) {
+
+        document
+            .getElementById(
+                "score"
+            )
+            .textContent =
+            "Stage Practice";
+
+    }
+
+    else {
+
+        document
+            .getElementById(
+                "score"
+            )
+            .textContent =
+            "Random Practice";
+    }
+
+
+
+    /* STAGE NAME */
+
+    const stageName =
+        document.getElementById(
+            "stageName"
+        );
+
+
+    if (
+        currentMode ===
+        "practice-stage"
+    ) {
+
+        stageName.textContent =
+            q.stage;
+
+    }
+
+    else {
+
+        stageName.textContent =
+            "";
+    }
+
+
+
+    /* RESET FMA */
+
+    [
+        "at",
+        "roll",
+        "pitch"
+    ].forEach(
+        id => {
+
+            const element =
+                document
+                .getElementById(id);
+
+
+            element.value = "";
+
+            element.disabled =
+                false;
+
+
+            element
+                .classList
+                .remove(
+                    "correct",
+                    "wrong",
+                    "mode-green",
+                    "mode-white",
+                    "mode-amber"
+                );
+        }
     );
-  });
 
 
-  const feedback =
-    document.getElementById("feedback");
 
-  feedback.textContent = "";
+    /* RESET FEEDBACK */
 
-  feedback.className = "feedback";
-
-
-  document
-    .getElementById("checkButton")
-    .style.display =
-    "inline-block";
+    const feedback =
+        document
+        .getElementById(
+            "feedback"
+        );
 
 
-  document
-    .getElementById("nextButton")
-    .style.display =
-    "none";
+    feedback.textContent =
+        "";
+
+    feedback.className =
+        "feedback";
+
+
+
+    document
+        .getElementById(
+            "checkButton"
+        )
+        .style.display =
+        "inline-block";
+
+
+    document
+        .getElementById(
+            "nextButton"
+        )
+        .style.display =
+        "none";
 }
+
 
 
 /* =========================================================
@@ -1007,309 +1901,441 @@ function loadQuestion() {
 
 function checkAnswer() {
 
-  const q =
-    activeQuestions[currentQuestion];
+    const q =
+        activeQuestions[
+            currentQuestion
+        ];
 
 
-  const at =
-    document.getElementById("at");
-
-  const roll =
-    document.getElementById("roll");
-
-  const pitch =
-    document.getElementById("pitch");
+    const at =
+        document
+        .getElementById(
+            "at"
+        );
 
 
-  if (
-    !at.value ||
-    !roll.value ||
-    !pitch.value
-  ) {
-
-    document
-      .getElementById("feedback")
-      .textContent =
-      "Select all three FMA modes.";
-
-    return;
-  }
+    const roll =
+        document
+        .getElementById(
+            "roll"
+        );
 
 
-  let completelyCorrect = true;
+    const pitch =
+        document
+        .getElementById(
+            "pitch"
+        );
 
 
-  if (at.value === q.at) {
-
-    at.classList.add("correct");
-
-  } else {
-
-    at.classList.add("wrong");
-
-    completelyCorrect = false;
-  }
-
-
-  if (roll.value === q.roll) {
-
-    roll.classList.add("correct");
-
-  } else {
-
-    roll.classList.add("wrong");
-
-    completelyCorrect = false;
-  }
-
-
-  if (pitch.value === q.pitch) {
-
-    pitch.classList.add("correct");
-
-  } else {
-
-    pitch.classList.add("wrong");
-
-    completelyCorrect = false;
-  }
-
-
-  at.disabled = true;
-  roll.disabled = true;
-  pitch.disabled = true;
-
-
-  const feedback =
-    document.getElementById("feedback");
-
-
-  if (completelyCorrect) {
 
     /*
-      Score only in quiz mode.
+      --- is a valid ROLL answer
+      when q.roll is empty.
+
+      A/T and pitch must always
+      have a selected mode.
     */
 
-    if (currentMode === "quiz") {
+    if (
+        !at.value ||
+        !pitch.value ||
+        (
+            q.roll !== "" &&
+            !roll.value
+        )
+    ) {
 
-      score++;
+        document
+            .getElementById(
+                "feedback"
+            )
+            .textContent =
+            "Select all required FMA modes.";
+
+
+        return;
+    }
+
+
+
+    let completelyCorrect =
+        true;
+
+
+
+    /* AUTOTHROTTLE */
+
+    if (
+        at.value === q.at
+    ) {
+
+        at.classList.add(
+            "correct"
+        );
 
     }
 
-    feedback.textContent =
-      "Correct";
+    else {
 
-    feedback.className =
-      "feedback correct-text";
+        at.classList.add(
+            "wrong"
+        );
 
-  } else {
+        completelyCorrect =
+            false;
+    }
 
-    feedback.innerHTML =
-      `
+
+
+    /* ROLL */
+
+    if (
+        roll.value === q.roll
+    ) {
+
+        roll.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        roll.classList.add(
+            "wrong"
+        );
+
+        completelyCorrect =
+            false;
+    }
+
+
+
+    /* PITCH */
+
+    if (
+        pitch.value === q.pitch
+    ) {
+
+        pitch.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        pitch.classList.add(
+            "wrong"
+        );
+
+        completelyCorrect =
+            false;
+    }
+
+
+
+    /* LOCK */
+
+    at.disabled =
+        true;
+
+    roll.disabled =
+        true;
+
+    pitch.disabled =
+        true;
+
+
+
+    const feedback =
+        document
+        .getElementById(
+            "feedback"
+        );
+
+
+
+    if (
+        completelyCorrect
+    ) {
+
+
+        if (
+            currentMode ===
+            "quiz"
+        ) {
+
+            score++;
+        }
+
+
+        feedback.textContent =
+            "Correct";
+
+
+        feedback.className =
+            "feedback correct-text";
+
+    }
+
+    else {
+
+
+        feedback.innerHTML =
+        `
+
         Correct FMA:
+
         <div class="answer-fma">
 
-          ${answerModeHTML(q.at)}
+            ${answerModeHTML(q.at)}
 
-          |
+            |
 
-          ${answerModeHTML(q.roll)}
+            ${answerModeHTML(q.roll)}
 
-          |
+            |
 
-          ${answerModeHTML(q.pitch)}
+            ${answerModeHTML(q.pitch)}
 
         </div>
-      `;
 
-    feedback.className =
-      "feedback wrong-text";
-  }
+        `;
 
 
-  if (currentMode === "quiz") {
+        feedback.className =
+            "feedback wrong-text";
+    }
+
+
+
+    if (
+        currentMode ===
+        "quiz"
+    ) {
+
+        document
+            .getElementById(
+                "score"
+            )
+            .textContent =
+            `Score: ${score}`;
+    }
+
+
 
     document
-      .getElementById("score")
-      .textContent =
-      `Score: ${score}`;
-  }
+        .getElementById(
+            "checkButton"
+        )
+        .style.display =
+        "none";
 
 
-  document
-    .getElementById("checkButton")
-    .style.display =
-    "none";
-
-
-  document
-    .getElementById("nextButton")
-    .style.display =
-    "inline-block";
+    document
+        .getElementById(
+            "nextButton"
+        )
+        .style.display =
+        "inline-block";
 }
 
 
+
 /* =========================================================
-   NEXT
+   NEXT QUESTION
    ========================================================= */
 
 function nextQuestion() {
 
-  currentQuestion++;
+    currentQuestion++;
 
-  if (
-    currentQuestion >=
-    activeQuestions.length
-  ) {
 
-    finishSession();
+    if (
+        currentQuestion >=
+        activeQuestions.length
+    ) {
 
-  } else {
+        finishSession();
 
-    loadQuestion();
-  }
+    }
+
+    else {
+
+        loadQuestion();
+    }
 }
 
 
+
 /* =========================================================
-   FINISH
+   FINISH SESSION
    ========================================================= */
 
 function finishSession() {
 
-  document
-    .getElementById("quizArea")
-    .style.display =
-    "none";
-
-  document
-    .getElementById("resultsArea")
-    .style.display =
-    "block";
-
-
-  document
-    .getElementById("restartButton")
-    .style.display =
-    "inline-block";
-
-
-  document
-    .getElementById("menuButton")
-    .style.display =
-    "inline-block";
-
-
-  if (currentMode === "quiz") {
-
-    const percentage =
-      Math.round(
-        (
-          score /
-          activeQuestions.length
-        ) * 100
-      );
+    document
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+        "none";
 
 
     document
-      .getElementById("practiceFinished")
-      .style.display =
-      "none";
+        .getElementById(
+            "resultsArea"
+        )
+        .style.display =
+        "block";
 
 
     document
-      .getElementById("finalScore")
-      .style.display =
-      "block";
+        .getElementById(
+            "restartButton"
+        )
+        .style.display =
+        "inline-block";
 
 
     document
-      .getElementById("finalPercent")
-      .style.display =
-      "block";
+        .getElementById(
+            "menuButton"
+        )
+        .style.display =
+        "inline-block";
 
 
-    document
-      .getElementById("finalScore")
-      .innerHTML =
-      `Your score:<br>${score} / ${activeQuestions.length}`;
+
+    if (
+        currentMode ===
+        "quiz"
+    ) {
 
 
-    document
-      .getElementById("finalPercent")
-      .textContent =
-      `${percentage}%`;
-
-  }
-
-  else {
-
-    /*
-      Practice has no score.
-    */
-
-    document
-      .getElementById("finalScore")
-      .style.display =
-      "none";
+        const percentage =
+            Math.round(
+                (
+                    score /
+                    activeQuestions.length
+                )
+                * 100
+            );
 
 
-    document
-      .getElementById("finalPercent")
-      .style.display =
-      "none";
+        document
+            .getElementById(
+                "practiceFinished"
+            )
+            .style.display =
+            "none";
 
 
-    document
-      .getElementById("practiceFinished")
-      .style.display =
-      "block";
-  }
+        document
+            .getElementById(
+                "finalScore"
+            )
+            .style.display =
+            "block";
+
+
+        document
+            .getElementById(
+                "finalPercent"
+            )
+            .style.display =
+            "block";
+
+
+        document
+            .getElementById(
+                "finalScore"
+            )
+            .innerHTML =
+            `Your score:<br>${score} / ${activeQuestions.length}`;
+
+
+        document
+            .getElementById(
+                "finalPercent"
+            )
+            .textContent =
+            `${percentage}%`;
+
+    }
+
+    else {
+
+
+        document
+            .getElementById(
+                "finalScore"
+            )
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById(
+                "finalPercent"
+            )
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById(
+                "practiceFinished"
+            )
+            .style.display =
+            "block";
+    }
 }
 
 
+
 /* =========================================================
-   RESTART SAME MODE
+   RESTART CURRENT MODE
    ========================================================= */
 
 function restartCurrentMode() {
 
-  if (currentMode === "quiz") {
+    if (
+        currentMode ===
+        "quiz"
+    ) {
 
-    startQuizMode();
+        startQuizMode();
+    }
 
-  } else {
 
-    startPracticeMode();
-  }
+    else if (
+        currentMode ===
+        "practice-random"
+    ) {
+
+        startRandomPractice();
+    }
+
+
+    else {
+
+        startStagePractice();
+    }
 }
+
 
 
 /* =========================================================
-   RETURN TO MENU
+   START
    ========================================================= */
 
-function showMenu() {
-
-  currentMode = null;
-
-  document
-    .getElementById("resultsArea")
-    .style.display =
-    "none";
-
-  document
-    .getElementById("quizArea")
-    .style.display =
-    "none";
-
-  document
-    .getElementById("modeMenu")
-    .style.display =
-    "block";
-}
+showMainMenu();
 
 </script>
 
 </body>
+
 </html>
