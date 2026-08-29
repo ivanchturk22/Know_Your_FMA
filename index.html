@@ -393,6 +393,48 @@ button {
 
 
 /* =========================
+   CORRECT ANSWER LAYOUT
+   ========================= */
+
+.correct-answer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+
+    max-width: 600px;
+    margin: 12px auto 0;
+
+    text-align: center;
+}
+
+.correct-answer-label {
+    font-size: 11px;
+    color: #777;
+    font-weight: bold;
+}
+
+.correct-answer-mode {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.correct-answer-afds-label {
+    grid-column: 2;
+    font-size: 11px;
+    color: #777;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+.correct-answer-afds {
+    grid-column: 2;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+/* =========================
    RESULTS
    ========================= */
 
@@ -454,6 +496,16 @@ button {
 
     .fma-labels {
         font-size: 11px;
+    }
+
+    .correct-answer-mode,
+    .correct-answer-afds {
+        font-size: 16px;
+    }
+
+    .correct-answer-label,
+    .correct-answer-afds-label {
+        font-size: 10px;
     }
 
     .mode-button {
@@ -1083,7 +1135,7 @@ const questionBank = [
 
 
 /* =====================================================
-   DESCENT / LEVEL OFF
+   DESCENT
    ===================================================== */
 
 {
@@ -1423,11 +1475,8 @@ const questionBank = [
 const QUIZ_QUESTION_COUNT = 10;
 
 let currentMode = null;
-
 let activeQuestions = [];
-
 let currentQuestion = 0;
-
 let score = 0;
 
 
@@ -1442,20 +1491,16 @@ function getModeColorClass(mode) {
         mode === "ARM" ||
         mode === "THR HLD"
     ) {
-
         return "mode-white";
     }
-
 
     if (
         mode === "CWS R" ||
         mode === "CWS P" ||
         mode === "SINGLE CH"
     ) {
-
         return "mode-amber";
     }
-
 
     return "mode-green";
 }
@@ -1470,12 +1515,9 @@ function updateModeColor(element) {
         "mode-amber"
     );
 
-
     if (element.value === "") {
-
         return;
     }
-
 
     element.classList.add(
         getModeColorClass(
@@ -1501,34 +1543,27 @@ function answerModeHTML(mode) {
         `;
     }
 
-
     const colorClass =
         getModeColorClass(mode);
 
-
     let answerClass =
         "answer-green";
-
 
     if (
         colorClass ===
         "mode-white"
     ) {
-
         answerClass =
             "answer-white";
     }
-
 
     if (
         colorClass ===
         "mode-amber"
     ) {
-
         answerClass =
             "answer-amber";
     }
-
 
     return `
     <span class="${answerClass}">
@@ -1548,13 +1583,9 @@ function shuffle(array) {
     const shuffled =
         [...array];
 
-
     for (
-        let i =
-        shuffled.length - 1;
-
+        let i = shuffled.length - 1;
         i > 0;
-
         i--
     ) {
 
@@ -1563,7 +1594,6 @@ function shuffle(array) {
                 Math.random() *
                 (i + 1)
             );
-
 
         [
             shuffled[i],
@@ -1574,7 +1604,6 @@ function shuffle(array) {
             shuffled[i]
         ];
     }
-
 
     return shuffled;
 }
@@ -1589,37 +1618,21 @@ function showMainMenu() {
 
     currentMode = null;
 
+    document
+        .getElementById("quizArea")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "quizArea"
-        )
-        .style.display =
-        "none";
-
+        .getElementById("resultsArea")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "resultsArea"
-        )
-        .style.display =
-        "none";
-
+        .getElementById("practiceMenu")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "practiceMenu"
-        )
-        .style.display =
-        "none";
-
-
-    document
-        .getElementById(
-            "modeMenu"
-        )
-        .style.display =
-        "block";
+        .getElementById("modeMenu")
+        .style.display = "block";
 }
 
 
@@ -1631,19 +1644,12 @@ function showMainMenu() {
 function showPracticeMenu() {
 
     document
-        .getElementById(
-            "modeMenu"
-        )
-        .style.display =
-        "none";
-
+        .getElementById("modeMenu")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "practiceMenu"
-        )
-        .style.display =
-        "block";
+        .getElementById("practiceMenu")
+        .style.display = "block";
 }
 
 
@@ -1654,19 +1660,14 @@ function showPracticeMenu() {
 
 function startQuizMode() {
 
-    currentMode =
-        "quiz";
-
+    currentMode = "quiz";
 
     activeQuestions =
-        shuffle(
-            questionBank
-        )
+        shuffle(questionBank)
         .slice(
             0,
             QUIZ_QUESTION_COUNT
         );
-
 
     startSession();
 }
@@ -1682,12 +1683,8 @@ function startRandomPractice() {
     currentMode =
         "practice-random";
 
-
     activeQuestions =
-        shuffle(
-            questionBank
-        );
-
+        shuffle(questionBank);
 
     startSession();
 }
@@ -1703,9 +1700,7 @@ function startStagePractice() {
     currentMode =
         "practice-stage";
 
-
     activeQuestions = [];
-
 
     stageOrder.forEach(
         stage => {
@@ -1716,13 +1711,11 @@ function startStagePractice() {
                     question.stage === stage
                 );
 
-
             activeQuestions.push(
                 ...stageQuestions
             );
         }
     );
-
 
     startSession();
 }
@@ -1736,41 +1729,23 @@ function startStagePractice() {
 function startSession() {
 
     currentQuestion = 0;
-
     score = 0;
 
+    document
+        .getElementById("modeMenu")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "modeMenu"
-        )
-        .style.display =
-        "none";
-
+        .getElementById("practiceMenu")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "practiceMenu"
-        )
-        .style.display =
-        "none";
-
+        .getElementById("resultsArea")
+        .style.display = "none";
 
     document
-        .getElementById(
-            "resultsArea"
-        )
-        .style.display =
-        "none";
-
-
-    document
-        .getElementById(
-            "quizArea"
-        )
-        .style.display =
-        "block";
-
+        .getElementById("quizArea")
+        .style.display = "block";
 
     loadQuestion();
 }
@@ -1788,11 +1763,8 @@ function loadQuestion() {
             currentQuestion
         ];
 
-
     document
-        .getElementById(
-            "scenario"
-        )
+        .getElementById("scenario")
         .innerHTML =
         `
 
@@ -1836,14 +1808,10 @@ function loadQuestion() {
 
         `;
 
-
     document
-        .getElementById(
-            "questionCounter"
-        )
+        .getElementById("questionCounter")
         .textContent =
         `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
-
 
 
     if (
@@ -1851,9 +1819,7 @@ function loadQuestion() {
     ) {
 
         document
-            .getElementById(
-                "score"
-            )
+            .getElementById("score")
             .textContent =
             `Score: ${score}`;
 
@@ -1865,9 +1831,7 @@ function loadQuestion() {
     ) {
 
         document
-            .getElementById(
-                "score"
-            )
+            .getElementById("score")
             .textContent =
             "Stage Practice";
 
@@ -1876,13 +1840,10 @@ function loadQuestion() {
     else {
 
         document
-            .getElementById(
-                "score"
-            )
+            .getElementById("score")
             .textContent =
             "Random Practice";
     }
-
 
 
     const stageName =
@@ -1908,7 +1869,6 @@ function loadQuestion() {
     }
 
 
-
     [
         "at",
         "roll",
@@ -1921,12 +1881,8 @@ function loadQuestion() {
                 document
                 .getElementById(id);
 
-
             element.value = "";
-
-            element.disabled =
-                false;
-
+            element.disabled = false;
 
             element
                 .classList
@@ -1941,34 +1897,24 @@ function loadQuestion() {
     );
 
 
-
     const feedback =
         document
         .getElementById(
             "feedback"
         );
 
-
-    feedback.textContent =
-        "";
-
+    feedback.textContent = "";
     feedback.className =
         "feedback";
 
 
-
     document
-        .getElementById(
-            "checkButton"
-        )
+        .getElementById("checkButton")
         .style.display =
         "inline-block";
 
-
     document
-        .getElementById(
-            "nextButton"
-        )
+        .getElementById("nextButton")
         .style.display =
         "none";
 }
@@ -1986,7 +1932,6 @@ function checkAnswer() {
             currentQuestion
         ];
 
-
     const at =
         document.getElementById("at");
 
@@ -2000,7 +1945,6 @@ function checkAnswer() {
         document.getElementById("afds");
 
 
-
     if (
         (q.at !== "" && !at.value) ||
         (q.roll !== "" && !roll.value) ||
@@ -2009,21 +1953,16 @@ function checkAnswer() {
     ) {
 
         document
-            .getElementById(
-                "feedback"
-            )
+            .getElementById("feedback")
             .textContent =
             "Select all required FMA modes.";
-
 
         return;
     }
 
 
-
     let completelyCorrect =
         true;
-
 
 
     if (
@@ -2045,7 +1984,6 @@ function checkAnswer() {
     }
 
 
-
     if (
         roll.value === q.roll
     ) {
@@ -2063,7 +2001,6 @@ function checkAnswer() {
         completelyCorrect =
             false;
     }
-
 
 
     if (
@@ -2085,7 +2022,6 @@ function checkAnswer() {
     }
 
 
-
     if (
         afds.value === q.afds
     ) {
@@ -2105,19 +2041,10 @@ function checkAnswer() {
     }
 
 
-
-    at.disabled =
-        true;
-
-    roll.disabled =
-        true;
-
-    pitch.disabled =
-        true;
-
-    afds.disabled =
-        true;
-
+    at.disabled = true;
+    roll.disabled = true;
+    pitch.disabled = true;
+    afds.disabled = true;
 
 
     const feedback =
@@ -2127,11 +2054,9 @@ function checkAnswer() {
         );
 
 
-
     if (
         completelyCorrect
     ) {
-
 
         if (
             currentMode ===
@@ -2144,7 +2069,6 @@ function checkAnswer() {
 
         feedback.textContent =
             "Correct";
-
 
         feedback.className =
             "feedback correct-text";
@@ -2159,21 +2083,41 @@ function checkAnswer() {
 
         Correct FMA:
 
-        <div class="answer-fma">
+        <div class="correct-answer-grid">
 
-            ${answerModeHTML(q.at)}
+            <div class="correct-answer-label">
+                AUTOTHROTTLE
+            </div>
 
-            |
+            <div class="correct-answer-label">
+                ROLL
+            </div>
 
-            ${answerModeHTML(q.roll)}
+            <div class="correct-answer-label">
+                PITCH
+            </div>
 
-            |
 
-            ${answerModeHTML(q.pitch)}
+            <div class="correct-answer-mode">
+                ${answerModeHTML(q.at)}
+            </div>
 
-            |
+            <div class="correct-answer-mode">
+                ${answerModeHTML(q.roll)}
+            </div>
 
-            ${answerModeHTML(q.afds)}
+            <div class="correct-answer-mode">
+                ${answerModeHTML(q.pitch)}
+            </div>
+
+
+            <div class="correct-answer-afds-label">
+                AFDS
+            </div>
+
+            <div class="correct-answer-afds">
+                ${answerModeHTML(q.afds)}
+            </div>
 
         </div>
 
@@ -2185,34 +2129,26 @@ function checkAnswer() {
     }
 
 
-
     if (
         currentMode ===
         "quiz"
     ) {
 
         document
-            .getElementById(
-                "score"
-            )
+            .getElementById("score")
             .textContent =
             `Score: ${score}`;
     }
 
 
-
     document
-        .getElementById(
-            "checkButton"
-        )
+        .getElementById("checkButton")
         .style.display =
         "none";
 
 
     document
-        .getElementById(
-            "nextButton"
-        )
+        .getElementById("nextButton")
         .style.display =
         "inline-block";
 }
@@ -2226,7 +2162,6 @@ function checkAnswer() {
 function nextQuestion() {
 
     currentQuestion++;
-
 
     if (
         currentQuestion >=
@@ -2252,43 +2187,30 @@ function nextQuestion() {
 function finishSession() {
 
     document
-        .getElementById(
-            "quizArea"
-        )
+        .getElementById("quizArea")
         .style.display =
         "none";
 
-
     document
-        .getElementById(
-            "resultsArea"
-        )
+        .getElementById("resultsArea")
         .style.display =
         "block";
 
-
     document
-        .getElementById(
-            "restartButton"
-        )
+        .getElementById("restartButton")
         .style.display =
         "inline-block";
 
-
     document
-        .getElementById(
-            "menuButton"
-        )
+        .getElementById("menuButton")
         .style.display =
         "inline-block";
-
 
 
     if (
         currentMode ===
         "quiz"
     ) {
-
 
         const percentage =
             Math.round(
@@ -2301,41 +2223,27 @@ function finishSession() {
 
 
         document
-            .getElementById(
-                "practiceFinished"
-            )
+            .getElementById("practiceFinished")
             .style.display =
             "none";
 
-
         document
-            .getElementById(
-                "finalScore"
-            )
+            .getElementById("finalScore")
             .style.display =
             "block";
 
-
         document
-            .getElementById(
-                "finalPercent"
-            )
+            .getElementById("finalPercent")
             .style.display =
             "block";
 
-
         document
-            .getElementById(
-                "finalScore"
-            )
+            .getElementById("finalScore")
             .innerHTML =
             `Your score:<br>${score} / ${activeQuestions.length}`;
 
-
         document
-            .getElementById(
-                "finalPercent"
-            )
+            .getElementById("finalPercent")
             .textContent =
             `${percentage}%`;
 
@@ -2343,27 +2251,18 @@ function finishSession() {
 
     else {
 
-
         document
-            .getElementById(
-                "finalScore"
-            )
+            .getElementById("finalScore")
             .style.display =
             "none";
 
-
         document
-            .getElementById(
-                "finalPercent"
-            )
+            .getElementById("finalPercent")
             .style.display =
             "none";
 
-
         document
-            .getElementById(
-                "practiceFinished"
-            )
+            .getElementById("practiceFinished")
             .style.display =
             "block";
     }
@@ -2385,7 +2284,6 @@ function restartCurrentMode() {
         startQuizMode();
     }
 
-
     else if (
         currentMode ===
         "practice-random"
@@ -2393,7 +2291,6 @@ function restartCurrentMode() {
 
         startRandomPractice();
     }
-
 
     else {
 
