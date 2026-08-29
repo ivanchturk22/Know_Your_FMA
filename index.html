@@ -139,20 +139,20 @@ h1 {
 
 .quiz-timer {
     justify-self: center;
-
     min-width: 72px;
-
     text-align: center;
-
     font-size: 20px;
     font-weight: bold;
-
     color: #333;
 
     transition:
         color 0.25s ease,
         font-size 0.25s ease,
         transform 0.25s ease;
+}
+
+.quiz-timer.amber {
+    color: #d99100;
 }
 
 .quiz-timer.warning {
@@ -166,6 +166,10 @@ h1 {
     font-size: 30px;
 }
 
+
+/* =========================
+   STAGE
+   ========================= */
 
 .stage-name {
     text-align: center;
@@ -377,15 +381,11 @@ h1 {
 
 button {
     padding: 14px 32px;
-
     border: none;
     border-radius: 7px;
-
     font-size: 17px;
     font-weight: bold;
-
     cursor: pointer;
-
     margin: 5px;
 }
 
@@ -396,6 +396,18 @@ button {
 
 #nextButton {
     background: #3877d6;
+    color: white;
+    display: none;
+}
+
+#practiceBackButton {
+    background: #777;
+    color: white;
+    display: none;
+}
+
+#finishQuizButton {
+    background: #b02727;
     color: white;
     display: none;
 }
@@ -428,11 +440,6 @@ button {
     color: #b02727;
 }
 
-.answer-fma {
-    margin-top: 8px;
-    font-size: 20px;
-}
-
 .answer-green {
     color: #00a63c;
 }
@@ -458,10 +465,8 @@ button {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
-
     max-width: 600px;
     margin: 12px auto 0;
-
     text-align: center;
 }
 
@@ -493,6 +498,59 @@ button {
 
 
 /* =========================
+   EXIT QUIZ MODAL
+   ========================= */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-box {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,0.35);
+}
+
+.modal-box h2 {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.modal-box p {
+    margin-bottom: 25px;
+    color: #555;
+    font-size: 18px;
+}
+
+.exit-yes-button {
+    background: #b02727;
+    color: white;
+}
+
+.exit-no-button {
+    background: #3877d6;
+    color: white;
+}
+
+
+/* =========================
    RESULTS
    ========================= */
 
@@ -508,6 +566,18 @@ button {
     font-size: 20px;
     color: #666;
     margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.speed-bonus-awarded {
+    color: #187b35;
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.speed-bonus-note {
+    font-size: 15px;
+    color: #777;
 }
 
 .practice-finished {
@@ -583,6 +653,14 @@ button {
     .mode-button {
         width: 90%;
     }
+
+    .modal-box {
+        padding: 25px 15px;
+    }
+
+    .modal-box button {
+        width: 90%;
+    }
 }
 
 </style>
@@ -611,7 +689,8 @@ button {
     <h2>Select Mode</h2>
 
     <p>
-        Quiz: 10 random questions, 5 minute limit, with score.<br>
+        Quiz: 10 random questions, 10 minute limit, with score.<br>
+        Finish before 05:00 to earn +1 Speed Bonus.<br>
         Practice: all questions with immediate feedback.
     </p>
 
@@ -784,7 +863,7 @@ button {
             id="quizTimer"
             class="quiz-timer"
             style="display:none;">
-            5:00
+            10:00
         </div>
 
         <div id="score"></div>
@@ -798,8 +877,6 @@ button {
     </div>
 
 
-
-    <!-- PFD STYLE DISPLAY -->
 
     <div class="pfd-area">
 
@@ -914,15 +991,12 @@ button {
 
         <div class="pfd-ground">
 
-
             <div
                 class="question-box"
                 id="scenario">
             </div>
 
-
         </div>
-
 
     </div>
 
@@ -944,11 +1018,30 @@ button {
 
         </button>
 
+
         <button
             id="nextButton"
             onclick="nextQuestion()">
 
             NEXT
+
+        </button>
+
+
+        <button
+            id="practiceBackButton"
+            onclick="exitPractice()">
+
+            BACK
+
+        </button>
+
+
+        <button
+            id="finishQuizButton"
+            onclick="showExitQuizModal()">
+
+            FINISH QUIZ
 
         </button>
 
@@ -997,6 +1090,7 @@ button {
 
         </button>
 
+
         <button
             id="menuButton"
             onclick="showMainMenu()">
@@ -1011,6 +1105,42 @@ button {
 
 
 </div>
+</div>
+
+
+
+<!-- EXIT QUIZ MODAL -->
+
+<div
+    id="exitQuizModal"
+    class="modal-overlay">
+
+    <div class="modal-box">
+
+        <h2>Finish Quiz?</h2>
+
+        <p>
+            Are you sure you want to exit the quiz?
+        </p>
+
+        <button
+            class="exit-yes-button"
+            onclick="exitQuizConfirmed()">
+
+            YES, EXIT
+
+        </button>
+
+        <button
+            class="exit-no-button"
+            onclick="closeExitQuizModal()">
+
+            NO, STAY
+
+        </button>
+
+    </div>
+
 </div>
 
 
@@ -1613,18 +1743,35 @@ const questionBank = [
 
 const QUIZ_QUESTION_COUNT = 10;
 
-const QUIZ_TIME_LIMIT = 5 * 60;
+const QUIZ_TIME_LIMIT = 10 * 60;
+
+const SPEED_BONUS_THRESHOLD = 5 * 60;
+
+const SPEED_BONUS_POINTS = 1;
+
 
 let currentMode = null;
+
 let selectedStage = null;
 
 let activeQuestions = [];
+
 let currentQuestion = 0;
+
 let score = 0;
 
-let quizTimeRemaining = QUIZ_TIME_LIMIT;
-let quizTimerInterval = null;
-let quizFinishedByTimeout = false;
+
+let quizTimeRemaining =
+    QUIZ_TIME_LIMIT;
+
+let quizTimerInterval =
+    null;
+
+let quizFinishedByTimeout =
+    false;
+
+let speedBonus =
+    0;
 
 
 
@@ -1642,6 +1789,9 @@ function startQuizTimer() {
     quizFinishedByTimeout =
         false;
 
+    speedBonus =
+        0;
+
     updateQuizTimerDisplay();
 
 
@@ -1658,7 +1808,8 @@ function startQuizTimer() {
                     quizTimeRemaining <= 0
                 ) {
 
-                    quizTimeRemaining = 0;
+                    quizTimeRemaining =
+                        0;
 
                     updateQuizTimerDisplay();
 
@@ -1666,6 +1817,11 @@ function startQuizTimer() {
 
                     quizFinishedByTimeout =
                         true;
+
+                    speedBonus =
+                        0;
+
+                    closeExitQuizModal();
 
                     finishSession();
                 }
@@ -1717,6 +1873,7 @@ function updateQuizTimerDisplay() {
 
 
     timer.classList.remove(
+        "amber",
         "warning",
         "expired"
     );
@@ -1738,6 +1895,17 @@ function updateQuizTimerDisplay() {
 
         timer.classList.add(
             "warning"
+        );
+
+    }
+
+    else if (
+        quizTimeRemaining <=
+        SPEED_BONUS_THRESHOLD
+    ) {
+
+        timer.classList.add(
+            "amber"
         );
     }
 }
@@ -1810,27 +1978,36 @@ function answerModeHTML(mode) {
         `;
     }
 
+
     const colorClass =
-        getModeColorClass(mode);
+        getModeColorClass(
+            mode
+        );
+
 
     let answerClass =
         "answer-green";
+
 
     if (
         colorClass ===
         "mode-white"
     ) {
+
         answerClass =
             "answer-white";
     }
+
 
     if (
         colorClass ===
         "mode-amber"
     ) {
+
         answerClass =
             "answer-amber";
     }
+
 
     return `
     <span class="${answerClass}">
@@ -1850,9 +2027,13 @@ function shuffle(array) {
     const shuffled =
         [...array];
 
+
     for (
-        let i = shuffled.length - 1;
+        let i =
+            shuffled.length - 1;
+
         i > 0;
+
         i--
     ) {
 
@@ -1861,6 +2042,7 @@ function shuffle(array) {
                 Math.random() *
                 (i + 1)
             );
+
 
         [
             shuffled[i],
@@ -1871,6 +2053,7 @@ function shuffle(array) {
             shuffled[i]
         ];
     }
+
 
     return shuffled;
 }
@@ -1885,32 +2068,62 @@ function showMainMenu() {
 
     stopQuizTimer();
 
-    currentMode = null;
-    selectedStage = null;
+    closeExitQuizModal();
+
+
+    currentMode =
+        null;
+
+    selectedStage =
+        null;
+
 
     document
-        .getElementById("quizArea")
-        .style.display = "none";
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("resultsArea")
-        .style.display = "none";
+        .getElementById(
+            "resultsArea"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("practiceMenu")
-        .style.display = "none";
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("stageMenu")
-        .style.display = "none";
+        .getElementById(
+            "stageMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("quizTimer")
-        .style.display = "none";
+        .getElementById(
+            "quizTimer"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("modeMenu")
-        .style.display = "block";
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "block";
 }
 
 
@@ -1922,16 +2135,27 @@ function showMainMenu() {
 function showPracticeMenu() {
 
     document
-        .getElementById("modeMenu")
-        .style.display = "none";
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("stageMenu")
-        .style.display = "none";
+        .getElementById(
+            "stageMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("practiceMenu")
-        .style.display = "block";
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "block";
 }
 
 
@@ -1939,12 +2163,19 @@ function showPracticeMenu() {
 function showPracticeMenuFromStage() {
 
     document
-        .getElementById("stageMenu")
-        .style.display = "none";
+        .getElementById(
+            "stageMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("practiceMenu")
-        .style.display = "block";
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "block";
 }
 
 
@@ -1956,12 +2187,19 @@ function showPracticeMenuFromStage() {
 function showStageMenu() {
 
     document
-        .getElementById("practiceMenu")
-        .style.display = "none";
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("stageMenu")
-        .style.display = "block";
+        .getElementById(
+            "stageMenu"
+        )
+        .style.display =
+        "block";
 }
 
 
@@ -1975,8 +2213,14 @@ function startQuizMode() {
     currentMode =
         "quiz";
 
+
     selectedStage =
         null;
+
+
+    speedBonus =
+        0;
+
 
     activeQuestions =
         shuffle(
@@ -1986,6 +2230,7 @@ function startQuizMode() {
             0,
             QUIZ_QUESTION_COUNT
         );
+
 
     startSession();
 
@@ -2002,16 +2247,20 @@ function startRandomPractice() {
 
     stopQuizTimer();
 
+
     currentMode =
         "practice-random";
 
+
     selectedStage =
         null;
+
 
     activeQuestions =
         shuffle(
             questionBank
         );
+
 
     startSession();
 }
@@ -2026,13 +2275,18 @@ function startStagePractice() {
 
     stopQuizTimer();
 
+
     currentMode =
         "practice-stage";
+
 
     selectedStage =
         null;
 
-    activeQuestions = [];
+
+    activeQuestions =
+        [];
+
 
     stageOrder.forEach(
         stage => {
@@ -2040,14 +2294,17 @@ function startStagePractice() {
             const stageQuestions =
                 questionBank.filter(
                     question =>
-                    question.stage === stage
+                    question.stage ===
+                    stage
                 );
+
 
             activeQuestions.push(
                 ...stageQuestions
             );
         }
     );
+
 
     startSession();
 }
@@ -2062,17 +2319,22 @@ function startSingleStage(stage) {
 
     stopQuizTimer();
 
+
     currentMode =
         "practice-single-stage";
+
 
     selectedStage =
         stage;
 
+
     activeQuestions =
         questionBank.filter(
             question =>
-            question.stage === stage
+            question.stage ===
+            stage
         );
+
 
     startSession();
 }
@@ -2085,45 +2347,107 @@ function startSingleStage(stage) {
 
 function startSession() {
 
-    currentQuestion = 0;
-    score = 0;
+    currentQuestion =
+        0;
+
+    score =
+        0;
+
 
     document
-        .getElementById("modeMenu")
-        .style.display = "none";
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("practiceMenu")
-        .style.display = "none";
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("stageMenu")
-        .style.display = "none";
+        .getElementById(
+            "stageMenu"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("resultsArea")
-        .style.display = "none";
+        .getElementById(
+            "resultsArea"
+        )
+        .style.display =
+        "none";
+
 
     document
-        .getElementById("quizArea")
-        .style.display = "block";
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+        "block";
+
+
+    const practiceBackButton =
+        document.getElementById(
+            "practiceBackButton"
+        );
+
+
+    const finishQuizButton =
+        document.getElementById(
+            "finishQuizButton"
+        );
 
 
     if (
-        currentMode === "quiz"
+        currentMode ===
+        "quiz"
     ) {
 
         document
-            .getElementById("quizTimer")
-            .style.display = "block";
+            .getElementById(
+                "quizTimer"
+            )
+            .style.display =
+            "block";
+
+
+        practiceBackButton
+            .style.display =
+            "none";
+
+
+        finishQuizButton
+            .style.display =
+            "inline-block";
 
     }
 
     else {
 
         document
-            .getElementById("quizTimer")
-            .style.display = "none";
+            .getElementById(
+                "quizTimer"
+            )
+            .style.display =
+            "none";
+
+
+        practiceBackButton
+            .style.display =
+            "inline-block";
+
+
+        finishQuizButton
+            .style.display =
+            "none";
     }
 
 
@@ -2145,7 +2469,9 @@ function loadQuestion() {
 
 
     document
-        .getElementById("scenario")
+        .getElementById(
+            "scenario"
+        )
         .innerHTML =
         `
 
@@ -2191,17 +2517,22 @@ function loadQuestion() {
 
 
     document
-        .getElementById("questionCounter")
+        .getElementById(
+            "questionCounter"
+        )
         .textContent =
         `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
 
 
     if (
-        currentMode === "quiz"
+        currentMode ===
+        "quiz"
     ) {
 
         document
-            .getElementById("score")
+            .getElementById(
+                "score"
+            )
             .textContent =
             `Score: ${score}`;
 
@@ -2213,7 +2544,9 @@ function loadQuestion() {
     ) {
 
         document
-            .getElementById("score")
+            .getElementById(
+                "score"
+            )
             .textContent =
             "Stage Practice";
 
@@ -2225,7 +2558,9 @@ function loadQuestion() {
     ) {
 
         document
-            .getElementById("score")
+            .getElementById(
+                "score"
+            )
             .textContent =
             selectedStage;
 
@@ -2234,7 +2569,9 @@ function loadQuestion() {
     else {
 
         document
-            .getElementById("score")
+            .getElementById(
+                "score"
+            )
             .textContent =
             "Random Practice";
     }
@@ -2270,18 +2607,24 @@ function loadQuestion() {
         "roll",
         "pitch",
         "afds"
-    ].forEach(
+    ]
+    .forEach(
         id => {
 
             const element =
                 document
-                .getElementById(id);
+                .getElementById(
+                    id
+                );
+
 
             element.value =
                 "";
 
+
             element.disabled =
                 false;
+
 
             element
                 .classList
@@ -2297,26 +2640,31 @@ function loadQuestion() {
 
 
     const feedback =
-        document
-        .getElementById(
+        document.getElementById(
             "feedback"
         );
 
+
     feedback.textContent =
         "";
+
 
     feedback.className =
         "feedback";
 
 
     document
-        .getElementById("checkButton")
+        .getElementById(
+            "checkButton"
+        )
         .style.display =
         "inline-block";
 
 
     document
-        .getElementById("nextButton")
+        .getElementById(
+            "nextButton"
+        )
         .style.display =
         "none";
 }
@@ -2334,28 +2682,49 @@ function checkAnswer() {
             currentQuestion
         ];
 
+
     const at =
-        document.getElementById("at");
+        document.getElementById(
+            "at"
+        );
+
 
     const roll =
-        document.getElementById("roll");
+        document.getElementById(
+            "roll"
+        );
+
 
     const pitch =
-        document.getElementById("pitch");
+        document.getElementById(
+            "pitch"
+        );
+
 
     const afds =
-        document.getElementById("afds");
+        document.getElementById(
+            "afds"
+        );
 
 
     if (
-        (q.at !== "" && !at.value) ||
-        (q.roll !== "" && !roll.value) ||
-        (q.pitch !== "" && !pitch.value) ||
-        (q.afds !== "" && !afds.value)
+        (q.at !== "" &&
+        !at.value) ||
+
+        (q.roll !== "" &&
+        !roll.value) ||
+
+        (q.pitch !== "" &&
+        !pitch.value) ||
+
+        (q.afds !== "" &&
+        !afds.value)
     ) {
 
         document
-            .getElementById("feedback")
+            .getElementById(
+                "feedback"
+            )
             .textContent =
             "Select all required FMA modes.";
 
@@ -2368,7 +2737,8 @@ function checkAnswer() {
 
 
     if (
-        at.value === q.at
+        at.value ===
+        q.at
     ) {
 
         at.classList.add(
@@ -2389,7 +2759,8 @@ function checkAnswer() {
 
 
     if (
-        roll.value === q.roll
+        roll.value ===
+        q.roll
     ) {
 
         roll.classList.add(
@@ -2410,7 +2781,8 @@ function checkAnswer() {
 
 
     if (
-        pitch.value === q.pitch
+        pitch.value ===
+        q.pitch
     ) {
 
         pitch.classList.add(
@@ -2431,7 +2803,8 @@ function checkAnswer() {
 
 
     if (
-        afds.value === q.afds
+        afds.value ===
+        q.afds
     ) {
 
         afds.classList.add(
@@ -2451,15 +2824,21 @@ function checkAnswer() {
     }
 
 
-    at.disabled = true;
-    roll.disabled = true;
-    pitch.disabled = true;
-    afds.disabled = true;
+    at.disabled =
+        true;
+
+    roll.disabled =
+        true;
+
+    pitch.disabled =
+        true;
+
+    afds.disabled =
+        true;
 
 
     const feedback =
-        document
-        .getElementById(
+        document.getElementById(
             "feedback"
         );
 
@@ -2480,13 +2859,13 @@ function checkAnswer() {
         feedback.textContent =
             "Correct";
 
+
         feedback.className =
             "feedback correct-text";
 
     }
 
     else {
-
 
         feedback.innerHTML =
         `
@@ -2545,20 +2924,26 @@ function checkAnswer() {
     ) {
 
         document
-            .getElementById("score")
+            .getElementById(
+                "score"
+            )
             .textContent =
             `Score: ${score}`;
     }
 
 
     document
-        .getElementById("checkButton")
+        .getElementById(
+            "checkButton"
+        )
         .style.display =
         "none";
 
 
     document
-        .getElementById("nextButton")
+        .getElementById(
+            "nextButton"
+        )
         .style.display =
         "inline-block";
 }
@@ -2572,6 +2957,7 @@ function checkAnswer() {
 function nextQuestion() {
 
     currentQuestion++;
+
 
     if (
         currentQuestion >=
@@ -2591,34 +2977,164 @@ function nextQuestion() {
 
 
 /* =========================================================
-   FINISH SESSION
+   EXIT PRACTICE
    ========================================================= */
 
-function finishSession() {
+function exitPractice() {
 
     stopQuizTimer();
 
 
     document
-        .getElementById("quizArea")
+        .getElementById(
+            "quizArea"
+        )
         .style.display =
         "none";
 
 
     document
-        .getElementById("resultsArea")
+        .getElementById(
+            "resultsArea"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "stageMenu"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "modeMenu"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "practiceMenu"
+        )
+        .style.display =
+        "block";
+}
+
+
+
+/* =========================================================
+   EXIT QUIZ MODAL
+   ========================================================= */
+
+function showExitQuizModal() {
+
+    document
+        .getElementById(
+            "exitQuizModal"
+        )
+        .style.display =
+        "flex";
+}
+
+
+
+function closeExitQuizModal() {
+
+    document
+        .getElementById(
+            "exitQuizModal"
+        )
+        .style.display =
+        "none";
+}
+
+
+
+function exitQuizConfirmed() {
+
+    stopQuizTimer();
+
+    closeExitQuizModal();
+
+    showMainMenu();
+}
+
+
+
+/* =========================================================
+   FINISH SESSION
+   ========================================================= */
+
+function finishSession() {
+
+
+    /* =====================
+       SPEED BONUS
+       ===================== */
+
+    if (
+        currentMode ===
+        "quiz" &&
+
+        !quizFinishedByTimeout &&
+
+        currentQuestion >=
+        activeQuestions.length &&
+
+        quizTimeRemaining >
+        SPEED_BONUS_THRESHOLD
+    ) {
+
+        speedBonus =
+            SPEED_BONUS_POINTS;
+
+    }
+
+    else {
+
+        speedBonus =
+            0;
+    }
+
+
+    stopQuizTimer();
+
+    closeExitQuizModal();
+
+
+    document
+        .getElementById(
+            "quizArea"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "resultsArea"
+        )
         .style.display =
         "block";
 
 
     document
-        .getElementById("restartButton")
+        .getElementById(
+            "restartButton"
+        )
         .style.display =
         "inline-block";
 
 
     document
-        .getElementById("menuButton")
+        .getElementById(
+            "menuButton"
+        )
         .style.display =
         "inline-block";
 
@@ -2628,77 +3144,198 @@ function finishSession() {
         "quiz"
     ) {
 
-        const percentage =
-            Math.round(
-                (
-                    score /
-                    activeQuestions.length
-                )
-                * 100
-            );
+
+        const totalScore =
+            score +
+            speedBonus;
+
+
+        const maximumScore =
+            activeQuestions.length +
+            SPEED_BONUS_POINTS;
 
 
         document
-            .getElementById("practiceFinished")
+            .getElementById(
+                "practiceFinished"
+            )
             .style.display =
             "none";
 
 
         document
-            .getElementById("finalScore")
+            .getElementById(
+                "finalScore"
+            )
             .style.display =
             "block";
 
 
         document
-            .getElementById("finalPercent")
+            .getElementById(
+                "finalPercent"
+            )
             .style.display =
             "block";
 
 
         document
-            .getElementById("finalScore")
+            .getElementById(
+                "finalScore"
+            )
             .innerHTML =
-            `Your score:<br>${score} / ${activeQuestions.length}`;
+            `
+            Your score:
+            <br>
+            ${totalScore} / ${maximumScore}
+            `;
 
+
+
+        /* =====================
+           TIME EXPIRED
+           ===================== */
 
         if (
             quizFinishedByTimeout
         ) {
 
             document
-                .getElementById("finalPercent")
+                .getElementById(
+                    "finalPercent"
+                )
                 .innerHTML =
-                `${percentage}%<br><br><strong>Time expired</strong>`;
+                `
+
+                Question score:
+                <strong>
+                ${score} / ${activeQuestions.length}
+                </strong>
+
+                <br>
+
+                Speed bonus:
+                <strong>+0</strong>
+
+                <br><br>
+
+                <strong>
+                Time expired
+                </strong>
+
+                <br>
+
+                <span class="speed-bonus-note">
+                    Finish before the timer reaches 05:00
+                    to earn +1 Speed Bonus.
+                </span>
+
+                `;
 
         }
+
+
+        /* =====================
+           SPEED BONUS AWARDED
+           ===================== */
+
+        else if (
+            speedBonus ===
+            SPEED_BONUS_POINTS
+        ) {
+
+            document
+                .getElementById(
+                    "finalPercent"
+                )
+                .innerHTML =
+                `
+
+                Question score:
+                <strong>
+                ${score} / ${activeQuestions.length}
+                </strong>
+
+                <br>
+
+                Speed bonus:
+                <strong>+1</strong>
+
+                <br><br>
+
+                <span class="speed-bonus-awarded">
+                    Speed Bonus Awarded!
+                </span>
+
+                <br>
+
+                <span class="speed-bonus-note">
+                    You finished before the timer reached 05:00.
+                </span>
+
+                `;
+
+        }
+
+
+        /* =====================
+           NO SPEED BONUS
+           ===================== */
 
         else {
 
             document
-                .getElementById("finalPercent")
-                .textContent =
-                `${percentage}%`;
+                .getElementById(
+                    "finalPercent"
+                )
+                .innerHTML =
+                `
+
+                Question score:
+                <strong>
+                ${score} / ${activeQuestions.length}
+                </strong>
+
+                <br>
+
+                Speed bonus:
+                <strong>+0</strong>
+
+                <br><br>
+
+                <span class="speed-bonus-note">
+                    Finish before the timer reaches 05:00
+                    to earn +1 Speed Bonus.
+                </span>
+
+                `;
         }
 
     }
 
+
     else {
 
         document
-            .getElementById("finalScore")
+            .getElementById(
+                "finalScore"
+            )
             .style.display =
             "none";
 
 
         document
-            .getElementById("finalPercent")
+            .getElementById(
+                "finalPercent"
+            )
             .style.display =
             "none";
 
 
         document
-            .getElementById("practiceFinished")
+            .getElementById(
+                "practiceFinished"
+            )
             .style.display =
             "block";
     }
@@ -2720,6 +3357,7 @@ function restartCurrentMode() {
         startQuizMode();
     }
 
+
     else if (
         currentMode ===
         "practice-random"
@@ -2727,6 +3365,7 @@ function restartCurrentMode() {
 
         startRandomPractice();
     }
+
 
     else if (
         currentMode ===
@@ -2737,6 +3376,7 @@ function restartCurrentMode() {
             selectedStage
         );
     }
+
 
     else {
 
