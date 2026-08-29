@@ -2079,7 +2079,7 @@ const questionBank = [
 
 {
     stage: "APPROACH",
-    vertical: "Maintaining altitude in ALT HLD",
+    vertical: "Maintaining altitude",
     horizontal: "VOR captured",
     armedCondition: "LNAV armed for missed approach",
     afdsCondition: "One AP engaged",
@@ -2093,7 +2093,7 @@ const questionBank = [
 
 {
     stage: "APPROACH",
-    vertical: "Maintaining altitude in ALT HLD",
+    vertical: "Maintaining altitude in ALT HOLD",
     horizontal: "HDG SEL",
     armedCondition: "VOR only armed for approach",
     afdsCondition: "One AP engaged",
@@ -3491,38 +3491,10 @@ function loadQuestion() {
 
 
 
-    /* =====================
-       QUIZ LAST QUESTION
-       ===================== */
-
-    const isLastQuizQuestion =
-        currentMode === "quiz" &&
-        currentQuestion ===
-        activeQuestions.length - 1;
-
-
-    if (
-        isLastQuizQuestion
-    ) {
-
-        document
-            .getElementById(
-                "finishLastQuizButton"
-            )
-            .style.display =
-            "inline-block";
-
-    }
-
-    else {
-
-        document
-            .getElementById(
-                "checkButton"
-            )
-            .style.display =
-            "inline-block";
-    }
+    document
+        .getElementById("checkButton")
+        .style.display =
+        "inline-block";
 }
 
 
@@ -3805,10 +3777,42 @@ function checkAnswer() {
         "none";
 
 
-    document
-        .getElementById("nextButton")
-        .style.display =
-        "inline-block";
+    const isLastQuizQuestion =
+        currentMode === "quiz" &&
+        currentQuestion ===
+        activeQuestions.length - 1;
+
+
+    if (
+        isLastQuizQuestion
+    ) {
+
+        document
+            .getElementById("nextButton")
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById("finishLastQuizButton")
+            .style.display =
+            "inline-block";
+
+    }
+
+    else {
+
+        document
+            .getElementById("finishLastQuizButton")
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById("nextButton")
+            .style.display =
+            "inline-block";
+    }
 }
 
 
@@ -3826,23 +3830,6 @@ function finishLastQuizQuestion() {
         return;
     }
 
-
-    const result =
-        evaluateCurrentAnswer();
-
-
-    if (
-        result === null
-    ) {
-
-        return;
-    }
-
-
-    /*
-    Move index beyond final question so
-    finishSession knows the quiz was completed.
-    */
 
     currentQuestion =
         activeQuestions.length;
