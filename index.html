@@ -387,7 +387,6 @@ button {
 
 /* =========================
    CHECK / NEXT / FINISH
-   Reduced vertical distance
    ========================= */
 
 .button-row {
@@ -410,9 +409,6 @@ button {
     background: #3877d6;
     color: white;
 }
-
-
-/* FINISH ON LAST QUIZ QUESTION */
 
 #finishLastQuizButton {
     display: none;
@@ -460,7 +456,6 @@ button {
 
 /* =========================
    FEEDBACK
-   Reduced empty spacing
    ========================= */
 
 .feedback {
@@ -933,24 +928,14 @@ button {
 
 
 
-    <!-- =================================================
-         PFD
-         ================================================= -->
-
     <div class="pfd-area">
 
-
-        <!-- BLUE SKY -->
-
         <div class="pfd-sky">
-
 
             <div class="fma-labels">
 
                 <div>AUTOTHROTTLE</div>
-
                 <div>ROLL</div>
-
                 <div>PITCH</div>
 
             </div>
@@ -958,8 +943,6 @@ button {
 
             <div class="fma">
 
-
-                <!-- AUTOTHROTTLE -->
 
                 <select
                     id="at"
@@ -977,9 +960,6 @@ button {
                 </select>
 
 
-
-                <!-- ROLL -->
-
                 <select
                     id="roll"
                     onchange="updateModeColor(this)">
@@ -994,9 +974,6 @@ button {
 
                 </select>
 
-
-
-                <!-- PITCH -->
 
                 <select
                     id="pitch"
@@ -1019,9 +996,6 @@ button {
                 </select>
 
 
-
-                <!-- AFDS -->
-
                 <div class="afds-label">
                     AFDS
                 </div>
@@ -1039,14 +1013,10 @@ button {
 
                 </select>
 
-
             </div>
 
         </div>
 
-
-
-        <!-- BROWN GROUND -->
 
         <div class="pfd-ground">
 
@@ -1060,21 +1030,11 @@ button {
     </div>
 
 
-
-    <!-- =================================================
-         FEEDBACK
-         ================================================= -->
-
     <div
         class="feedback"
         id="feedback">
     </div>
 
-
-
-    <!-- =================================================
-         MAIN ACTION
-         ================================================= -->
 
     <div class="button-row">
 
@@ -1107,11 +1067,6 @@ button {
     </div>
 
 
-
-    <!-- =================================================
-         EXIT / BACK
-         ================================================= -->
-
     <div class="exit-row">
 
         <button
@@ -1132,7 +1087,6 @@ button {
         </button>
 
     </div>
-
 
 </div>
 
@@ -1685,7 +1639,7 @@ const questionBank = [
     pitch: "G/P",
     afds: "FD"
 },
-    
+
 {
     stage: "APPROACH",
     vertical: "Maintaining FMC calculated altitude in VNAV",
@@ -1696,7 +1650,7 @@ const questionBank = [
     pitch: "VNAV PTH",
     afds: "CMD"
 },
-    
+
 {
     stage: "APPROACH",
     vertical: "IAN — G/P captured",
@@ -2369,11 +2323,7 @@ function showStageMenu() {
 
 
 /* =========================================================
-   QUIZ
-   ========================================================= */
-
-/* =========================================================
-   QUIZ
+   QUIZ QUESTION GENERATOR
    ========================================================= */
 
 function generateQuizQuestions() {
@@ -2407,6 +2357,7 @@ function generateQuizQuestions() {
         "APPROACH"
     ];
 
+
     extraStages.forEach(stage => {
 
         const alreadySelected =
@@ -2435,13 +2386,21 @@ function generateQuizQuestions() {
 }
 
 
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+
 function startQuizMode() {
 
-    currentMode = "quiz";
+    currentMode =
+        "quiz";
 
-    selectedStage = null;
+    selectedStage =
+        null;
 
-    speedBonus = 0;
+    speedBonus =
+        0;
 
     activeQuestions =
         generateQuizQuestions();
@@ -2450,6 +2409,7 @@ function startQuizMode() {
 
     startQuizTimer();
 }
+
 
 
 /* =========================================================
@@ -2543,7 +2503,7 @@ function startSingleStage(stage) {
     activeQuestions =
         questionBank.filter(
             question =>
-            question.stage === stage
+                question.stage === stage
         );
 
 
@@ -2868,7 +2828,7 @@ function loadQuestion() {
     document
         .getElementById("checkButton")
         .style.display =
-        "none";
+        "inline-block";
 
 
     document
@@ -2883,41 +2843,6 @@ function loadQuestion() {
         )
         .style.display =
         "none";
-
-
-
-    /* =====================
-       QUIZ LAST QUESTION
-       ===================== */
-
-    const isLastQuizQuestion =
-        currentMode === "quiz" &&
-        currentQuestion ===
-        activeQuestions.length - 1;
-
-
-    if (
-        isLastQuizQuestion
-    ) {
-
-        document
-            .getElementById(
-                "finishLastQuizButton"
-            )
-            .style.display =
-            "inline-block";
-
-    }
-
-    else {
-
-        document
-            .getElementById(
-                "checkButton"
-            )
-            .style.display =
-            "inline-block";
-    }
 }
 
 
@@ -3131,7 +3056,7 @@ function evaluateCurrentAnswer() {
 
 
 /* =========================================================
-   NORMAL CHECK
+   CHECK ANSWER
    ========================================================= */
 
 function checkAnswer() {
@@ -3193,16 +3118,78 @@ function checkAnswer() {
 
 
 
+    /* Hide CHECK */
+
     document
         .getElementById("checkButton")
         .style.display =
         "none";
 
 
-    document
-        .getElementById("nextButton")
-        .style.display =
-        "inline-block";
+
+    /* Is this the last question in Quiz? */
+
+    const isLastQuizQuestion =
+        currentMode === "quiz" &&
+        currentQuestion ===
+        activeQuestions.length - 1;
+
+
+
+    if (
+        isLastQuizQuestion
+    ) {
+
+        /*
+        Last Quiz question:
+
+        CHECK
+        ↓
+        Correct / Wrong
+        ↓
+        FINISH
+        */
+
+        document
+            .getElementById("nextButton")
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById(
+                "finishLastQuizButton"
+            )
+            .style.display =
+            "inline-block";
+
+    }
+
+    else {
+
+        /*
+        Normal question:
+
+        CHECK
+        ↓
+        Correct / Wrong
+        ↓
+        NEXT
+        */
+
+        document
+            .getElementById(
+                "finishLastQuizButton"
+            )
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById("nextButton")
+            .style.display =
+            "inline-block";
+    }
 }
 
 
@@ -3221,21 +3208,11 @@ function finishLastQuizQuestion() {
     }
 
 
-    const result =
-        evaluateCurrentAnswer();
-
-
-    if (
-        result === null
-    ) {
-
-        return;
-    }
-
-
     /*
+    Last answer has already been checked.
+
     Move index beyond final question so
-    finishSession knows the quiz was completed.
+    finishSession knows Quiz was completed.
     */
 
     currentQuestion =
