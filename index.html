@@ -134,6 +134,34 @@ h1 {
 
 
 /* =========================
+   PRACTICE NAVIGATION
+   ========================= */
+
+.practice-navigation {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    max-width: 760px;
+    margin: 8px auto 15px;
+}
+
+.practice-nav-button {
+    background: #3877d6;
+    color: white;
+    padding: 11px 22px;
+    border-radius: 7px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.practice-nav-button:disabled {
+    background: #b7b7b7;
+    color: #eeeeee;
+    cursor: default;
+}
+
+
+/* =========================
    QUIZ TIMER
    ========================= */
 
@@ -371,12 +399,12 @@ h1 {
 
 
 /* =========================
-   BUTTONS
+   MAIN ACTION BUTTONS
    ========================= */
 
 .button-row {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 28px;
 }
 
 button {
@@ -389,28 +417,55 @@ button {
     margin: 5px;
 }
 
-#checkButton {
-    background: #222;
-    color: white;
-}
 
-#nextButton {
+/* CHECK — BLUE AND WIDE */
+
+#checkButton {
+    display: inline-block;
+    width: 320px;
+    max-width: 90%;
     background: #3877d6;
     color: white;
-    display: none;
 }
 
-#practiceBackButton {
-    background: #777;
+
+/* QUIZ NEXT */
+
+#nextButton {
+    display: none;
+    width: 320px;
+    max-width: 90%;
+    background: #3877d6;
     color: white;
-    display: none;
 }
 
-#finishQuizButton {
+
+/* =========================
+   EXIT / BACK BUTTONS
+   ========================= */
+
+.exit-row {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+#practiceBackButton,
+#exitQuizButton {
     background: #b02727;
     color: white;
     display: none;
+
+    padding: 14px 32px;
+    font-size: 17px;
+    min-width: 170px;
 }
+
+
+/* =========================
+   RESULT BUTTONS
+   ========================= */
 
 #restartButton,
 #menuButton {
@@ -616,6 +671,15 @@ button {
         font-size: 26px;
     }
 
+    .practice-navigation {
+        gap: 7px;
+    }
+
+    .practice-nav-button {
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+
     .pfd-sky {
         min-height: 220px;
         padding: 20px 8px 25px;
@@ -661,6 +725,11 @@ button {
     .modal-box button {
         width: 90%;
     }
+
+    #checkButton,
+    #nextButton {
+        width: 90%;
+    }
 }
 
 </style>
@@ -682,7 +751,9 @@ button {
 <div class="card">
 
 
-<!-- MAIN MENU -->
+<!-- =====================================================
+     MAIN MENU
+     ===================================================== -->
 
 <div id="modeMenu" class="mode-select">
 
@@ -714,7 +785,9 @@ button {
 
 
 
-<!-- PRACTICE MENU -->
+<!-- =====================================================
+     PRACTICE MENU
+     ===================================================== -->
 
 <div
     id="practiceMenu"
@@ -757,7 +830,9 @@ button {
 
 
 
-<!-- STAGE MENU -->
+<!-- =====================================================
+     STAGE MENU
+     ===================================================== -->
 
 <div
     id="stageMenu"
@@ -848,7 +923,9 @@ button {
 
 
 
-<!-- QUESTION AREA -->
+<!-- =====================================================
+     QUESTION AREA
+     ===================================================== -->
 
 <div
     id="quizArea"
@@ -863,12 +940,43 @@ button {
             id="quizTimer"
             class="quiz-timer"
             style="display:none;">
+
             10:00
+
         </div>
 
         <div id="score"></div>
 
     </div>
+
+
+
+    <!-- PRACTICE PREVIOUS / NEXT -->
+
+    <div
+        id="practiceNavigation"
+        class="practice-navigation">
+
+        <button
+            id="practicePreviousButton"
+            class="practice-nav-button"
+            onclick="previousPracticeQuestion()">
+
+            ← PREVIOUS
+
+        </button>
+
+        <button
+            id="practiceNextButton"
+            class="practice-nav-button"
+            onclick="nextPracticeQuestion()">
+
+            NEXT →
+
+        </button>
+
+    </div>
+
 
 
     <div
@@ -877,6 +985,10 @@ button {
     </div>
 
 
+
+    <!-- =================================================
+         PFD
+         ================================================= -->
 
     <div class="pfd-area">
 
@@ -961,7 +1073,7 @@ button {
 
 
 
-                <!-- AFDS BELOW ROLL -->
+                <!-- AFDS -->
 
                 <div class="afds-label">
                     AFDS
@@ -1002,11 +1114,20 @@ button {
 
 
 
+    <!-- =================================================
+         FEEDBACK
+         ================================================= -->
+
     <div
         class="feedback"
         id="feedback">
     </div>
 
+
+
+    <!-- =================================================
+         CHECK / QUIZ NEXT
+         ================================================= -->
 
     <div class="button-row">
 
@@ -1027,31 +1148,43 @@ button {
 
         </button>
 
+    </div>
+
+
+
+    <!-- =================================================
+         EXIT / BACK AT BOTTOM
+         ================================================= -->
+
+    <div class="exit-row">
 
         <button
             id="practiceBackButton"
             onclick="exitPractice()">
 
-            BACK
+            BACK TO MENU
 
         </button>
 
 
         <button
-            id="finishQuizButton"
+            id="exitQuizButton"
             onclick="showExitQuizModal()">
 
-            FINISH QUIZ
+            EXIT QUIZ
 
         </button>
 
     </div>
 
+
 </div>
 
 
 
-<!-- RESULTS -->
+<!-- =====================================================
+     RESULTS
+     ===================================================== -->
 
 <div
     id="resultsArea"
@@ -1109,7 +1242,9 @@ button {
 
 
 
-<!-- EXIT QUIZ MODAL -->
+<!-- =====================================================
+     EXIT QUIZ MODAL
+     ===================================================== -->
 
 <div
     id="exitQuizModal"
@@ -1117,7 +1252,7 @@ button {
 
     <div class="modal-box">
 
-        <h2>Finish Quiz?</h2>
+        <h2>Exit Quiz?</h2>
 
         <p>
             Are you sure you want to exit the quiz?
@@ -1334,6 +1469,12 @@ const questionBank = [
     pitch: "VNAV SPD",
     afds: "FD"
 },
+
+
+
+/* =====================================================
+   LEVEL / CAPTURE
+   ===================================================== */
 
 {
     stage: "LEVEL / CAPTURE",
@@ -1738,7 +1879,7 @@ const questionBank = [
 
 
 /* =========================================================
-   VARIABLES
+   SETTINGS / VARIABLES
    ========================================================= */
 
 const QUIZ_QUESTION_COUNT = 10;
@@ -1772,6 +1913,103 @@ let quizFinishedByTimeout =
 
 let speedBonus =
     0;
+
+
+/*
+Practice state contains one entry for every question:
+
+{
+    at: "",
+    roll: "",
+    pitch: "",
+    afds: "",
+    checked: false,
+    correct: false
+}
+*/
+
+let practiceStates = [];
+
+
+
+/* =========================================================
+   HELPER — IS PRACTICE?
+   ========================================================= */
+
+function isPracticeMode() {
+
+    return (
+        currentMode === "practice-random" ||
+        currentMode === "practice-stage" ||
+        currentMode === "practice-single-stage"
+    );
+}
+
+
+
+/* =========================================================
+   CREATE PRACTICE STATES
+   ========================================================= */
+
+function createPracticeStates() {
+
+    practiceStates =
+        activeQuestions.map(
+            () => ({
+                at: "",
+                roll: "",
+                pitch: "",
+                afds: "",
+                checked: false,
+                correct: false
+            })
+        );
+}
+
+
+
+/* =========================================================
+   SAVE CURRENT PRACTICE STATE
+   ========================================================= */
+
+function saveCurrentPracticeState() {
+
+    if (
+        !isPracticeMode() ||
+        !practiceStates[currentQuestion]
+    ) {
+        return;
+    }
+
+
+    const state =
+        practiceStates[currentQuestion];
+
+
+    /*
+    If the question was already checked,
+    answers remain locked and should not change.
+    */
+
+    if (
+        state.checked
+    ) {
+        return;
+    }
+
+
+    state.at =
+        document.getElementById("at").value;
+
+    state.roll =
+        document.getElementById("roll").value;
+
+    state.pitch =
+        document.getElementById("pitch").value;
+
+    state.afds =
+        document.getElementById("afds").value;
+}
 
 
 
@@ -1922,16 +2160,20 @@ function getModeColorClass(mode) {
         mode === "ARM" ||
         mode === "THR HLD"
     ) {
+
         return "mode-white";
     }
+
 
     if (
         mode === "CWS R" ||
         mode === "CWS P" ||
         mode === "SINGLE CH"
     ) {
+
         return "mode-amber";
     }
+
 
     return "mode-green";
 }
@@ -1946,17 +2188,39 @@ function updateModeColor(element) {
         "mode-amber"
     );
 
+
     if (
         element.value === ""
     ) {
+
+        /*
+        Save blank selection as well.
+        */
+
+        if (
+            isPracticeMode()
+        ) {
+
+            saveCurrentPracticeState();
+        }
+
         return;
     }
+
 
     element.classList.add(
         getModeColorClass(
             element.value
         )
     );
+
+
+    if (
+        isPracticeMode()
+    ) {
+
+        saveCurrentPracticeState();
+    }
 }
 
 
@@ -1980,9 +2244,7 @@ function answerModeHTML(mode) {
 
 
     const colorClass =
-        getModeColorClass(
-            mode
-        );
+        getModeColorClass(mode);
 
 
     let answerClass =
@@ -2222,6 +2484,10 @@ function startQuizMode() {
         0;
 
 
+    practiceStates =
+        [];
+
+
     activeQuestions =
         shuffle(
             questionBank
@@ -2261,6 +2527,8 @@ function startRandomPractice() {
             questionBank
         );
 
+
+    createPracticeStates();
 
     startSession();
 }
@@ -2306,6 +2574,8 @@ function startStagePractice() {
     );
 
 
+    createPracticeStates();
+
     startSession();
 }
 
@@ -2335,6 +2605,8 @@ function startSingleStage(stage) {
             stage
         );
 
+
+    createPracticeStates();
 
     startSession();
 }
@@ -2400,9 +2672,15 @@ function startSession() {
         );
 
 
-    const finishQuizButton =
+    const exitQuizButton =
         document.getElementById(
-            "finishQuizButton"
+            "exitQuizButton"
+        );
+
+
+    const practiceNavigation =
+        document.getElementById(
+            "practiceNavigation"
         );
 
 
@@ -2419,12 +2697,17 @@ function startSession() {
             "block";
 
 
+        practiceNavigation
+            .style.display =
+            "none";
+
+
         practiceBackButton
             .style.display =
             "none";
 
 
-        finishQuizButton
+        exitQuizButton
             .style.display =
             "inline-block";
 
@@ -2440,18 +2723,67 @@ function startSession() {
             "none";
 
 
+        practiceNavigation
+            .style.display =
+            "grid";
+
+
         practiceBackButton
             .style.display =
             "inline-block";
 
 
-        finishQuizButton
+        exitQuizButton
             .style.display =
             "none";
     }
 
 
     loadQuestion();
+}
+
+
+
+/* =========================================================
+   CLEAR SELECT STYLE
+   ========================================================= */
+
+function clearSelectStyle(element) {
+
+    element.classList.remove(
+        "correct",
+        "wrong",
+        "mode-green",
+        "mode-white",
+        "mode-amber"
+    );
+}
+
+
+
+/* =========================================================
+   APPLY NORMAL MODE COLOR
+   ========================================================= */
+
+function applyNormalModeColor(element) {
+
+    element.classList.remove(
+        "mode-green",
+        "mode-white",
+        "mode-amber"
+    );
+
+
+    if (
+        element.value !== ""
+    ) {
+
+        element.classList.add(
+            getModeColorClass(
+                element.value
+            )
+        );
+    }
 }
 
 
@@ -2524,6 +2856,10 @@ function loadQuestion() {
         `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
 
 
+    /* =====================
+       TOP RIGHT
+       ===================== */
+
     if (
         currentMode ===
         "quiz"
@@ -2577,6 +2913,11 @@ function loadQuestion() {
     }
 
 
+
+    /* =====================
+       STAGE NAME
+       ===================== */
+
     const stageName =
         document.getElementById(
             "stageName"
@@ -2584,10 +2925,7 @@ function loadQuestion() {
 
 
     if (
-        currentMode ===
-        "practice-stage" ||
-        currentMode ===
-        "practice-single-stage"
+        isPracticeMode()
     ) {
 
         stageName.textContent =
@@ -2602,42 +2940,50 @@ function loadQuestion() {
     }
 
 
+
+    /* =====================
+       SELECTS
+       ===================== */
+
+    const at =
+        document.getElementById("at");
+
+    const roll =
+        document.getElementById("roll");
+
+    const pitch =
+        document.getElementById("pitch");
+
+    const afds =
+        document.getElementById("afds");
+
+
     [
-        "at",
-        "roll",
-        "pitch",
-        "afds"
+        at,
+        roll,
+        pitch,
+        afds
     ]
     .forEach(
-        id => {
-
-            const element =
-                document
-                .getElementById(
-                    id
-                );
-
+        element => {
 
             element.value =
                 "";
 
-
             element.disabled =
                 false;
 
-
-            element
-                .classList
-                .remove(
-                    "correct",
-                    "wrong",
-                    "mode-green",
-                    "mode-white",
-                    "mode-amber"
-                );
+            clearSelectStyle(
+                element
+            );
         }
     );
 
+
+
+    /* =====================
+       FEEDBACK RESET
+       ===================== */
 
     const feedback =
         document.getElementById(
@@ -2648,9 +2994,267 @@ function loadQuestion() {
     feedback.textContent =
         "";
 
-
     feedback.className =
         "feedback";
+
+
+    /* =====================
+       PRACTICE RESTORE
+       ===================== */
+
+    if (
+        isPracticeMode()
+    ) {
+
+        const state =
+            practiceStates[
+                currentQuestion
+            ];
+
+
+        at.value =
+            state.at;
+
+        roll.value =
+            state.roll;
+
+        pitch.value =
+            state.pitch;
+
+        afds.value =
+            state.afds;
+
+
+        applyNormalModeColor(at);
+
+        applyNormalModeColor(roll);
+
+        applyNormalModeColor(pitch);
+
+        applyNormalModeColor(afds);
+
+
+        if (
+            state.checked
+        ) {
+
+            restoreCheckedPracticeQuestion(
+                q,
+                state
+            );
+
+        }
+
+        else {
+
+            at.disabled =
+                false;
+
+            roll.disabled =
+                false;
+
+            pitch.disabled =
+                false;
+
+            afds.disabled =
+                false;
+
+
+            document
+                .getElementById(
+                    "checkButton"
+                )
+                .style.display =
+                "inline-block";
+
+
+            document
+                .getElementById(
+                    "nextButton"
+                )
+                .style.display =
+                "none";
+        }
+
+
+        updatePracticeNavigation();
+
+    }
+
+    /* =====================
+       QUIZ NEW QUESTION
+       ===================== */
+
+    else {
+
+        document
+            .getElementById(
+                "checkButton"
+            )
+            .style.display =
+            "inline-block";
+
+
+        document
+            .getElementById(
+                "nextButton"
+            )
+            .style.display =
+            "none";
+    }
+}
+
+
+
+/* =========================================================
+   RESTORE CHECKED PRACTICE QUESTION
+   ========================================================= */
+
+function restoreCheckedPracticeQuestion(
+    q,
+    state
+) {
+
+    const at =
+        document.getElementById("at");
+
+    const roll =
+        document.getElementById("roll");
+
+    const pitch =
+        document.getElementById("pitch");
+
+    const afds =
+        document.getElementById("afds");
+
+
+    [
+        at,
+        roll,
+        pitch,
+        afds
+    ]
+    .forEach(
+        element => {
+
+            clearSelectStyle(
+                element
+            );
+        }
+    );
+
+
+    if (
+        state.at === q.at
+    ) {
+
+        at.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        at.classList.add(
+            "wrong"
+        );
+    }
+
+
+    if (
+        state.roll === q.roll
+    ) {
+
+        roll.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        roll.classList.add(
+            "wrong"
+        );
+    }
+
+
+    if (
+        state.pitch === q.pitch
+    ) {
+
+        pitch.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        pitch.classList.add(
+            "wrong"
+        );
+    }
+
+
+    if (
+        state.afds === q.afds
+    ) {
+
+        afds.classList.add(
+            "correct"
+        );
+
+    }
+
+    else {
+
+        afds.classList.add(
+            "wrong"
+        );
+    }
+
+
+    at.disabled =
+        true;
+
+    roll.disabled =
+        true;
+
+    pitch.disabled =
+        true;
+
+    afds.disabled =
+        true;
+
+
+    const feedback =
+        document.getElementById(
+            "feedback"
+        );
+
+
+    if (
+        state.correct
+    ) {
+
+        feedback.textContent =
+            "Correct";
+
+        feedback.className =
+            "feedback correct-text";
+
+    }
+
+    else {
+
+        feedback.innerHTML =
+            correctAnswerHTML(q);
+
+        feedback.className =
+            "feedback wrong-text";
+    }
 
 
     document
@@ -2658,8 +3262,12 @@ function loadQuestion() {
             "checkButton"
         )
         .style.display =
-        "inline-block";
+        "none";
 
+
+    /*
+    Practice uses only the top navigation.
+    */
 
     document
         .getElementById(
@@ -2667,6 +3275,146 @@ function loadQuestion() {
         )
         .style.display =
         "none";
+}
+
+
+
+/* =========================================================
+   CORRECT ANSWER HTML
+   ========================================================= */
+
+function correctAnswerHTML(q) {
+
+    return `
+
+    Correct FMA:
+
+    <div class="correct-answer-grid">
+
+        <div class="correct-answer-label">
+            AUTOTHROTTLE
+        </div>
+
+        <div class="correct-answer-label">
+            ROLL
+        </div>
+
+        <div class="correct-answer-label">
+            PITCH
+        </div>
+
+
+        <div class="correct-answer-mode">
+            ${answerModeHTML(q.at)}
+        </div>
+
+        <div class="correct-answer-mode">
+            ${answerModeHTML(q.roll)}
+        </div>
+
+        <div class="correct-answer-mode">
+            ${answerModeHTML(q.pitch)}
+        </div>
+
+
+        <div class="correct-answer-afds-label">
+            AFDS
+        </div>
+
+        <div class="correct-answer-afds">
+            ${answerModeHTML(q.afds)}
+        </div>
+
+    </div>
+
+    `;
+}
+
+
+
+/* =========================================================
+   UPDATE PRACTICE NAVIGATION
+   ========================================================= */
+
+function updatePracticeNavigation() {
+
+    if (
+        !isPracticeMode()
+    ) {
+        return;
+    }
+
+
+    const previousButton =
+        document.getElementById(
+            "practicePreviousButton"
+        );
+
+
+    const nextButton =
+        document.getElementById(
+            "practiceNextButton"
+        );
+
+
+    previousButton.disabled =
+        currentQuestion === 0;
+
+
+    nextButton.disabled =
+        currentQuestion ===
+        activeQuestions.length - 1;
+}
+
+
+
+/* =========================================================
+   PREVIOUS PRACTICE QUESTION
+   ========================================================= */
+
+function previousPracticeQuestion() {
+
+    if (
+        !isPracticeMode() ||
+        currentQuestion <= 0
+    ) {
+        return;
+    }
+
+
+    saveCurrentPracticeState();
+
+
+    currentQuestion--;
+
+
+    loadQuestion();
+}
+
+
+
+/* =========================================================
+   NEXT PRACTICE QUESTION
+   ========================================================= */
+
+function nextPracticeQuestion() {
+
+    if (
+        !isPracticeMode() ||
+        currentQuestion >=
+        activeQuestions.length - 1
+    ) {
+        return;
+    }
+
+
+    saveCurrentPracticeState();
+
+
+    currentQuestion++;
+
+
+    loadQuestion();
 }
 
 
@@ -2736,6 +3484,17 @@ function checkAnswer() {
         true;
 
 
+    clearSelectStyle(at);
+    clearSelectStyle(roll);
+    clearSelectStyle(pitch);
+    clearSelectStyle(afds);
+
+
+
+    /* =====================
+       AUTOTHROTTLE
+       ===================== */
+
     if (
         at.value ===
         q.at
@@ -2757,6 +3516,11 @@ function checkAnswer() {
             false;
     }
 
+
+
+    /* =====================
+       ROLL
+       ===================== */
 
     if (
         roll.value ===
@@ -2780,6 +3544,11 @@ function checkAnswer() {
     }
 
 
+
+    /* =====================
+       PITCH
+       ===================== */
+
     if (
         pitch.value ===
         q.pitch
@@ -2801,6 +3570,11 @@ function checkAnswer() {
             false;
     }
 
+
+
+    /* =====================
+       AFDS
+       ===================== */
 
     if (
         afds.value ===
@@ -2824,6 +3598,7 @@ function checkAnswer() {
     }
 
 
+
     at.disabled =
         true;
 
@@ -2836,6 +3611,45 @@ function checkAnswer() {
     afds.disabled =
         true;
 
+
+
+    /* =====================
+       SAVE PRACTICE RESULT
+       ===================== */
+
+    if (
+        isPracticeMode()
+    ) {
+
+        practiceStates[
+            currentQuestion
+        ] = {
+
+            at:
+                at.value,
+
+            roll:
+                roll.value,
+
+            pitch:
+                pitch.value,
+
+            afds:
+                afds.value,
+
+            checked:
+                true,
+
+            correct:
+                completelyCorrect
+        };
+    }
+
+
+
+    /* =====================
+       FEEDBACK
+       ===================== */
 
     const feedback =
         document.getElementById(
@@ -2868,55 +3682,18 @@ function checkAnswer() {
     else {
 
         feedback.innerHTML =
-        `
-
-        Correct FMA:
-
-        <div class="correct-answer-grid">
-
-            <div class="correct-answer-label">
-                AUTOTHROTTLE
-            </div>
-
-            <div class="correct-answer-label">
-                ROLL
-            </div>
-
-            <div class="correct-answer-label">
-                PITCH
-            </div>
-
-
-            <div class="correct-answer-mode">
-                ${answerModeHTML(q.at)}
-            </div>
-
-            <div class="correct-answer-mode">
-                ${answerModeHTML(q.roll)}
-            </div>
-
-            <div class="correct-answer-mode">
-                ${answerModeHTML(q.pitch)}
-            </div>
-
-
-            <div class="correct-answer-afds-label">
-                AFDS
-            </div>
-
-            <div class="correct-answer-afds">
-                ${answerModeHTML(q.afds)}
-            </div>
-
-        </div>
-
-        `;
+            correctAnswerHTML(q);
 
 
         feedback.className =
             "feedback wrong-text";
     }
 
+
+
+    /* =====================
+       QUIZ SCORE
+       ===================== */
 
     if (
         currentMode ===
@@ -2932,6 +3709,11 @@ function checkAnswer() {
     }
 
 
+
+    /* =====================
+       BUTTON BEHAVIOUR
+       ===================== */
+
     document
         .getElementById(
             "checkButton"
@@ -2940,21 +3722,51 @@ function checkAnswer() {
         "none";
 
 
-    document
-        .getElementById(
-            "nextButton"
-        )
-        .style.display =
-        "inline-block";
+    if (
+        currentMode ===
+        "quiz"
+    ) {
+
+        document
+            .getElementById(
+                "nextButton"
+            )
+            .style.display =
+            "inline-block";
+
+    }
+
+    else {
+
+        /*
+        Practice has PREVIOUS / NEXT at top.
+        No second NEXT button at bottom.
+        */
+
+        document
+            .getElementById(
+                "nextButton"
+            )
+            .style.display =
+            "none";
+    }
 }
 
 
 
 /* =========================================================
-   NEXT QUESTION
+   NEXT QUESTION — QUIZ ONLY
    ========================================================= */
 
 function nextQuestion() {
+
+    if (
+        currentMode !==
+        "quiz"
+    ) {
+        return;
+    }
+
 
     currentQuestion++;
 
@@ -2981,6 +3793,8 @@ function nextQuestion() {
    ========================================================= */
 
 function exitPractice() {
+
+    saveCurrentPracticeState();
 
     stopQuizTimer();
 
