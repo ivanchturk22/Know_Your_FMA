@@ -208,6 +208,24 @@ h1 {
 
 
 /* =========================
+   AFDS
+   BELOW ROLL
+   ========================= */
+
+.afds-label {
+    grid-column: 2;
+    text-align: center;
+    font-size: 13px;
+    color: #777;
+    padding-top: 8px;
+}
+
+#afds {
+    grid-column: 2;
+}
+
+
+/* =========================
    FMA COLORS
    ========================= */
 
@@ -405,9 +423,7 @@ button {
 <div class="card">
 
 
-<!-- =====================================================
-     MAIN MENU
-     ===================================================== -->
+<!-- MAIN MENU -->
 
 <div id="modeMenu" class="mode-select">
 
@@ -418,7 +434,6 @@ button {
         Practice: all questions with immediate feedback.
     </p>
 
-
     <button
         class="mode-button quiz-mode-button"
         onclick="startQuizMode()">
@@ -426,7 +441,6 @@ button {
         QUIZ MODE
 
     </button>
-
 
     <button
         class="mode-button practice-mode-button"
@@ -440,9 +454,7 @@ button {
 
 
 
-<!-- =====================================================
-     PRACTICE MENU
-     ===================================================== -->
+<!-- PRACTICE MENU -->
 
 <div
     id="practiceMenu"
@@ -455,7 +467,6 @@ button {
         Choose how you want to practice.
     </p>
 
-
     <button
         class="mode-button random-button"
         onclick="startRandomPractice()">
@@ -463,7 +474,6 @@ button {
         RANDOM
 
     </button>
-
 
     <button
         class="mode-button stage-button"
@@ -473,9 +483,7 @@ button {
 
     </button>
 
-
     <br>
-
 
     <button
         class="mode-button back-button"
@@ -489,9 +497,7 @@ button {
 
 
 
-<!-- =====================================================
-     QUESTION AREA
-     ===================================================== -->
+<!-- QUESTION AREA -->
 
 <div
     id="quizArea"
@@ -617,6 +623,33 @@ button {
 
         </select>
 
+
+        <!-- AFDS LABEL BELOW ROLL -->
+
+        <div class="afds-label">
+            AFDS
+        </div>
+
+
+        <!-- AFDS BELOW ROLL -->
+
+        <select
+            id="afds"
+            onchange="updateModeColor(this)">
+
+            <option value="">---</option>
+
+            <option>FD</option>
+
+            <option>CMD</option>
+
+            <option>SINGLE CH</option>
+
+            <option>LAND 3</option>
+
+        </select>
+
+
     </div>
 
 
@@ -628,7 +661,6 @@ button {
 
     <div class="button-row">
 
-
         <button
             id="checkButton"
             onclick="checkAnswer()">
@@ -636,7 +668,6 @@ button {
             CHECK
 
         </button>
-
 
         <button
             id="nextButton"
@@ -646,16 +677,13 @@ button {
 
         </button>
 
-
     </div>
 
 </div>
 
 
 
-<!-- =====================================================
-     RESULTS
-     ===================================================== -->
+<!-- RESULTS -->
 
 <div
     id="resultsArea"
@@ -686,7 +714,6 @@ button {
 
     <div class="button-row">
 
-
         <button
             id="restartButton"
             onclick="restartCurrentMode()">
@@ -695,7 +722,6 @@ button {
 
         </button>
 
-
         <button
             id="menuButton"
             onclick="showMainMenu()">
@@ -703,7 +729,6 @@ button {
             MODE MENU
 
         </button>
-
 
     </div>
 
@@ -717,17 +742,21 @@ button {
 
 <script>
 
+
 /* =========================================================
    STAGE ORDER
    ========================================================= */
 
 const stageOrder = [
+
     "TAKEOFF",
     "CLIMB",
     "LEVEL / CAPTURE",
     "DESCENT",
     "APPROACH",
-    "GO-AROUND"
+    "GO-AROUND",
+    "AUTOLAND"
+
 ];
 
 
@@ -745,120 +774,112 @@ const questionBank = [
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "Takeoff — TO/GA just pushed, beginning takeoff roll",
-
-    horizontal:
-    "LNAV armed",
-
+    vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
+    horizontal: "Wings level option",
+    afdsCondition: "Manual flight with FD",
     at: "N1",
-
     roll: "",
-
-    pitch: "TO/GA"
+    pitch: "TO/GA",
+    afds: "FD"
 },
-
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "Takeoff roll — passing 84 kt",
-
-    horizontal:
-    "LNAV armed",
-
-    at: "THR HLD",
-
-    roll: "",
-
-    pitch: "TO/GA"
+    vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
+    horizontal: "HDG SEL option",
+    afdsCondition: "Manual flight with FD",
+    at: "N1",
+    roll: "HDG SEL",
+    pitch: "TO/GA",
+    afds: "FD"
 },
-
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "After liftoff — below LNAV engagement altitude",
-
-    horizontal:
-    "LNAV armed",
-
+    vertical: "Takeoff roll — passing 84 kt",
+    horizontal: "Wings level option",
+    afdsCondition: "Manual flight with FD",
     at: "THR HLD",
-
     roll: "",
-
-    pitch: "TO/GA"
+    pitch: "TO/GA",
+    afds: "FD"
 },
-
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "Initial climb — below 800 ft RA",
-
-    horizontal:
-    "LNAV engaged",
-
+    vertical: "Takeoff roll — passing 84 kt",
+    horizontal: "HDG SEL option",
+    afdsCondition: "Manual flight with FD",
     at: "THR HLD",
+    roll: "HDG SEL",
+    pitch: "TO/GA",
+    afds: "FD"
+},
 
+{
+    stage: "TAKEOFF",
+    vertical: "After liftoff — below LNAV engagement altitude",
+    horizontal: "Wings level option",
+    afdsCondition: "Manual flight with FD",
+    at: "THR HLD",
+    roll: "",
+    pitch: "TO/GA",
+    afds: "FD"
+},
+
+{
+    stage: "TAKEOFF",
+    vertical: "After liftoff — below LNAV engagement altitude",
+    horizontal: "HDG SEL option",
+    afdsCondition: "Manual flight with FD",
+    at: "THR HLD",
+    roll: "HDG SEL",
+    pitch: "TO/GA",
+    afds: "FD"
+},
+
+{
+    stage: "TAKEOFF",
+    vertical: "Initial climb — below 800 ft RA",
+    horizontal: "LNAV engaged",
+    afdsCondition: "Manual flight with FD",
+    at: "THR HLD",
     roll: "LNAV",
-
-    pitch: "TO/GA"
+    pitch: "TO/GA",
+    afds: "FD"
 },
-
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "Initial climb — above 800 ft RA, before climb thrust engages",
-
-    horizontal:
-    "LNAV engaged",
-
+    vertical: "Initial climb — above 800 ft RA, before climb thrust engages",
+    horizontal: "LNAV engaged",
+    afdsCondition: "Manual flight with FD",
     at: "ARM",
-
     roll: "LNAV",
-
-    pitch: "TO/GA"
+    pitch: "TO/GA",
+    afds: "FD"
 },
-
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "Climb — climb thrust selected, still in TO/GA pitch mode",
-
-    horizontal:
-    "LNAV engaged",
-
+    vertical: "Climb — climb thrust selected, still in TO/GA pitch mode",
+    horizontal: "LNAV engaged",
+    afdsCondition: "Manual flight with FD",
     at: "N1",
-
     roll: "LNAV",
-
-    pitch: "TO/GA"
+    pitch: "TO/GA",
+    afds: "FD"
 },
-
 
 {
     stage: "TAKEOFF",
-
-    vertical:
-    "Climb — VNAV engaged after takeoff",
-
-    horizontal:
-    "LNAV engaged",
-
+    vertical: "Climb — VNAV engaged after takeoff",
+    horizontal: "LNAV engaged",
+    afdsCondition: "One AP engaged",
     at: "N1",
-
     roll: "LNAV",
-
-    pitch: "VNAV SPD"
+    pitch: "VNAV SPD",
+    afds: "CMD"
 },
 
 
@@ -869,368 +890,239 @@ const questionBank = [
 
 {
     stage: "CLIMB",
-
-    vertical:
-    "LVL CHG climb",
-
-    horizontal:
-    "HDG SEL",
-
+    vertical: "LVL CHG climb",
+    horizontal: "HDG SEL",
+    afdsCondition: "One AP engaged",
     at: "N1",
-
     roll: "HDG SEL",
-
-    pitch: "MCP SPD"
+    pitch: "MCP SPD",
+    afds: "CMD"
 },
-
 
 {
     stage: "CLIMB",
-
-    vertical:
-    "V/S climb",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "V/S climb",
+    horizontal: "LNAV",
+    afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
-
     roll: "LNAV",
-
-    pitch: "V/S"
+    pitch: "V/S",
+    afds: "FD"
 },
-
 
 {
     stage: "CLIMB",
-
-    vertical:
-    "VNAV climb — no altitude restrictions",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV climb — no altitude restrictions",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "N1",
-
     roll: "LNAV",
+    pitch: "VNAV SPD",
+    afds: "CMD"
+},
 
-    pitch: "VNAV SPD"
+{
+    stage: "CLIMB",
+    vertical: "VNAV climb — no altitude restrictions",
+    horizontal: "LNAV",
+    afdsCondition: "Manual flight with FD",
+    at: "N1",
+    roll: "LNAV",
+    pitch: "VNAV SPD",
+    afds: "FD"
+},
+
+{
+    stage: "LEVEL / CAPTURE",
+    vertical: "VNAV climb — just started capturing an FMC altitude restriction",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "LNAV",
+    pitch: "ALT ACQ",
+    afds: "CMD"
+},
+
+{
+    stage: "LEVEL / CAPTURE",
+    vertical: "VNAV climb — level at FMC altitude restriction, established level",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "LNAV",
+    pitch: "VNAV PTH",
+    afds: "CMD"
+},
+
+{
+    stage: "LEVEL / CAPTURE",
+    vertical: "VNAV climb — level at MCP altitude due to ATC restriction, established level",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "LNAV",
+    pitch: "VNAV ALT",
+    afds: "CMD"
+},
+
+{
+    stage: "LEVEL / CAPTURE",
+    vertical: "LVL CHG climb — just started capturing selected altitude",
+    horizontal: "HDG SEL",
+    afdsCondition: "One AP engaged",
+    at: "MCP SPD",
+    roll: "HDG SEL",
+    pitch: "ALT ACQ",
+    afds: "CMD"
+},
+
+{
+    stage: "LEVEL / CAPTURE",
+    vertical: "After LVL CHG level-off — established at selected altitude",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
+    at: "MCP SPD",
+    roll: "LNAV",
+    pitch: "ALT HOLD",
+    afds: "CMD"
+},
+
+{
+    stage: "LEVEL / CAPTURE",
+    vertical: "VNAV climb — established at FMC cruise altitude",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "LNAV",
+    pitch: "VNAV PTH",
+    afds: "CMD"
 },
 
 
 
 /* =====================================================
-   LEVEL / CAPTURE
-   ===================================================== */
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "VNAV climb — just started capturing an FMC altitude restriction",
-
-    horizontal:
-    "LNAV",
-
-    at: "FMC SPD",
-
-    roll: "LNAV",
-
-    pitch: "ALT ACQ"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "VNAV climb — level at FMC altitude restriction, established level",
-
-    horizontal:
-    "LNAV",
-
-    at: "FMC SPD",
-
-    roll: "LNAV",
-
-    pitch: "VNAV PTH"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "VNAV climb — level at MCP altitude due to ATC restriction, established level",
-
-    horizontal:
-    "LNAV",
-
-    at: "FMC SPD",
-
-    roll: "LNAV",
-
-    pitch: "VNAV ALT"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "LVL CHG climb — just started capturing selected altitude",
-
-    horizontal:
-    "HDG SEL",
-
-    at: "MCP SPD",
-
-    roll: "HDG SEL",
-
-    pitch: "ALT ACQ"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "After LVL CHG level-off — established at selected altitude",
-
-    horizontal:
-    "LNAV",
-
-    at: "MCP SPD",
-
-    roll: "LNAV",
-
-    pitch: "ALT HOLD"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "VNAV climb — established at FMC cruise altitude",
-
-    horizontal:
-    "LNAV",
-
-    at: "FMC SPD",
-
-    roll: "LNAV",
-
-    pitch: "VNAV PTH"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "V/S climb — just started capturing selected altitude",
-
-    horizontal:
-    "LNAV",
-
-    at: "MCP SPD",
-
-    roll: "LNAV",
-
-    pitch: "ALT ACQ"
-},
-
-
-{
-    stage: "LEVEL / CAPTURE",
-
-    vertical:
-    "After V/S level-off — established at selected altitude",
-
-    horizontal:
-    "HDG SEL",
-
-    at: "MCP SPD",
-
-    roll: "HDG SEL",
-
-    pitch: "ALT HOLD"
-},
-
-
-
-/* =====================================================
-   DESCENT
+   DESCENT / LEVEL OFF
    ===================================================== */
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "LVL CHG descent — just initiated",
-
-    horizontal:
-    "HDG SEL",
-
+    vertical: "LVL CHG descent — just initiated",
+    horizontal: "HDG SEL",
+    afdsCondition: "One AP engaged",
     at: "RETARD",
-
     roll: "HDG SEL",
-
-    pitch: "MCP SPD"
+    pitch: "MCP SPD",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "LVL CHG descent — established with thrust at idle",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "LVL CHG descent — established with thrust at idle",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "ARM",
-
     roll: "LNAV",
-
-    pitch: "MCP SPD"
+    pitch: "MCP SPD",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "V/S descent",
-
-    horizontal:
-    "HDG SEL",
-
+    vertical: "V/S descent",
+    horizontal: "HDG SEL",
+    afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
-
     roll: "HDG SEL",
-
-    pitch: "V/S"
+    pitch: "V/S",
+    afds: "FD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "VNAV descent — established on FMC path",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV descent — established on FMC path",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "FMC SPD",
-
     roll: "LNAV",
-
-    pitch: "VNAV PTH"
+    pitch: "VNAV PTH",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "VNAV descent above path — descent just initiated",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV descent above path — descent just initiated",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "RETARD",
-
     roll: "LNAV",
-
-    pitch: "VNAV SPD"
+    pitch: "VNAV SPD",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "VNAV descent above path — established with thrust at idle",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV descent above path — established with thrust at idle",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "ARM",
-
     roll: "LNAV",
-
-    pitch: "VNAV SPD"
+    pitch: "VNAV SPD",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "VNAV descent — just started capturing an FMC altitude restriction",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV descent — just started capturing an FMC altitude restriction",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "FMC SPD",
-
     roll: "LNAV",
-
-    pitch: "ALT ACQ"
+    pitch: "ALT ACQ",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "VNAV descent — level at FMC altitude restriction, established level",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV descent — level at FMC altitude restriction, established level",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "FMC SPD",
-
     roll: "LNAV",
-
-    pitch: "VNAV PTH"
+    pitch: "VNAV PTH",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "VNAV descent — level at MCP altitude due to ATC restriction, established level",
-
-    horizontal:
-    "LNAV",
-
+    vertical: "VNAV descent — level at MCP altitude due to ATC restriction, established level",
+    horizontal: "LNAV",
+    afdsCondition: "One AP engaged",
     at: "FMC SPD",
-
     roll: "LNAV",
-
-    pitch: "VNAV ALT"
+    pitch: "VNAV ALT",
+    afds: "CMD"
 },
-
 
 {
     stage: "DESCENT",
-
-    vertical:
-    "V/S descent — just started capturing selected altitude",
-
-    horizontal:
-    "HDG SEL",
-
+    vertical: "V/S descent — just started capturing selected altitude",
+    horizontal: "HDG SEL",
+    afdsCondition: "One AP engaged",
     at: "MCP SPD",
-
     roll: "HDG SEL",
+    pitch: "ALT ACQ",
+    afds: "CMD"
+},
 
-    pitch: "ALT ACQ"
+{
+    stage: "DESCENT",
+    vertical: "After V/S level-off — established at selected altitude",
+    horizontal: "HDG SEL",
+    afdsCondition: "One AP engaged",
+    at: "MCP SPD",
+    roll: "HDG SEL",
+    pitch: "ALT HOLD",
+    afds: "CMD"
 },
 
 
@@ -1241,69 +1133,90 @@ const questionBank = [
 
 {
     stage: "APPROACH",
-
-    vertical:
-    "Maintaining cleared altitude",
-
-    horizontal:
-    "ILS — LOC captured",
-
+    vertical: "Maintaining cleared altitude",
+    horizontal: "ILS — LOC captured",
+    afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
-
     roll: "VOR/LOC",
-
-    pitch: "ALT HOLD"
+    pitch: "ALT HOLD",
+    afds: "FD"
 },
-
 
 {
     stage: "APPROACH",
-
-    vertical:
-    "ILS — G/S captured",
-
-    horizontal:
-    "LOC captured",
-
+    vertical: "Maintaining cleared altitude",
+    horizontal: "ILS — LOC captured",
+    afdsCondition: "One AP engaged",
     at: "MCP SPD",
-
     roll: "VOR/LOC",
-
-    pitch: "G/S"
+    pitch: "ALT HOLD",
+    afds: "CMD"
 },
-
 
 {
     stage: "APPROACH",
-
-    vertical:
-    "IAN — G/P captured",
-
-    horizontal:
-    "FAC captured",
-
+    vertical: "ILS — G/S captured",
+    horizontal: "LOC captured",
+    afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
+    roll: "VOR/LOC",
+    pitch: "G/S",
+    afds: "FD"
+},
 
+{
+    stage: "APPROACH",
+    vertical: "ILS — G/S captured",
+    horizontal: "LOC captured",
+    afdsCondition: "One AP engaged",
+    at: "MCP SPD",
+    roll: "VOR/LOC",
+    pitch: "G/S",
+    afds: "SINGLE CH"
+},
+
+{
+    stage: "APPROACH",
+    vertical: "IAN — G/P captured",
+    horizontal: "FAC captured",
+    afdsCondition: "Manual flight with FD",
+    at: "MCP SPD",
     roll: "FAC",
-
-    pitch: "G/P"
+    pitch: "G/P",
+    afds: "FD"
 },
-
 
 {
     stage: "APPROACH",
-
-    vertical:
-    "Maintaining altitude",
-
-    horizontal:
-    "VOR captured",
-
+    vertical: "IAN — G/P captured",
+    horizontal: "FAC captured",
+    afdsCondition: "One AP engaged",
     at: "MCP SPD",
+    roll: "FAC",
+    pitch: "G/P",
+    afds: "CMD"
+},
 
+{
+    stage: "APPROACH",
+    vertical: "Maintaining altitude",
+    horizontal: "VOR captured",
+    afdsCondition: "Manual flight with FD",
+    at: "MCP SPD",
     roll: "VOR/LOC",
+    pitch: "ALT HOLD",
+    afds: "FD"
+},
 
-    pitch: "ALT HOLD"
+{
+    stage: "APPROACH",
+    vertical: "Maintaining altitude",
+    horizontal: "VOR captured",
+    afdsCondition: "One AP engaged",
+    at: "MCP SPD",
+    roll: "VOR/LOC",
+    pitch: "ALT HOLD",
+    afds: "CMD"
 },
 
 
@@ -1314,18 +1227,107 @@ const questionBank = [
 
 {
     stage: "GO-AROUND",
-
-    vertical:
-    "Go-around — TO/GA switches just pushed",
-
-    horizontal:
-    "LNAV engaged",
-
+    vertical: "Go-around — TO/GA switches just pushed",
+    horizontal: "Wings level / ground-track option",
+    afdsCondition: "Manual flight with FD",
     at: "GA",
+    roll: "",
+    pitch: "TO/GA",
+    afds: "FD"
+},
 
+{
+    stage: "GO-AROUND",
+    vertical: "Go-around — TO/GA switches just pushed",
+    horizontal: "LNAV option",
+    afdsCondition: "Manual flight with FD",
+    at: "GA",
     roll: "LNAV",
+    pitch: "TO/GA",
+    afds: "FD"
+},
 
-    pitch: "TO/GA"
+{
+    stage: "GO-AROUND",
+    vertical: "Go-around — TO/GA switches just pushed",
+    horizontal: "LNAV option",
+    afdsCondition: "One AP engaged BEFORE pushing TO/GA",
+    at: "GA",
+    roll: "LNAV",
+    pitch: "TO/GA",
+    afds: "FD"
+},
+
+
+
+/* =====================================================
+   AUTOLAND
+   ===================================================== */
+
+{
+    stage: "AUTOLAND",
+    vertical: "ILS — G/S captured, self-test not passed yet",
+    horizontal: "LOC captured",
+    afdsCondition: "Dual Channel AP, Fail-Operational",
+    at: "MCP SPD",
+    roll: "VOR/LOC",
+    pitch: "G/S",
+    afds: "SINGLE CH"
+},
+
+{
+    stage: "AUTOLAND",
+    vertical: "ILS — G/S captured, self-test passed",
+    horizontal: "LOC captured",
+    afdsCondition: "Dual Channel AP, Fail-Operational",
+    at: "MCP SPD",
+    roll: "VOR/LOC",
+    pitch: "G/S",
+    afds: "LAND 3"
+},
+
+{
+    stage: "AUTOLAND",
+    vertical: "ILS — 50 ft RA, flare initiated",
+    horizontal: "LOC captured",
+    afdsCondition: "Dual Channel AP, Fail-Operational",
+    at: "MCP SPD",
+    roll: "VOR/LOC",
+    pitch: "FLARE",
+    afds: "LAND 3"
+},
+
+{
+    stage: "AUTOLAND",
+    vertical: "ILS — 27 ft RA, FLARE engaged, thrust reducing toward idle",
+    horizontal: "LOC captured",
+    afdsCondition: "Dual Channel AP, Fail-Operational",
+    at: "RETARD",
+    roll: "VOR/LOC",
+    pitch: "FLARE",
+    afds: "LAND 3"
+},
+
+{
+    stage: "AUTOLAND",
+    vertical: "Autoland — touchdown, ROLLOUT engaged",
+    horizontal: "ROLLOUT engaged",
+    afdsCondition: "Dual Channel AP, Fail-Operational",
+    at: "RETARD",
+    roll: "ROLLOUT",
+    pitch: "FLARE",
+    afds: "LAND 3"
+},
+
+{
+    stage: "AUTOLAND",
+    vertical: "Autoland — 2 seconds after touchdown, established in rollout",
+    horizontal: "ROLLOUT engaged",
+    afdsCondition: "Dual Channel AP, Fail-Operational",
+    at: "",
+    roll: "ROLLOUT",
+    pitch: "FLARE",
+    afds: "LAND 3"
 }
 
 ];
@@ -1365,7 +1367,8 @@ function getModeColorClass(mode) {
 
     if (
         mode === "CWS R" ||
-        mode === "CWS P"
+        mode === "CWS P" ||
+        mode === "SINGLE CH"
     ) {
 
         return "mode-amber";
@@ -1622,13 +1625,6 @@ function startStagePractice() {
     activeQuestions = [];
 
 
-    /*
-      Go through stages in the specified order.
-
-      Questions within each stage stay
-      in their logical database order.
-    */
-
     stageOrder.forEach(
         stage => {
 
@@ -1711,8 +1707,6 @@ function loadQuestion() {
         ];
 
 
-    /* QUESTION TEXT */
-
     document
         .getElementById(
             "scenario"
@@ -1745,10 +1739,21 @@ function loadQuestion() {
 
         </div>
 
+
+        <div class="scenario-line">
+
+            <span class="scenario-label">
+            AFDS:
+            </span>
+
+            <span class="scenario-condition">
+            ${q.afdsCondition}
+            </span>
+
+        </div>
+
         `;
 
-
-    /* QUESTION COUNTER */
 
     document
         .getElementById(
@@ -1758,8 +1763,6 @@ function loadQuestion() {
         `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
 
 
-
-    /* SCORE / MODE */
 
     if (
         currentMode === "quiz"
@@ -1800,8 +1803,6 @@ function loadQuestion() {
 
 
 
-    /* STAGE NAME */
-
     const stageName =
         document.getElementById(
             "stageName"
@@ -1826,12 +1827,11 @@ function loadQuestion() {
 
 
 
-    /* RESET FMA */
-
     [
         "at",
         "roll",
-        "pitch"
+        "pitch",
+        "afds"
     ].forEach(
         id => {
 
@@ -1859,8 +1859,6 @@ function loadQuestion() {
     );
 
 
-
-    /* RESET FEEDBACK */
 
     const feedback =
         document
@@ -1908,42 +1906,29 @@ function checkAnswer() {
 
 
     const at =
-        document
-        .getElementById(
-            "at"
-        );
-
+        document.getElementById("at");
 
     const roll =
-        document
-        .getElementById(
-            "roll"
-        );
-
+        document.getElementById("roll");
 
     const pitch =
-        document
-        .getElementById(
-            "pitch"
-        );
+        document.getElementById("pitch");
+
+    const afds =
+        document.getElementById("afds");
 
 
 
     /*
-      --- is a valid ROLL answer
-      when q.roll is empty.
-
-      A/T and pitch must always
-      have a selected mode.
+      --- is accepted whenever the
+      correct database value is blank.
     */
 
     if (
-        !at.value ||
-        !pitch.value ||
-        (
-            q.roll !== "" &&
-            !roll.value
-        )
+        (q.at !== "" && !at.value) ||
+        (q.roll !== "" && !roll.value) ||
+        (q.pitch !== "" && !pitch.value) ||
+        (q.afds !== "" && !afds.value)
     ) {
 
         document
@@ -1964,8 +1949,6 @@ function checkAnswer() {
 
 
 
-    /* AUTOTHROTTLE */
-
     if (
         at.value === q.at
     ) {
@@ -1974,9 +1957,7 @@ function checkAnswer() {
             "correct"
         );
 
-    }
-
-    else {
+    } else {
 
         at.classList.add(
             "wrong"
@@ -1987,8 +1968,6 @@ function checkAnswer() {
     }
 
 
-
-    /* ROLL */
 
     if (
         roll.value === q.roll
@@ -1998,9 +1977,7 @@ function checkAnswer() {
             "correct"
         );
 
-    }
-
-    else {
+    } else {
 
         roll.classList.add(
             "wrong"
@@ -2012,8 +1989,6 @@ function checkAnswer() {
 
 
 
-    /* PITCH */
-
     if (
         pitch.value === q.pitch
     ) {
@@ -2022,9 +1997,7 @@ function checkAnswer() {
             "correct"
         );
 
-    }
-
-    else {
+    } else {
 
         pitch.classList.add(
             "wrong"
@@ -2036,7 +2009,25 @@ function checkAnswer() {
 
 
 
-    /* LOCK */
+    if (
+        afds.value === q.afds
+    ) {
+
+        afds.classList.add(
+            "correct"
+        );
+
+    } else {
+
+        afds.classList.add(
+            "wrong"
+        );
+
+        completelyCorrect =
+            false;
+    }
+
+
 
     at.disabled =
         true;
@@ -2045,6 +2036,9 @@ function checkAnswer() {
         true;
 
     pitch.disabled =
+        true;
+
+    afds.disabled =
         true;
 
 
@@ -2099,6 +2093,10 @@ function checkAnswer() {
             |
 
             ${answerModeHTML(q.pitch)}
+
+            |
+
+            ${answerModeHTML(q.afds)}
 
         </div>
 
