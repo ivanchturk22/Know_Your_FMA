@@ -96,18 +96,76 @@ h1 {
     color: white;
 }
 
+.stage-choice-button {
+    display: block;
+    width: 280px;
+    max-width: 90%;
+    margin: 10px auto;
+    background: #187b35;
+    color: white;
+}
+
+.all-stages-button {
+    background: #222;
+    color: white;
+}
+
 
 /* =========================
    TOP ROW
    ========================= */
 
 .top-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
     margin-bottom: 10px;
     font-size: 16px;
     color: #666;
 }
+
+#questionCounter {
+    justify-self: start;
+}
+
+#score {
+    justify-self: end;
+}
+
+
+/* =========================
+   QUIZ TIMER
+   ========================= */
+
+.quiz-timer {
+    justify-self: center;
+
+    min-width: 72px;
+
+    text-align: center;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    color: #333;
+
+    transition:
+        color 0.25s ease,
+        font-size 0.25s ease,
+        transform 0.25s ease;
+}
+
+.quiz-timer.warning {
+    color: #d00000;
+    font-size: 30px;
+    transform: scale(1.08);
+}
+
+.quiz-timer.expired {
+    color: #d00000;
+    font-size: 30px;
+}
+
 
 .stage-name {
     text-align: center;
@@ -474,6 +532,20 @@ button {
         padding: 20px 10px;
     }
 
+    .top-row {
+        font-size: 13px;
+    }
+
+    .quiz-timer {
+        font-size: 18px;
+        min-width: 60px;
+    }
+
+    .quiz-timer.warning,
+    .quiz-timer.expired {
+        font-size: 26px;
+    }
+
     .pfd-sky {
         min-height: 220px;
         padding: 20px 8px 25px;
@@ -539,7 +611,7 @@ button {
     <h2>Select Mode</h2>
 
     <p>
-        Quiz: 10 random questions with score.<br>
+        Quiz: 10 random questions, 5 minute limit, with score.<br>
         Practice: all questions with immediate feedback.
     </p>
 
@@ -586,7 +658,7 @@ button {
 
     <button
         class="mode-button stage-button"
-        onclick="startStagePractice()">
+        onclick="showStageMenu()">
 
         STAGE BY STAGE
 
@@ -606,6 +678,97 @@ button {
 
 
 
+<!-- STAGE MENU -->
+
+<div
+    id="stageMenu"
+    class="mode-select"
+    style="display:none;">
+
+    <h2>Select Stage</h2>
+
+    <p>
+        Practice all stages in order or choose one specific stage.
+    </p>
+
+    <button
+        class="mode-button stage-choice-button all-stages-button"
+        onclick="startStagePractice()">
+
+        ALL STAGES IN ORDER
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('TAKEOFF')">
+
+        TAKEOFF
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('CLIMB')">
+
+        CLIMB
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('LEVEL / CAPTURE')">
+
+        LEVEL / CAPTURE
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('DESCENT')">
+
+        DESCENT
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('APPROACH')">
+
+        APPROACH
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('GO-AROUND')">
+
+        GO-AROUND
+
+    </button>
+
+    <button
+        class="mode-button stage-choice-button"
+        onclick="startSingleStage('AUTOLAND')">
+
+        AUTOLAND
+
+    </button>
+
+    <br>
+
+    <button
+        class="mode-button back-button"
+        onclick="showPracticeMenuFromStage()">
+
+        BACK
+
+    </button>
+
+</div>
+
+
+
 <!-- QUESTION AREA -->
 
 <div
@@ -616,6 +779,13 @@ button {
     <div class="top-row">
 
         <div id="questionCounter"></div>
+
+        <div
+            id="quizTimer"
+            class="quiz-timer"
+            style="display:none;">
+            5:00
+        </div>
 
         <div id="score"></div>
 
@@ -660,19 +830,12 @@ button {
                     onchange="updateModeColor(this)">
 
                     <option value="">---</option>
-
                     <option>N1</option>
-
                     <option>MCP SPD</option>
-
                     <option>FMC SPD</option>
-
                     <option>ARM</option>
-
                     <option>THR HLD</option>
-
                     <option>RETARD</option>
-
                     <option>GA</option>
 
                 </select>
@@ -686,17 +849,11 @@ button {
                     onchange="updateModeColor(this)">
 
                     <option value="">---</option>
-
                     <option>HDG SEL</option>
-
                     <option>LNAV</option>
-
                     <option>VOR/LOC</option>
-
                     <option>FAC</option>
-
                     <option>ROLLOUT</option>
-
                     <option>CWS R</option>
 
                 </select>
@@ -710,29 +867,17 @@ button {
                     onchange="updateModeColor(this)">
 
                     <option value="">---</option>
-
                     <option>MCP SPD</option>
-
                     <option>V/S</option>
-
                     <option>ALT ACQ</option>
-
                     <option>ALT HOLD</option>
-
                     <option>VNAV SPD</option>
-
                     <option>VNAV PTH</option>
-
                     <option>VNAV ALT</option>
-
                     <option>G/S</option>
-
                     <option>G/P</option>
-
                     <option>TO/GA</option>
-
                     <option>FLARE</option>
-
                     <option>CWS P</option>
 
                 </select>
@@ -751,13 +896,9 @@ button {
                     onchange="updateModeColor(this)">
 
                     <option value="">---</option>
-
                     <option>FD</option>
-
                     <option>CMD</option>
-
                     <option>SINGLE CH</option>
-
                     <option>LAND 3</option>
 
                 </select>
@@ -882,7 +1023,6 @@ button {
    ========================================================= */
 
 const stageOrder = [
-
     "TAKEOFF",
     "CLIMB",
     "LEVEL / CAPTURE",
@@ -890,7 +1030,6 @@ const stageOrder = [
     "APPROACH",
     "GO-AROUND",
     "AUTOLAND"
-
 ];
 
 
@@ -1474,10 +1613,134 @@ const questionBank = [
 
 const QUIZ_QUESTION_COUNT = 10;
 
+const QUIZ_TIME_LIMIT = 5 * 60;
+
 let currentMode = null;
+let selectedStage = null;
+
 let activeQuestions = [];
 let currentQuestion = 0;
 let score = 0;
+
+let quizTimeRemaining = QUIZ_TIME_LIMIT;
+let quizTimerInterval = null;
+let quizFinishedByTimeout = false;
+
+
+
+/* =========================================================
+   QUIZ TIMER
+   ========================================================= */
+
+function startQuizTimer() {
+
+    stopQuizTimer();
+
+    quizTimeRemaining =
+        QUIZ_TIME_LIMIT;
+
+    quizFinishedByTimeout =
+        false;
+
+    updateQuizTimerDisplay();
+
+
+    quizTimerInterval =
+        setInterval(
+            function() {
+
+                quizTimeRemaining--;
+
+                updateQuizTimerDisplay();
+
+
+                if (
+                    quizTimeRemaining <= 0
+                ) {
+
+                    quizTimeRemaining = 0;
+
+                    updateQuizTimerDisplay();
+
+                    stopQuizTimer();
+
+                    quizFinishedByTimeout =
+                        true;
+
+                    finishSession();
+                }
+
+            },
+            1000
+        );
+}
+
+
+
+function stopQuizTimer() {
+
+    if (
+        quizTimerInterval !== null
+    ) {
+
+        clearInterval(
+            quizTimerInterval
+        );
+
+        quizTimerInterval =
+            null;
+    }
+}
+
+
+
+function updateQuizTimerDisplay() {
+
+    const timer =
+        document.getElementById(
+            "quizTimer"
+        );
+
+
+    const minutes =
+        Math.floor(
+            quizTimeRemaining / 60
+        );
+
+
+    const seconds =
+        quizTimeRemaining % 60;
+
+
+    timer.textContent =
+        `${minutes}:${String(seconds).padStart(2, "0")}`;
+
+
+    timer.classList.remove(
+        "warning",
+        "expired"
+    );
+
+
+    if (
+        quizTimeRemaining <= 0
+    ) {
+
+        timer.classList.add(
+            "expired"
+        );
+
+    }
+
+    else if (
+        quizTimeRemaining <= 60
+    ) {
+
+        timer.classList.add(
+            "warning"
+        );
+    }
+}
 
 
 
@@ -1515,7 +1778,9 @@ function updateModeColor(element) {
         "mode-amber"
     );
 
-    if (element.value === "") {
+    if (
+        element.value === ""
+    ) {
         return;
     }
 
@@ -1534,7 +1799,9 @@ function updateModeColor(element) {
 
 function answerModeHTML(mode) {
 
-    if (mode === "") {
+    if (
+        mode === ""
+    ) {
 
         return `
         <span class="answer-blank">
@@ -1616,7 +1883,10 @@ function shuffle(array) {
 
 function showMainMenu() {
 
+    stopQuizTimer();
+
     currentMode = null;
+    selectedStage = null;
 
     document
         .getElementById("quizArea")
@@ -1628,6 +1898,14 @@ function showMainMenu() {
 
     document
         .getElementById("practiceMenu")
+        .style.display = "none";
+
+    document
+        .getElementById("stageMenu")
+        .style.display = "none";
+
+    document
+        .getElementById("quizTimer")
         .style.display = "none";
 
     document
@@ -1648,7 +1926,41 @@ function showPracticeMenu() {
         .style.display = "none";
 
     document
+        .getElementById("stageMenu")
+        .style.display = "none";
+
+    document
         .getElementById("practiceMenu")
+        .style.display = "block";
+}
+
+
+
+function showPracticeMenuFromStage() {
+
+    document
+        .getElementById("stageMenu")
+        .style.display = "none";
+
+    document
+        .getElementById("practiceMenu")
+        .style.display = "block";
+}
+
+
+
+/* =========================================================
+   STAGE MENU
+   ========================================================= */
+
+function showStageMenu() {
+
+    document
+        .getElementById("practiceMenu")
+        .style.display = "none";
+
+    document
+        .getElementById("stageMenu")
         .style.display = "block";
 }
 
@@ -1660,16 +1972,24 @@ function showPracticeMenu() {
 
 function startQuizMode() {
 
-    currentMode = "quiz";
+    currentMode =
+        "quiz";
+
+    selectedStage =
+        null;
 
     activeQuestions =
-        shuffle(questionBank)
+        shuffle(
+            questionBank
+        )
         .slice(
             0,
             QUIZ_QUESTION_COUNT
         );
 
     startSession();
+
+    startQuizTimer();
 }
 
 
@@ -1680,11 +2000,18 @@ function startQuizMode() {
 
 function startRandomPractice() {
 
+    stopQuizTimer();
+
     currentMode =
         "practice-random";
 
+    selectedStage =
+        null;
+
     activeQuestions =
-        shuffle(questionBank);
+        shuffle(
+            questionBank
+        );
 
     startSession();
 }
@@ -1692,13 +2019,18 @@ function startRandomPractice() {
 
 
 /* =========================================================
-   STAGE-BY-STAGE PRACTICE
+   ALL STAGES IN ORDER
    ========================================================= */
 
 function startStagePractice() {
 
+    stopQuizTimer();
+
     currentMode =
         "practice-stage";
+
+    selectedStage =
+        null;
 
     activeQuestions = [];
 
@@ -1723,6 +2055,31 @@ function startStagePractice() {
 
 
 /* =========================================================
+   SINGLE STAGE PRACTICE
+   ========================================================= */
+
+function startSingleStage(stage) {
+
+    stopQuizTimer();
+
+    currentMode =
+        "practice-single-stage";
+
+    selectedStage =
+        stage;
+
+    activeQuestions =
+        questionBank.filter(
+            question =>
+            question.stage === stage
+        );
+
+    startSession();
+}
+
+
+
+/* =========================================================
    START SESSION
    ========================================================= */
 
@@ -1740,12 +2097,35 @@ function startSession() {
         .style.display = "none";
 
     document
+        .getElementById("stageMenu")
+        .style.display = "none";
+
+    document
         .getElementById("resultsArea")
         .style.display = "none";
 
     document
         .getElementById("quizArea")
         .style.display = "block";
+
+
+    if (
+        currentMode === "quiz"
+    ) {
+
+        document
+            .getElementById("quizTimer")
+            .style.display = "block";
+
+    }
+
+    else {
+
+        document
+            .getElementById("quizTimer")
+            .style.display = "none";
+    }
+
 
     loadQuestion();
 }
@@ -1762,6 +2142,7 @@ function loadQuestion() {
         activeQuestions[
             currentQuestion
         ];
+
 
     document
         .getElementById("scenario")
@@ -1808,6 +2189,7 @@ function loadQuestion() {
 
         `;
 
+
     document
         .getElementById("questionCounter")
         .textContent =
@@ -1837,6 +2219,18 @@ function loadQuestion() {
 
     }
 
+    else if (
+        currentMode ===
+        "practice-single-stage"
+    ) {
+
+        document
+            .getElementById("score")
+            .textContent =
+            selectedStage;
+
+    }
+
     else {
 
         document
@@ -1854,7 +2248,9 @@ function loadQuestion() {
 
     if (
         currentMode ===
-        "practice-stage"
+        "practice-stage" ||
+        currentMode ===
+        "practice-single-stage"
     ) {
 
         stageName.textContent =
@@ -1881,8 +2277,11 @@ function loadQuestion() {
                 document
                 .getElementById(id);
 
-            element.value = "";
-            element.disabled = false;
+            element.value =
+                "";
+
+            element.disabled =
+                false;
 
             element
                 .classList
@@ -1903,7 +2302,9 @@ function loadQuestion() {
             "feedback"
         );
 
-    feedback.textContent = "";
+    feedback.textContent =
+        "";
+
     feedback.className =
         "feedback";
 
@@ -1912,6 +2313,7 @@ function loadQuestion() {
         .getElementById("checkButton")
         .style.display =
         "inline-block";
+
 
     document
         .getElementById("nextButton")
@@ -1973,7 +2375,9 @@ function checkAnswer() {
             "correct"
         );
 
-    } else {
+    }
+
+    else {
 
         at.classList.add(
             "wrong"
@@ -1992,7 +2396,9 @@ function checkAnswer() {
             "correct"
         );
 
-    } else {
+    }
+
+    else {
 
         roll.classList.add(
             "wrong"
@@ -2011,7 +2417,9 @@ function checkAnswer() {
             "correct"
         );
 
-    } else {
+    }
+
+    else {
 
         pitch.classList.add(
             "wrong"
@@ -2030,7 +2438,9 @@ function checkAnswer() {
             "correct"
         );
 
-    } else {
+    }
+
+    else {
 
         afds.classList.add(
             "wrong"
@@ -2186,20 +2596,26 @@ function nextQuestion() {
 
 function finishSession() {
 
+    stopQuizTimer();
+
+
     document
         .getElementById("quizArea")
         .style.display =
         "none";
+
 
     document
         .getElementById("resultsArea")
         .style.display =
         "block";
 
+
     document
         .getElementById("restartButton")
         .style.display =
         "inline-block";
+
 
     document
         .getElementById("menuButton")
@@ -2227,25 +2643,43 @@ function finishSession() {
             .style.display =
             "none";
 
+
         document
             .getElementById("finalScore")
             .style.display =
             "block";
 
+
         document
             .getElementById("finalPercent")
             .style.display =
             "block";
+
 
         document
             .getElementById("finalScore")
             .innerHTML =
             `Your score:<br>${score} / ${activeQuestions.length}`;
 
-        document
-            .getElementById("finalPercent")
-            .textContent =
-            `${percentage}%`;
+
+        if (
+            quizFinishedByTimeout
+        ) {
+
+            document
+                .getElementById("finalPercent")
+                .innerHTML =
+                `${percentage}%<br><br><strong>Time expired</strong>`;
+
+        }
+
+        else {
+
+            document
+                .getElementById("finalPercent")
+                .textContent =
+                `${percentage}%`;
+        }
 
     }
 
@@ -2256,10 +2690,12 @@ function finishSession() {
             .style.display =
             "none";
 
+
         document
             .getElementById("finalPercent")
             .style.display =
             "none";
+
 
         document
             .getElementById("practiceFinished")
@@ -2290,6 +2726,16 @@ function restartCurrentMode() {
     ) {
 
         startRandomPractice();
+    }
+
+    else if (
+        currentMode ===
+        "practice-single-stage"
+    ) {
+
+        startSingleStage(
+            selectedStage
+        );
     }
 
     else {
