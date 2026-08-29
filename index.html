@@ -46,16 +46,36 @@
       color: #666;
     }
 
+    /* QUESTION */
+
     .scenario {
-      text-align: center;
-      font-size: 25px;
-      font-weight: bold;
-      margin: 25px 0 35px;
-      min-height: 60px;
+      max-width: 700px;
+      margin: 25px auto 35px;
+      min-height: 85px;
+
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
+
+      font-size: 22px;
+      line-height: 1.6;
     }
+
+    .scenario-line {
+      display: block;
+    }
+
+    .scenario-label {
+      font-weight: bold;
+      color: #555;
+    }
+
+    .scenario-condition {
+      font-weight: bold;
+      color: #111;
+    }
+
+    /* FMA */
 
     .fma-labels {
       display: grid;
@@ -83,22 +103,20 @@
       height: 70px;
       background: #4d4d4d;
       border: none;
+
+      color: #00ff4c;
+
       font-size: 19px;
       font-weight: bold;
       text-align: center;
       cursor: pointer;
-
-      /* Default FMA active-mode color */
-      color: #00ff4c;
     }
 
     .fma select:focus {
       outline: 2px solid #00ff4c;
     }
 
-    /*
-      FMA TEXT COLORS
-    */
+    /* FMA COLORS */
 
     .mode-green {
       color: #00ff4c !important;
@@ -112,13 +130,7 @@
       color: #ffbf00 !important;
     }
 
-    /*
-      CORRECT / WRONG BACKGROUNDS
-
-      Text color is NOT changed here,
-      so ARM / THR HLD / CWS remain
-      their correct FMA color.
-    */
+    /* ANSWER BACKGROUNDS */
 
     .correct {
       background: #215d31 !important;
@@ -127,6 +139,8 @@
     .wrong {
       background: #772727 !important;
     }
+
+    /* BUTTONS */
 
     .button-row {
       text-align: center;
@@ -159,6 +173,8 @@
       color: white;
       display: none;
     }
+
+    /* FEEDBACK */
 
     .feedback {
       min-height: 35px;
@@ -193,6 +209,8 @@
       color: #c88900;
     }
 
+    /* FINAL SCORE */
+
     .final-score {
       text-align: center;
       font-size: 38px;
@@ -218,7 +236,8 @@
       }
 
       .scenario {
-        font-size: 20px;
+        font-size: 18px;
+        line-height: 1.7;
       }
 
       .fma select {
@@ -271,7 +290,6 @@
           <option>GA</option>
         </select>
 
-
         <!-- ROLL -->
 
         <select id="roll" onchange="updateModeColor(this)">
@@ -285,7 +303,6 @@
           <option>ROLLOUT</option>
           <option>CWS R</option>
         </select>
-
 
         <!-- PITCH -->
 
@@ -311,15 +328,11 @@
 
       <div class="button-row">
 
-        <button
-          id="checkButton"
-          onclick="checkAnswer()">
+        <button id="checkButton" onclick="checkAnswer()">
           CHECK
         </button>
 
-        <button
-          id="nextButton"
-          onclick="nextQuestion()">
+        <button id="nextButton" onclick="nextQuestion()">
           NEXT
         </button>
 
@@ -327,26 +340,15 @@
 
     </div>
 
+    <div id="resultsArea" style="display:none;">
 
-    <div
-      id="resultsArea"
-      style="display:none;">
+      <div class="final-score" id="finalScore"></div>
 
-      <div
-        class="final-score"
-        id="finalScore">
-      </div>
-
-      <div
-        class="final-percent"
-        id="finalPercent">
-      </div>
+      <div class="final-percent" id="finalPercent"></div>
 
       <div class="button-row">
 
-        <button
-          id="restartButton"
-          onclick="startQuiz()">
+        <button id="restartButton" onclick="startQuiz()">
           TRY AGAIN
         </button>
 
@@ -358,7 +360,6 @@
 
 </div>
 
-
 <script>
 
 /* =========================================================
@@ -367,249 +368,294 @@
 
 const questionBank = [
 
-  /* CLIMB / LEVEL OFF */
+  /* =====================================================
+     CLIMB / LEVEL OFF
+     ===================================================== */
 
   {
-    scenario: "LVL CHG climb — HDG SEL",
+    vertical: "LVL CHG climb",
+    horizontal: "HDG SEL",
     at: "N1",
     roll: "HDG SEL",
     pitch: "MCP SPD"
   },
 
   {
-    scenario: "V/S climb — LNAV",
+    vertical: "V/S climb",
+    horizontal: "LNAV",
     at: "MCP SPD",
     roll: "LNAV",
     pitch: "V/S"
   },
 
   {
-    scenario: "VNAV climb, no altitude restrictions — LNAV",
+    vertical: "VNAV climb — no altitude restrictions",
+    horizontal: "LNAV",
     at: "N1",
     roll: "LNAV",
     pitch: "VNAV SPD"
   },
 
   {
-    scenario: "VNAV climb — just started capturing an FMC altitude restriction — LNAV",
+    vertical: "VNAV climb — just started capturing an FMC altitude restriction",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "ALT ACQ"
   },
 
   {
-    scenario: "VNAV climb — level at FMC altitude restriction, established level — LNAV",
+    vertical: "VNAV climb — level at FMC altitude restriction, established level",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH"
   },
 
   {
-    scenario: "VNAV climb — level at MCP altitude due to ATC restriction, established level — LNAV",
+    vertical: "VNAV climb — level at MCP altitude due to ATC restriction, established level",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV ALT"
   },
 
   {
-    scenario: "LVL CHG climb — just started capturing selected altitude — HDG SEL",
+    vertical: "LVL CHG climb — just started capturing selected altitude",
+    horizontal: "HDG SEL",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "ALT ACQ"
   },
 
   {
-    scenario: "After LVL CHG level-off — established at selected altitude — LNAV",
+    vertical: "After LVL CHG level-off — established at selected altitude",
+    horizontal: "LNAV",
     at: "MCP SPD",
     roll: "LNAV",
     pitch: "ALT HOLD"
   },
 
   {
-    scenario: "VNAV climb — established at FMC cruise altitude — LNAV",
+    vertical: "VNAV climb — established at FMC cruise altitude",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH"
   },
 
 
-  /* DESCENT / LEVEL OFF */
+  /* =====================================================
+     DESCENT / LEVEL OFF
+     ===================================================== */
 
   {
-    scenario: "LVL CHG descent just initiated — HDG SEL",
+    vertical: "LVL CHG descent — just initiated",
+    horizontal: "HDG SEL",
     at: "RETARD",
     roll: "HDG SEL",
     pitch: "MCP SPD"
   },
 
   {
-    scenario: "LVL CHG descent, established with thrust at idle — LNAV",
+    vertical: "LVL CHG descent — established with thrust at idle",
+    horizontal: "LNAV",
     at: "ARM",
     roll: "LNAV",
     pitch: "MCP SPD"
   },
 
   {
-    scenario: "V/S descent — HDG SEL",
+    vertical: "V/S descent",
+    horizontal: "HDG SEL",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "V/S"
   },
 
   {
-    scenario: "VNAV descent, established on FMC path — LNAV",
+    vertical: "VNAV descent — established on FMC path",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH"
   },
 
   {
-    scenario: "VNAV descent above path, descent just initiated — LNAV",
+    vertical: "VNAV descent above path — descent just initiated",
+    horizontal: "LNAV",
     at: "RETARD",
     roll: "LNAV",
     pitch: "VNAV SPD"
   },
 
   {
-    scenario: "VNAV descent above path, established with thrust at idle — LNAV",
+    vertical: "VNAV descent above path — established with thrust at idle",
+    horizontal: "LNAV",
     at: "ARM",
     roll: "LNAV",
     pitch: "VNAV SPD"
   },
 
   {
-    scenario: "VNAV descent — just started capturing an FMC altitude restriction — LNAV",
+    vertical: "VNAV descent — just started capturing an FMC altitude restriction",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "ALT ACQ"
   },
 
   {
-    scenario: "VNAV descent — level at FMC altitude restriction, established level — LNAV",
+    vertical: "VNAV descent — level at FMC altitude restriction, established level",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH"
   },
 
   {
-    scenario: "VNAV descent — level at MCP altitude due to ATC restriction, established level — LNAV",
+    vertical: "VNAV descent — level at MCP altitude due to ATC restriction, established level",
+    horizontal: "LNAV",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV ALT"
   },
 
 
-  /* ALTITUDE CAPTURE — NON-VNAV */
+  /* =====================================================
+     ALTITUDE CAPTURE — NON-VNAV
+     ===================================================== */
 
   {
-    scenario: "V/S climb — just started capturing selected altitude — LNAV",
+    vertical: "V/S climb — just started capturing selected altitude",
+    horizontal: "LNAV",
     at: "MCP SPD",
     roll: "LNAV",
     pitch: "ALT ACQ"
   },
 
   {
-    scenario: "V/S descent — just started capturing selected altitude — HDG SEL",
+    vertical: "V/S descent — just started capturing selected altitude",
+    horizontal: "HDG SEL",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "ALT ACQ"
   },
 
   {
-    scenario: "After V/S level-off — established at selected altitude — HDG SEL",
+    vertical: "After V/S level-off — established at selected altitude",
+    horizontal: "HDG SEL",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "ALT HOLD"
   },
 
 
-  /* APPROACH */
+  /* =====================================================
+     APPROACH
+     ===================================================== */
 
   {
-    scenario: "ILS — level at cleared altitude, LOC captured, maintaining altitude",
+    vertical: "Maintaining cleared altitude",
+    horizontal: "ILS — LOC captured",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "ALT HOLD"
   },
 
   {
-    scenario: "ILS — LOC and G/S captured",
+    vertical: "ILS — G/S captured",
+    horizontal: "LOC captured",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "G/S"
   },
 
   {
-    scenario: "IAN — FAC and G/P captured",
+    vertical: "IAN — G/P captured",
+    horizontal: "FAC captured",
     at: "MCP SPD",
     roll: "FAC",
     pitch: "G/P"
   },
 
   {
-    scenario: "VOR approach — VOR captured, maintaining altitude",
+    vertical: "Maintaining altitude",
+    horizontal: "VOR captured",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "ALT HOLD"
   },
 
 
-  /* GO-AROUND */
+  /* =====================================================
+     GO-AROUND
+     ===================================================== */
 
   {
-    scenario: "Go-around — TO/GA switches just pushed",
+    vertical: "Go-around — TO/GA switches just pushed",
+    horizontal: "TO/GA",
     at: "GA",
     roll: "TO/GA",
     pitch: "TO/GA"
   },
 
 
-  /* TAKEOFF */
+  /* =====================================================
+     TAKEOFF
+     ===================================================== */
 
   {
-    scenario: "Takeoff — TO/GA just pushed, beginning takeoff roll — LNAV armed",
+    vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
+    horizontal: "LNAV armed",
     at: "N1",
     roll: "BLANK",
     pitch: "TO/GA"
   },
 
   {
-    scenario: "Takeoff roll — passing 84 kt — LNAV armed",
+    vertical: "Takeoff roll — passing 84 kt",
+    horizontal: "LNAV armed",
     at: "THR HLD",
     roll: "BLANK",
     pitch: "TO/GA"
   },
 
   {
-    scenario: "After liftoff — below LNAV engagement altitude — LNAV armed",
+    vertical: "After liftoff — below LNAV engagement altitude",
+    horizontal: "LNAV armed",
     at: "THR HLD",
     roll: "BLANK",
     pitch: "TO/GA"
   },
 
   {
-    scenario: "Initial climb — LNAV engaged, below 800 ft RA",
+    vertical: "Initial climb — below 800 ft RA",
+    horizontal: "LNAV engaged",
     at: "THR HLD",
     roll: "LNAV",
     pitch: "TO/GA"
   },
 
   {
-    scenario: "Initial climb — LNAV engaged, above 800 ft RA, before climb thrust engages",
+    vertical: "Initial climb — above 800 ft RA, before climb thrust engages",
+    horizontal: "LNAV engaged",
     at: "ARM",
     roll: "LNAV",
     pitch: "TO/GA"
   },
 
   {
-    scenario: "Climb — LNAV engaged, climb thrust selected, still in TO/GA pitch mode",
+    vertical: "Climb — climb thrust selected, still in TO/GA pitch mode",
+    horizontal: "LNAV engaged",
     at: "N1",
     roll: "LNAV",
     pitch: "TO/GA"
   },
 
   {
-    scenario: "Climb — LNAV and VNAV engaged after takeoff",
+    vertical: "Climb — VNAV engaged after takeoff",
+    horizontal: "LNAV engaged",
     at: "N1",
     roll: "LNAV",
     pitch: "VNAV SPD"
@@ -635,9 +681,7 @@ let score = 0;
 
 function getModeColorClass(mode) {
 
-  /*
-    WHITE MODES
-  */
+  /* WHITE */
 
   if (
     mode === "ARM" ||
@@ -647,9 +691,7 @@ function getModeColorClass(mode) {
   }
 
 
-  /*
-    AMBER MODES
-  */
+  /* AMBER */
 
   if (
     mode === "CWS R" ||
@@ -659,9 +701,7 @@ function getModeColorClass(mode) {
   }
 
 
-  /*
-    NORMAL ACTIVE FMA MODES
-  */
+  /* GREEN */
 
   return "mode-green";
 }
@@ -675,15 +715,9 @@ function updateModeColor(element) {
     "mode-amber"
   );
 
-
-  /*
-    Keep initial blank selector neutral
-  */
-
   if (element.value === "") {
     return;
   }
-
 
   element.classList.add(
     getModeColorClass(element.value)
@@ -692,7 +726,7 @@ function updateModeColor(element) {
 
 
 /* =========================================================
-   COLOR FOR CORRECT ANSWER DISPLAY
+   CORRECT ANSWER COLORS
    ========================================================= */
 
 function answerModeHTML(mode) {
@@ -700,10 +734,8 @@ function answerModeHTML(mode) {
   const colorClass =
     getModeColorClass(mode);
 
-
   let answerClass =
     "answer-green";
-
 
   if (colorClass === "mode-white") {
     answerClass = "answer-white";
@@ -712,7 +744,6 @@ function answerModeHTML(mode) {
   if (colorClass === "mode-amber") {
     answerClass = "answer-amber";
   }
-
 
   return `<span class="${answerClass}">${mode}</span>`;
 }
@@ -736,7 +767,6 @@ function shuffle(array) {
       Math.floor(
         Math.random() * (i + 1)
       );
-
 
     [
       shuffled[i],
@@ -765,29 +795,20 @@ function startQuiz() {
         NUMBER_OF_QUESTIONS
       );
 
-
   currentQuestion = 0;
-
   score = 0;
-
 
   document
     .getElementById("quizArea")
-    .style.display =
-    "block";
-
+    .style.display = "block";
 
   document
     .getElementById("resultsArea")
-    .style.display =
-    "none";
-
+    .style.display = "none";
 
   document
     .getElementById("restartButton")
-    .style.display =
-    "none";
-
+    .style.display = "none";
 
   loadQuestion();
 }
@@ -803,10 +824,27 @@ function loadQuestion() {
     quizQuestions[currentQuestion];
 
 
+  /*
+    NEW QUESTION FORMAT:
+
+    VERTICAL: condition
+    HORIZONTAL: condition
+  */
+
   document
     .getElementById("scenario")
-    .textContent =
-    q.scenario;
+    .innerHTML =
+    `
+      <div class="scenario-line">
+        <span class="scenario-label">VERTICAL:</span>
+        <span class="scenario-condition">${q.vertical}</span>
+      </div>
+
+      <div class="scenario-line">
+        <span class="scenario-label">HORIZONTAL:</span>
+        <span class="scenario-condition">${q.horizontal}</span>
+      </div>
+    `;
 
 
   document
@@ -830,11 +868,8 @@ function loadQuestion() {
     const element =
       document.getElementById(id);
 
-
     element.value = "";
-
     element.disabled = false;
-
 
     element.classList.remove(
       "correct",
@@ -847,27 +882,19 @@ function loadQuestion() {
 
 
   const feedback =
-    document.getElementById(
-      "feedback"
-    );
-
+    document.getElementById("feedback");
 
   feedback.textContent = "";
-
-  feedback.className =
-    "feedback";
+  feedback.className = "feedback";
 
 
   document
     .getElementById("checkButton")
-    .style.display =
-    "inline-block";
-
+    .style.display = "inline-block";
 
   document
     .getElementById("nextButton")
-    .style.display =
-    "none";
+    .style.display = "none";
 }
 
 
@@ -879,7 +906,6 @@ function checkAnswer() {
 
   const q =
     quizQuestions[currentQuestion];
-
 
   const at =
     document.getElementById("at");
@@ -910,82 +936,61 @@ function checkAnswer() {
 
 
   if (at.value === q.at) {
-
     at.classList.add("correct");
-
   } else {
-
     at.classList.add("wrong");
-
     completelyCorrect = false;
   }
 
 
   if (roll.value === q.roll) {
-
     roll.classList.add("correct");
-
   } else {
-
     roll.classList.add("wrong");
-
     completelyCorrect = false;
   }
 
 
   if (pitch.value === q.pitch) {
-
     pitch.classList.add("correct");
-
   } else {
-
     pitch.classList.add("wrong");
-
     completelyCorrect = false;
   }
 
 
   at.disabled = true;
-
   roll.disabled = true;
-
   pitch.disabled = true;
 
 
   const feedback =
-    document.getElementById(
-      "feedback"
-    );
+    document.getElementById("feedback");
 
 
   if (completelyCorrect) {
 
     score++;
 
-
     feedback.textContent =
       "Correct";
-
 
     feedback.className =
       "feedback correct-text";
 
-  }
-
-  else {
+  } else {
 
     feedback.innerHTML =
       `
-      Correct FMA:
-      <div class="answer-fma">
-        ${answerModeHTML(q.at)}
-        |
-        ${answerModeHTML(q.roll)}
-        |
-        ${answerModeHTML(q.pitch)}
-      </div>
+        Correct FMA:
+        <div class="answer-fma">
+          ${answerModeHTML(q.at)}
+          |
+          ${answerModeHTML(q.roll)}
+          |
+          ${answerModeHTML(q.pitch)}
+        </div>
       `;
-
 
     feedback.className =
       "feedback wrong-text";
@@ -1000,14 +1005,11 @@ function checkAnswer() {
 
   document
     .getElementById("checkButton")
-    .style.display =
-    "none";
-
+    .style.display = "none";
 
   document
     .getElementById("nextButton")
-    .style.display =
-    "inline-block";
+    .style.display = "inline-block";
 }
 
 
@@ -1019,7 +1021,6 @@ function nextQuestion() {
 
   currentQuestion++;
 
-
   if (
     currentQuestion >=
     quizQuestions.length
@@ -1027,9 +1028,7 @@ function nextQuestion() {
 
     finishQuiz();
 
-  }
-
-  else {
+  } else {
 
     loadQuestion();
   }
@@ -1037,21 +1036,18 @@ function nextQuestion() {
 
 
 /* =========================================================
-   FINISH
+   FINISH QUIZ
    ========================================================= */
 
 function finishQuiz() {
 
   document
     .getElementById("quizArea")
-    .style.display =
-    "none";
-
+    .style.display = "none";
 
   document
     .getElementById("resultsArea")
-    .style.display =
-    "block";
+    .style.display = "block";
 
 
   const percentage =
@@ -1059,8 +1055,7 @@ function finishQuiz() {
       (
         score /
         quizQuestions.length
-      )
-      * 100
+      ) * 100
     );
 
 
@@ -1078,8 +1073,7 @@ function finishQuiz() {
 
   document
     .getElementById("restartButton")
-    .style.display =
-    "inline-block";
+    .style.display = "inline-block";
 }
 
 
