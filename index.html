@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>737 FMA Trainer</title>
 
   <style>
+
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
@@ -47,17 +49,24 @@
 
     .scenario {
       text-align: center;
-      font-size: 28px;
+      font-size: 25px;
       font-weight: bold;
-      margin: 25px 0 30px;
+      margin: 25px 0 35px;
+      min-height: 60px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .fma-labels {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 3px;
+
       max-width: 700px;
       margin: 0 auto 4px;
+
       text-align: center;
       font-size: 13px;
       color: #777;
@@ -66,22 +75,30 @@
     .fma {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+
       gap: 2px;
+
       max-width: 700px;
       margin: auto;
-      background: #444;
+
+      background: #333;
       padding: 3px;
     }
 
     .fma select {
       width: 100%;
-      height: 65px;
-      background: #666;
+      height: 70px;
+
+      background: #555;
       color: #00ff4c;
+
       border: none;
-      font-size: 20px;
+
+      font-size: 19px;
       font-weight: bold;
+
       text-align: center;
+
       cursor: pointer;
     }
 
@@ -104,11 +121,15 @@
 
     button {
       padding: 14px 32px;
+
       border: none;
       border-radius: 7px;
+
       font-size: 17px;
       font-weight: bold;
+
       cursor: pointer;
+
       margin: 5px;
     }
 
@@ -130,9 +151,12 @@
     }
 
     .feedback {
-      min-height: 30px;
+      min-height: 35px;
+
       text-align: center;
-      margin-top: 20px;
+
+      margin-top: 22px;
+
       font-size: 18px;
       font-weight: bold;
     }
@@ -147,367 +171,1042 @@
 
     .final-score {
       text-align: center;
+
       font-size: 38px;
       font-weight: bold;
-      margin: 40px 0;
+
+      margin: 40px 0 15px;
+    }
+
+    .final-percent {
+      text-align: center;
+
+      font-size: 20px;
+
+      color: #666;
+
+      margin-bottom: 30px;
     }
 
     @media (max-width: 600px) {
-      .scenario {
-        font-size: 22px;
-      }
 
-      .fma select {
-        font-size: 14px;
-        height: 60px;
+      .container {
+        padding: 15px 10px;
       }
 
       .card {
         padding: 20px 10px;
       }
+
+      .scenario {
+        font-size: 20px;
+      }
+
+      .fma select {
+        font-size: 13px;
+        height: 65px;
+      }
+
     }
+
   </style>
+
 </head>
+
 
 <body>
 
 <div class="container">
 
   <h1>737 FMA Trainer</h1>
-  <div class="subtitle">Autoflight Mode Practice</div>
+
+  <div class="subtitle">
+    Autoflight Mode Practice
+  </div>
+
 
   <div class="card">
+
+
+    <!-- QUIZ -->
 
     <div id="quizArea">
 
       <div class="top-row">
-        <div id="questionCounter">Question 1 / 10</div>
-        <div id="score">Score: 0</div>
+
+        <div id="questionCounter">
+          Question 1 / 10
+        </div>
+
+        <div id="score">
+          Score: 0
+        </div>
+
       </div>
 
-      <div class="scenario" id="scenario"></div>
+
+      <div
+        class="scenario"
+        id="scenario">
+      </div>
+
 
       <div class="fma-labels">
+
         <div>AUTOTHROTTLE</div>
+
         <div>ROLL</div>
+
         <div>PITCH</div>
+
       </div>
+
 
       <div class="fma">
 
+
+        <!-- AUTOTHROTTLE -->
+
         <select id="at">
+
           <option value="">---</option>
+
           <option>N1</option>
-          <option>ARM</option>
+
           <option>MCP SPD</option>
+
           <option>FMC SPD</option>
-          <option>RETARD</option>
+
+          <option>ARM</option>
+
           <option>THR HLD</option>
+
+          <option>RETARD</option>
+
           <option>GA</option>
+
         </select>
+
+
+
+        <!-- ROLL -->
 
         <select id="roll">
+
           <option value="">---</option>
+
           <option>HDG SEL</option>
+
           <option>LNAV</option>
+
           <option>VOR/LOC</option>
+
           <option>FAC</option>
+
           <option>TO/GA</option>
+
+          <option>ROLLOUT</option>
+
+          <option>CWS R</option>
+
         </select>
+
+
+
+        <!-- PITCH -->
 
         <select id="pitch">
+
           <option value="">---</option>
+
           <option>MCP SPD</option>
+
           <option>V/S</option>
+
           <option>ALT ACQ</option>
+
           <option>ALT HOLD</option>
+
           <option>VNAV SPD</option>
+
           <option>VNAV PTH</option>
+
           <option>VNAV ALT</option>
+
           <option>G/S</option>
+
           <option>G/P</option>
+
           <option>TO/GA</option>
+
+          <option>FLARE</option>
+
+          <option>CWS P</option>
+
         </select>
 
+
       </div>
 
-      <div class="feedback" id="feedback"></div>
+
+      <div
+        class="feedback"
+        id="feedback">
+      </div>
+
 
       <div class="button-row">
-        <button id="checkButton" onclick="checkAnswer()">CHECK</button>
-        <button id="nextButton" onclick="nextQuestion()">NEXT</button>
+
+        <button
+          id="checkButton"
+          onclick="checkAnswer()">
+
+          CHECK
+
+        </button>
+
+
+        <button
+          id="nextButton"
+          onclick="nextQuestion()">
+
+          NEXT
+
+        </button>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- RESULTS -->
+
+    <div
+      id="resultsArea"
+      style="display:none;">
+
+      <div
+        class="final-score"
+        id="finalScore">
+      </div>
+
+      <div
+        class="final-percent"
+        id="finalPercent">
+      </div>
+
+
+      <div class="button-row">
+
+        <button
+          id="restartButton"
+          onclick="startQuiz()">
+
+          TRY AGAIN
+
+        </button>
+
       </div>
 
     </div>
 
-    <div id="resultsArea" style="display:none;">
-      <div class="final-score" id="finalScore"></div>
-
-      <div class="button-row">
-        <button id="restartButton" onclick="startQuiz()">TRY AGAIN</button>
-      </div>
-    </div>
 
   </div>
+
 </div>
+
 
 
 <script>
 
+
+/* =========================================================
+   MASTER QUESTION BANK
+   26 FMA SCENARIOS
+   ========================================================= */
+
+
 const questionBank = [
 
-  {
-    scenario: "CLIMB — LVL CHG + HDG SEL",
-    at: "N1",
-    roll: "HDG SEL",
-    pitch: "MCP SPD"
-  },
 
-  {
-    scenario: "DESCENT — LVL CHG + HDG SEL",
-    at: "ARM",
-    roll: "HDG SEL",
-    pitch: "MCP SPD"
-  },
+/* =========================
+   CLIMB / LEVEL OFF
+   ========================= */
 
-  {
-    scenario: "CLIMB — V/S + HDG SEL",
-    at: "MCP SPD",
-    roll: "HDG SEL",
-    pitch: "V/S"
-  },
 
-  {
-    scenario: "LEVEL FLIGHT — ALT HOLD + HDG SEL",
-    at: "MCP SPD",
-    roll: "HDG SEL",
-    pitch: "ALT HOLD"
-  },
+{
+  scenario:
+  "LVL CHG climb — HDG SEL",
 
-  {
-    scenario: "VNAV CLIMB — NO ALTITUDE RESTRICTIONS",
-    at: "N1",
-    roll: "LNAV",
-    pitch: "VNAV SPD"
-  },
+  at: "N1",
+  roll: "HDG SEL",
+  pitch: "MCP SPD"
+},
 
-  {
-    scenario: "VNAV CLIMB — FMC ALTITUDE RESTRICTION",
-    at: "MCP SPD",
-    roll: "LNAV",
-    pitch: "VNAV ALT"
-  },
 
-  {
-    scenario: "VNAV DESCENT — ON FMC PATH",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "VNAV PTH"
-  },
+{
+  scenario:
+  "V/S climb — LNAV",
 
-  {
-    scenario: "DESCENT — V/S + HDG SEL",
-    at: "MCP SPD",
-    roll: "HDG SEL",
-    pitch: "V/S"
-  },
+  at: "MCP SPD",
+  roll: "LNAV",
+  pitch: "V/S"
+},
 
-  {
-    scenario: "ILS — LOCALIZER AND GLIDESLOPE CAPTURED",
-    at: "MCP SPD",
-    roll: "VOR/LOC",
-    pitch: "G/S"
-  },
 
-  {
-    scenario: "IAN — FINAL APPROACH COURSE AND GLIDEPATH CAPTURED",
-    at: "FMC SPD",
-    roll: "FAC",
-    pitch: "G/P"
-  },
+{
+  scenario:
+  "VNAV climb, no altitude restrictions — LNAV",
 
-  {
-    scenario: "SELECTED ALTITUDE CAPTURE",
-    at: "MCP SPD",
-    roll: "HDG SEL",
-    pitch: "ALT ACQ"
-  },
+  at: "N1",
+  roll: "LNAV",
+  pitch: "VNAV SPD"
+},
 
-  {
-    scenario: "VNAV DESCENT — LEVEL AT MCP ALTITUDE",
-    at: "FMC SPD",
-    roll: "LNAV",
-    pitch: "VNAV ALT"
-  }
+
+{
+  scenario:
+  "VNAV climb — just started capturing an FMC altitude restriction — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "ALT ACQ"
+},
+
+
+{
+  scenario:
+  "VNAV climb — level at FMC altitude restriction, established level — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "VNAV PTH"
+},
+
+
+{
+  scenario:
+  "VNAV climb — level at MCP altitude due to ATC restriction, established level — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "VNAV ALT"
+},
+
+
+{
+  scenario:
+  "LVL CHG climb — just started capturing selected altitude — HDG SEL",
+
+  at: "MCP SPD",
+  roll: "HDG SEL",
+  pitch: "ALT ACQ"
+},
+
+
+{
+  scenario:
+  "After LVL CHG level-off — established at selected altitude — LNAV",
+
+  at: "MCP SPD",
+  roll: "LNAV",
+  pitch: "ALT HOLD"
+},
+
+
+{
+  scenario:
+  "VNAV climb — established at FMC cruise altitude — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "VNAV PTH"
+},
+
+
+
+/* =========================
+   DESCENT / LEVEL OFF
+   ========================= */
+
+
+{
+  scenario:
+  "LVL CHG descent just initiated — HDG SEL",
+
+  at: "RETARD",
+  roll: "HDG SEL",
+  pitch: "MCP SPD"
+},
+
+
+{
+  scenario:
+  "LVL CHG descent, established with thrust at idle — LNAV",
+
+  at: "ARM",
+  roll: "LNAV",
+  pitch: "MCP SPD"
+},
+
+
+{
+  scenario:
+  "V/S descent — HDG SEL",
+
+  at: "MCP SPD",
+  roll: "HDG SEL",
+  pitch: "V/S"
+},
+
+
+{
+  scenario:
+  "VNAV descent, established on FMC path — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "VNAV PTH"
+},
+
+
+{
+  scenario:
+  "VNAV descent above path, descent just initiated — LNAV",
+
+  at: "RETARD",
+  roll: "LNAV",
+  pitch: "VNAV SPD"
+},
+
+
+{
+  scenario:
+  "VNAV descent above path, established with thrust at idle — LNAV",
+
+  at: "ARM",
+  roll: "LNAV",
+  pitch: "VNAV SPD"
+},
+
+
+{
+  scenario:
+  "VNAV descent — just started capturing an FMC altitude restriction — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "ALT ACQ"
+},
+
+
+{
+  scenario:
+  "VNAV descent — level at FMC altitude restriction, established level — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "VNAV PTH"
+},
+
+
+{
+  scenario:
+  "VNAV descent — level at MCP altitude due to ATC restriction, established level — LNAV",
+
+  at: "FMC SPD",
+  roll: "LNAV",
+  pitch: "VNAV ALT"
+},
+
+
+
+/* =========================
+   ALTITUDE CAPTURE
+   NON-VNAV
+   ========================= */
+
+
+{
+  scenario:
+  "V/S climb — just started capturing selected altitude — LNAV",
+
+  at: "MCP SPD",
+  roll: "LNAV",
+  pitch: "ALT ACQ"
+},
+
+
+{
+  scenario:
+  "V/S descent — just started capturing selected altitude — HDG SEL",
+
+  at: "MCP SPD",
+  roll: "HDG SEL",
+  pitch: "ALT ACQ"
+},
+
+
+{
+  scenario:
+  "After V/S level-off — established at selected altitude — HDG SEL",
+
+  at: "MCP SPD",
+  roll: "HDG SEL",
+  pitch: "ALT HOLD"
+},
+
+
+
+/* =========================
+   APPROACH
+   ========================= */
+
+
+{
+  scenario:
+  "ILS — level at cleared altitude, LOC captured, maintaining altitude",
+
+  at: "MCP SPD",
+  roll: "VOR/LOC",
+  pitch: "ALT HOLD"
+},
+
+
+{
+  scenario:
+  "ILS — LOC and G/S captured",
+
+  at: "MCP SPD",
+  roll: "VOR/LOC",
+  pitch: "G/S"
+},
+
+
+{
+  scenario:
+  "IAN — FAC and G/P captured",
+
+  at: "MCP SPD",
+  roll: "FAC",
+  pitch: "G/P"
+},
+
+
+{
+  scenario:
+  "VOR approach — VOR captured, maintaining altitude",
+
+  at: "MCP SPD",
+  roll: "VOR/LOC",
+  pitch: "ALT HOLD"
+},
+
+
+
+/* =========================
+   GO-AROUND
+   ========================= */
+
+
+{
+  scenario:
+  "Go-around — TO/GA switches just pushed",
+
+  at: "GA",
+  roll: "TO/GA",
+  pitch: "TO/GA"
+}
+
 
 ];
 
 
+
+/* =========================================================
+   QUIZ SETTINGS
+   ========================================================= */
+
+
+const NUMBER_OF_QUESTIONS = 10;
+
 let quizQuestions = [];
+
 let currentQuestion = 0;
+
 let score = 0;
 
 
+
+/* =========================================================
+   SHUFFLE
+   Fisher-Yates shuffle
+   ========================================================= */
+
+
 function shuffle(array) {
-  return [...array].sort(() => Math.random() - 0.5);
+
+  const shuffled = [...array];
+
+  for (
+    let i = shuffled.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      Math.floor(
+        Math.random() * (i + 1)
+      );
+
+    [
+      shuffled[i],
+      shuffled[j]
+    ] =
+    [
+      shuffled[j],
+      shuffled[i]
+    ];
+
+  }
+
+  return shuffled;
+
 }
+
+
+
+/* =========================================================
+   START QUIZ
+   ========================================================= */
 
 
 function startQuiz() {
 
-  quizQuestions = shuffle(questionBank).slice(0, 10);
+  /*
+     Shuffle all 26 questions
+     and take the first 10.
+  */
+
+  quizQuestions =
+    shuffle(questionBank)
+    .slice(
+      0,
+      NUMBER_OF_QUESTIONS
+    );
+
 
   currentQuestion = 0;
+
   score = 0;
 
-  document.getElementById("quizArea").style.display = "block";
-  document.getElementById("resultsArea").style.display = "none";
 
-  document.getElementById("restartButton").style.display = "none";
+  document
+    .getElementById("quizArea")
+    .style.display = "block";
+
+
+  document
+    .getElementById("resultsArea")
+    .style.display = "none";
+
+
+  document
+    .getElementById("restartButton")
+    .style.display = "none";
+
 
   loadQuestion();
+
 }
+
+
+
+/* =========================================================
+   LOAD QUESTION
+   ========================================================= */
 
 
 function loadQuestion() {
 
-  const q = quizQuestions[currentQuestion];
+  const q =
+    quizQuestions[currentQuestion];
 
-  document.getElementById("scenario").textContent = q.scenario;
 
-  document.getElementById("questionCounter").textContent =
+  document
+    .getElementById("scenario")
+    .textContent =
+    q.scenario;
+
+
+  document
+    .getElementById("questionCounter")
+    .textContent =
     `Question ${currentQuestion + 1} / ${quizQuestions.length}`;
 
-  document.getElementById("score").textContent =
+
+  document
+    .getElementById("score")
+    .textContent =
     `Score: ${score}`;
 
-  ["at", "roll", "pitch"].forEach(id => {
 
-    const element = document.getElementById(id);
+
+  /*
+     Reset all three FMA selectors
+  */
+
+  [
+    "at",
+    "roll",
+    "pitch"
+  ].forEach(id => {
+
+    const element =
+      document.getElementById(id);
 
     element.value = "";
+
     element.disabled = false;
 
-    element.classList.remove("correct", "wrong");
+    element.classList.remove(
+      "correct",
+      "wrong"
+    );
 
   });
 
-  document.getElementById("feedback").textContent = "";
-  document.getElementById("feedback").className = "feedback";
 
-  document.getElementById("checkButton").style.display = "inline-block";
-  document.getElementById("nextButton").style.display = "none";
+
+  /*
+     Clear feedback
+  */
+
+  const feedback =
+    document.getElementById(
+      "feedback"
+    );
+
+
+  feedback.textContent = "";
+
+  feedback.className =
+    "feedback";
+
+
+
+  /*
+     Reset buttons
+  */
+
+  document
+    .getElementById("checkButton")
+    .style.display =
+    "inline-block";
+
+
+  document
+    .getElementById("nextButton")
+    .style.display =
+    "none";
 
 }
+
+
+
+/* =========================================================
+   CHECK ANSWER
+   ========================================================= */
 
 
 function checkAnswer() {
 
-  const q = quizQuestions[currentQuestion];
+  const q =
+    quizQuestions[currentQuestion];
 
-  const at = document.getElementById("at");
-  const roll = document.getElementById("roll");
-  const pitch = document.getElementById("pitch");
 
-  if (!at.value || !roll.value || !pitch.value) {
+  const at =
+    document.getElementById("at");
 
-    document.getElementById("feedback").textContent =
+  const roll =
+    document.getElementById("roll");
+
+  const pitch =
+    document.getElementById("pitch");
+
+
+
+  /*
+     Student must select
+     all three modes.
+  */
+
+  if (
+    !at.value ||
+    !roll.value ||
+    !pitch.value
+  ) {
+
+    document
+      .getElementById("feedback")
+      .textContent =
       "Select all three FMA modes.";
 
     return;
+
   }
+
+
 
   let completelyCorrect = true;
 
 
-  if (at.value === q.at) {
-    at.classList.add("correct");
-  } else {
-    at.classList.add("wrong");
+
+  /*
+     AUTOTHROTTLE
+  */
+
+  if (
+    at.value === q.at
+  ) {
+
+    at.classList.add(
+      "correct"
+    );
+
+  }
+
+  else {
+
+    at.classList.add(
+      "wrong"
+    );
+
     completelyCorrect = false;
+
   }
 
 
-  if (roll.value === q.roll) {
-    roll.classList.add("correct");
-  } else {
-    roll.classList.add("wrong");
+
+  /*
+     ROLL
+  */
+
+  if (
+    roll.value === q.roll
+  ) {
+
+    roll.classList.add(
+      "correct"
+    );
+
+  }
+
+  else {
+
+    roll.classList.add(
+      "wrong"
+    );
+
     completelyCorrect = false;
+
   }
 
 
-  if (pitch.value === q.pitch) {
-    pitch.classList.add("correct");
-  } else {
-    pitch.classList.add("wrong");
-    completelyCorrect = false;
+
+  /*
+     PITCH
+  */
+
+  if (
+    pitch.value === q.pitch
+  ) {
+
+    pitch.classList.add(
+      "correct"
+    );
+
   }
 
+  else {
+
+    pitch.classList.add(
+      "wrong"
+    );
+
+    completelyCorrect = false;
+
+  }
+
+
+
+  /*
+     Lock selections
+  */
 
   at.disabled = true;
+
   roll.disabled = true;
+
   pitch.disabled = true;
 
 
-  const feedback = document.getElementById("feedback");
+
+  const feedback =
+    document.getElementById(
+      "feedback"
+    );
 
 
-  if (completelyCorrect) {
+
+  /*
+     Score
+  */
+
+  if (
+    completelyCorrect
+  ) {
 
     score++;
 
-    feedback.textContent = "Correct";
-    feedback.className = "feedback correct-text";
 
-  } else {
+    feedback.textContent =
+      "Correct";
+
+
+    feedback.className =
+      "feedback correct-text";
+
+  }
+
+  else {
 
     feedback.innerHTML =
       `Correct FMA: <strong>${q.at} | ${q.roll} | ${q.pitch}</strong>`;
 
-    feedback.className = "feedback wrong-text";
+
+    feedback.className =
+      "feedback wrong-text";
 
   }
 
 
-  document.getElementById("score").textContent =
+
+  document
+    .getElementById("score")
+    .textContent =
     `Score: ${score}`;
 
 
-  document.getElementById("checkButton").style.display = "none";
-  document.getElementById("nextButton").style.display = "inline-block";
+
+  document
+    .getElementById("checkButton")
+    .style.display =
+    "none";
+
+
+  document
+    .getElementById("nextButton")
+    .style.display =
+    "inline-block";
 
 }
+
+
+
+/* =========================================================
+   NEXT QUESTION
+   ========================================================= */
 
 
 function nextQuestion() {
 
   currentQuestion++;
 
-  if (currentQuestion >= quizQuestions.length) {
+
+  if (
+    currentQuestion >=
+    quizQuestions.length
+  ) {
+
     finishQuiz();
-  } else {
+
+  }
+
+  else {
+
     loadQuestion();
+
   }
 
 }
 
 
+
+/* =========================================================
+   FINISH QUIZ
+   ========================================================= */
+
+
 function finishQuiz() {
 
-  document.getElementById("quizArea").style.display = "none";
-  document.getElementById("resultsArea").style.display = "block";
+  document
+    .getElementById("quizArea")
+    .style.display =
+    "none";
 
-  document.getElementById("finalScore").innerHTML =
+
+  document
+    .getElementById("resultsArea")
+    .style.display =
+    "block";
+
+
+
+  const percentage =
+    Math.round(
+      (
+        score /
+        quizQuestions.length
+      )
+      * 100
+    );
+
+
+
+  document
+    .getElementById("finalScore")
+    .innerHTML =
     `Your score:<br>${score} / ${quizQuestions.length}`;
 
-  document.getElementById("restartButton").style.display = "inline-block";
+
+  document
+    .getElementById("finalPercent")
+    .textContent =
+    `${percentage}%`;
+
+
+  document
+    .getElementById("restartButton")
+    .style.display =
+    "inline-block";
 
 }
 
 
+
+/* =========================================================
+   START AUTOMATICALLY
+   ========================================================= */
+
+
 startQuiz();
 
+
 </script>
+
 
 </body>
 </html>
