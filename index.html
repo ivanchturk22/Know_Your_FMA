@@ -2361,35 +2361,84 @@ function showStageMenu() {
    QUIZ
    ========================================================= */
 
+/* =========================================================
+   QUIZ
+   ========================================================= */
+
+function generateQuizQuestions() {
+
+    let selectedQuestions = [];
+
+    /* One random question from every stage */
+
+    stageOrder.forEach(stage => {
+
+        const stageQuestions =
+            questionBank.filter(
+                question =>
+                    question.stage === stage
+            );
+
+        const randomQuestion =
+            shuffle(stageQuestions)[0];
+
+        selectedQuestions.push(
+            randomQuestion
+        );
+    });
+
+
+    /* Extra question from the 3 largest stages */
+
+    const extraStages = [
+        "DESCENT",
+        "TAKEOFF",
+        "APPROACH"
+    ];
+
+    extraStages.forEach(stage => {
+
+        const alreadySelected =
+            selectedQuestions.filter(
+                question =>
+                    question.stage === stage
+            );
+
+        const availableQuestions =
+            questionBank.filter(
+                question =>
+                    question.stage === stage &&
+                    !alreadySelected.includes(question)
+            );
+
+        const randomQuestion =
+            shuffle(availableQuestions)[0];
+
+        selectedQuestions.push(
+            randomQuestion
+        );
+    });
+
+
+    return shuffle(selectedQuestions);
+}
+
+
 function startQuizMode() {
 
-    currentMode =
-        "quiz";
+    currentMode = "quiz";
 
+    selectedStage = null;
 
-    selectedStage =
-        null;
-
-
-    speedBonus =
-        0;
-
+    speedBonus = 0;
 
     activeQuestions =
-        shuffle(
-            questionBank
-        )
-        .slice(
-            0,
-            QUIZ_QUESTION_COUNT
-        );
-
+        generateQuizQuestions();
 
     startSession();
 
     startQuizTimer();
 }
-
 
 
 /* =========================================================
