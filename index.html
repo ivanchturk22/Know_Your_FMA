@@ -1729,8 +1729,8 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "Wings level / ground-track option",
-    afdsCondition: "Manual flight with FD",
-    at: "GA",
+    afdsCondition: "After manual flight with FD",
+    at: "",
     roll: "",
     pitch: "TO/GA",
     afds: "FD"
@@ -1740,7 +1740,18 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "LNAV option",
-    afdsCondition: "Manual flight with FD",
+    afdsCondition: "After manual flight with FD",
+    at: "",
+    roll: "LNAV",
+    pitch: "TO/GA",
+    afds: "FD"
+},
+
+{
+    stage: "GO-AROUND",
+    vertical: "Go-around — TO/GA switches just pushed",
+    horizontal: "LNAV option",
+    afdsCondition: "After single channel AP approach",
     at: "GA",
     roll: "LNAV",
     pitch: "TO/GA",
@@ -1751,11 +1762,11 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "LNAV option",
-    afdsCondition: "One AP engaged BEFORE pushing TO/GA",
+    afdsCondition: "After DUAL channel approach, self-test passed",
     at: "GA",
     roll: "LNAV",
     pitch: "TO/GA",
-    afds: "FD"
+    afds: "CMD"
 },
 
 
