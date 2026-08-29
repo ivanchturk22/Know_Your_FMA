@@ -38,6 +38,40 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
+    .mode-select {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .mode-select h2 {
+      margin-bottom: 10px;
+    }
+
+    .mode-select p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .mode-button {
+      padding: 14px 28px;
+      margin: 8px;
+      border: none;
+      border-radius: 7px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .quiz-mode-button {
+      background: #222;
+      color: white;
+    }
+
+    .practice-mode-button {
+      background: #3877d6;
+      color: white;
+    }
+
     .top-row {
       display: flex;
       justify-content: space-between;
@@ -45,8 +79,6 @@
       font-size: 16px;
       color: #666;
     }
-
-    /* QUESTION */
 
     .scenario {
       max-width: 700px;
@@ -74,8 +106,6 @@
       font-weight: bold;
       color: #111;
     }
-
-    /* FMA */
 
     .fma-labels {
       display: grid;
@@ -116,8 +146,6 @@
       outline: 2px solid #00ff4c;
     }
 
-    /* FMA COLORS */
-
     .mode-green {
       color: #00ff4c !important;
     }
@@ -130,8 +158,6 @@
       color: #ffbf00 !important;
     }
 
-    /* ANSWER BACKGROUNDS */
-
     .correct {
       background: #215d31 !important;
     }
@@ -139,8 +165,6 @@
     .wrong {
       background: #772727 !important;
     }
-
-    /* BUTTONS */
 
     .button-row {
       text-align: center;
@@ -168,13 +192,12 @@
       display: none;
     }
 
-    #restartButton {
+    #restartButton,
+    #menuButton {
       background: #222;
       color: white;
       display: none;
     }
-
-    /* FEEDBACK */
 
     .feedback {
       min-height: 35px;
@@ -209,8 +232,6 @@
       color: #c88900;
     }
 
-    /* FINAL SCORE */
-
     .final-score {
       text-align: center;
       font-size: 38px;
@@ -223,6 +244,13 @@
       font-size: 20px;
       color: #666;
       margin-bottom: 30px;
+    }
+
+    .practice-finished {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      margin: 40px 0 20px;
     }
 
     @media (max-width: 600px) {
@@ -244,6 +272,10 @@
         font-size: 13px;
         height: 65px;
       }
+
+      .mode-button {
+        width: 90%;
+      }
     }
   </style>
 </head>
@@ -260,11 +292,42 @@
 
   <div class="card">
 
-    <div id="quizArea">
+    <!-- MODE MENU -->
+
+    <div id="modeMenu" class="mode-select">
+
+      <h2>Select Mode</h2>
+
+      <p>
+        Quiz: 10 random questions with score.<br>
+        Practice: all questions, no score.
+      </p>
+
+      <button
+        class="mode-button quiz-mode-button"
+        onclick="startQuizMode()">
+        QUIZ MODE
+      </button>
+
+      <button
+        class="mode-button practice-mode-button"
+        onclick="startPracticeMode()">
+        PRACTICE MODE
+      </button>
+
+    </div>
+
+
+    <!-- QUIZ / PRACTICE AREA -->
+
+    <div id="quizArea" style="display:none;">
 
       <div class="top-row">
-        <div id="questionCounter">Question 1 / 10</div>
-        <div id="score">Score: 0</div>
+
+        <div id="questionCounter"></div>
+
+        <div id="score"></div>
+
       </div>
 
       <div class="scenario" id="scenario"></div>
@@ -277,8 +340,6 @@
 
       <div class="fma">
 
-        <!-- AUTOTHROTTLE -->
-
         <select id="at" onchange="updateModeColor(this)">
           <option value="">---</option>
           <option>N1</option>
@@ -289,8 +350,6 @@
           <option>RETARD</option>
           <option>GA</option>
         </select>
-
-        <!-- ROLL -->
 
         <select id="roll" onchange="updateModeColor(this)">
           <option value="">---</option>
@@ -303,8 +362,6 @@
           <option>ROLLOUT</option>
           <option>CWS R</option>
         </select>
-
-        <!-- PITCH -->
 
         <select id="pitch" onchange="updateModeColor(this)">
           <option value="">---</option>
@@ -340,16 +397,40 @@
 
     </div>
 
+
+    <!-- RESULTS -->
+
     <div id="resultsArea" style="display:none;">
 
-      <div class="final-score" id="finalScore"></div>
+      <div
+        class="final-score"
+        id="finalScore">
+      </div>
 
-      <div class="final-percent" id="finalPercent"></div>
+      <div
+        class="final-percent"
+        id="finalPercent">
+      </div>
+
+      <div
+        class="practice-finished"
+        id="practiceFinished"
+        style="display:none;">
+        Practice Complete
+      </div>
 
       <div class="button-row">
 
-        <button id="restartButton" onclick="startQuiz()">
+        <button
+          id="restartButton"
+          onclick="restartCurrentMode()">
           TRY AGAIN
+        </button>
+
+        <button
+          id="menuButton"
+          onclick="showMenu()">
+          MODE MENU
         </button>
 
       </div>
@@ -360,6 +441,7 @@
 
 </div>
 
+
 <script>
 
 /* =========================================================
@@ -368,9 +450,7 @@
 
 const questionBank = [
 
-  /* =====================================================
-     CLIMB / LEVEL OFF
-     ===================================================== */
+  /* CLIMB / LEVEL OFF */
 
   {
     vertical: "LVL CHG climb",
@@ -445,9 +525,7 @@ const questionBank = [
   },
 
 
-  /* =====================================================
-     DESCENT / LEVEL OFF
-     ===================================================== */
+  /* DESCENT */
 
   {
     vertical: "LVL CHG descent — just initiated",
@@ -522,9 +600,7 @@ const questionBank = [
   },
 
 
-  /* =====================================================
-     ALTITUDE CAPTURE — NON-VNAV
-     ===================================================== */
+  /* ALTITUDE CAPTURE */
 
   {
     vertical: "V/S climb — just started capturing selected altitude",
@@ -551,9 +627,7 @@ const questionBank = [
   },
 
 
-  /* =====================================================
-     APPROACH
-     ===================================================== */
+  /* APPROACH */
 
   {
     vertical: "Maintaining cleared altitude",
@@ -588,9 +662,7 @@ const questionBank = [
   },
 
 
-  /* =====================================================
-     GO-AROUND
-     ===================================================== */
+  /* GO-AROUND */
 
   {
     vertical: "Go-around — TO/GA switches just pushed",
@@ -601,9 +673,7 @@ const questionBank = [
   },
 
 
-  /* =====================================================
-     TAKEOFF
-     ===================================================== */
+  /* TAKEOFF */
 
   {
     vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
@@ -665,23 +735,25 @@ const questionBank = [
 
 
 /* =========================================================
-   SETTINGS
+   VARIABLES
    ========================================================= */
 
-const NUMBER_OF_QUESTIONS = 10;
+const QUIZ_QUESTION_COUNT = 10;
 
-let quizQuestions = [];
+let currentMode = null;
+
+let activeQuestions = [];
+
 let currentQuestion = 0;
+
 let score = 0;
 
 
 /* =========================================================
-   FMA COLOR LOGIC
+   COLORS
    ========================================================= */
 
 function getModeColorClass(mode) {
-
-  /* WHITE */
 
   if (
     mode === "ARM" ||
@@ -690,18 +762,12 @@ function getModeColorClass(mode) {
     return "mode-white";
   }
 
-
-  /* AMBER */
-
   if (
     mode === "CWS R" ||
     mode === "CWS P"
   ) {
     return "mode-amber";
   }
-
-
-  /* GREEN */
 
   return "mode-green";
 }
@@ -724,10 +790,6 @@ function updateModeColor(element) {
   );
 }
 
-
-/* =========================================================
-   CORRECT ANSWER COLORS
-   ========================================================= */
 
 function answerModeHTML(mode) {
 
@@ -783,32 +845,60 @@ function shuffle(array) {
 
 
 /* =========================================================
-   START QUIZ
+   START MODES
    ========================================================= */
 
-function startQuiz() {
+function startQuizMode() {
 
-  quizQuestions =
+  currentMode = "quiz";
+
+  activeQuestions =
     shuffle(questionBank)
       .slice(
         0,
-        NUMBER_OF_QUESTIONS
+        QUIZ_QUESTION_COUNT
       );
 
+  startSession();
+}
+
+
+function startPracticeMode() {
+
+  currentMode = "practice";
+
+  /*
+    Use ALL questions,
+    but shuffle their order.
+  */
+
+  activeQuestions =
+    shuffle(questionBank);
+
+  startSession();
+}
+
+
+function startSession() {
+
   currentQuestion = 0;
+
   score = 0;
 
   document
-    .getElementById("quizArea")
-    .style.display = "block";
+    .getElementById("modeMenu")
+    .style.display =
+    "none";
 
   document
     .getElementById("resultsArea")
-    .style.display = "none";
+    .style.display =
+    "none";
 
   document
-    .getElementById("restartButton")
-    .style.display = "none";
+    .getElementById("quizArea")
+    .style.display =
+    "block";
 
   loadQuestion();
 }
@@ -821,15 +911,8 @@ function startQuiz() {
 function loadQuestion() {
 
   const q =
-    quizQuestions[currentQuestion];
+    activeQuestions[currentQuestion];
 
-
-  /*
-    NEW QUESTION FORMAT:
-
-    VERTICAL: condition
-    HORIZONTAL: condition
-  */
 
   document
     .getElementById("scenario")
@@ -850,13 +933,28 @@ function loadQuestion() {
   document
     .getElementById("questionCounter")
     .textContent =
-    `Question ${currentQuestion + 1} / ${quizQuestions.length}`;
+    `Question ${currentQuestion + 1} / ${activeQuestions.length}`;
 
 
-  document
-    .getElementById("score")
-    .textContent =
-    `Score: ${score}`;
+  /*
+    QUIZ shows score.
+    PRACTICE shows mode name instead.
+  */
+
+  if (currentMode === "quiz") {
+
+    document
+      .getElementById("score")
+      .textContent =
+      `Score: ${score}`;
+
+  } else {
+
+    document
+      .getElementById("score")
+      .textContent =
+      "Practice Mode";
+  }
 
 
   [
@@ -869,6 +967,7 @@ function loadQuestion() {
       document.getElementById(id);
 
     element.value = "";
+
     element.disabled = false;
 
     element.classList.remove(
@@ -885,16 +984,20 @@ function loadQuestion() {
     document.getElementById("feedback");
 
   feedback.textContent = "";
+
   feedback.className = "feedback";
 
 
   document
     .getElementById("checkButton")
-    .style.display = "inline-block";
+    .style.display =
+    "inline-block";
+
 
   document
     .getElementById("nextButton")
-    .style.display = "none";
+    .style.display =
+    "none";
 }
 
 
@@ -905,7 +1008,8 @@ function loadQuestion() {
 function checkAnswer() {
 
   const q =
-    quizQuestions[currentQuestion];
+    activeQuestions[currentQuestion];
+
 
   const at =
     document.getElementById("at");
@@ -936,25 +1040,37 @@ function checkAnswer() {
 
 
   if (at.value === q.at) {
+
     at.classList.add("correct");
+
   } else {
+
     at.classList.add("wrong");
+
     completelyCorrect = false;
   }
 
 
   if (roll.value === q.roll) {
+
     roll.classList.add("correct");
+
   } else {
+
     roll.classList.add("wrong");
+
     completelyCorrect = false;
   }
 
 
   if (pitch.value === q.pitch) {
+
     pitch.classList.add("correct");
+
   } else {
+
     pitch.classList.add("wrong");
+
     completelyCorrect = false;
   }
 
@@ -970,7 +1086,15 @@ function checkAnswer() {
 
   if (completelyCorrect) {
 
-    score++;
+    /*
+      Score only in quiz mode.
+    */
+
+    if (currentMode === "quiz") {
+
+      score++;
+
+    }
 
     feedback.textContent =
       "Correct";
@@ -984,11 +1108,17 @@ function checkAnswer() {
       `
         Correct FMA:
         <div class="answer-fma">
+
           ${answerModeHTML(q.at)}
+
           |
+
           ${answerModeHTML(q.roll)}
+
           |
+
           ${answerModeHTML(q.pitch)}
+
         </div>
       `;
 
@@ -997,24 +1127,30 @@ function checkAnswer() {
   }
 
 
-  document
-    .getElementById("score")
-    .textContent =
-    `Score: ${score}`;
+  if (currentMode === "quiz") {
+
+    document
+      .getElementById("score")
+      .textContent =
+      `Score: ${score}`;
+  }
 
 
   document
     .getElementById("checkButton")
-    .style.display = "none";
+    .style.display =
+    "none";
+
 
   document
     .getElementById("nextButton")
-    .style.display = "inline-block";
+    .style.display =
+    "inline-block";
 }
 
 
 /* =========================================================
-   NEXT QUESTION
+   NEXT
    ========================================================= */
 
 function nextQuestion() {
@@ -1023,10 +1159,10 @@ function nextQuestion() {
 
   if (
     currentQuestion >=
-    quizQuestions.length
+    activeQuestions.length
   ) {
 
-    finishQuiz();
+    finishSession();
 
   } else {
 
@@ -1036,52 +1172,142 @@ function nextQuestion() {
 
 
 /* =========================================================
-   FINISH QUIZ
+   FINISH
    ========================================================= */
 
-function finishQuiz() {
+function finishSession() {
 
   document
     .getElementById("quizArea")
-    .style.display = "none";
+    .style.display =
+    "none";
 
   document
     .getElementById("resultsArea")
-    .style.display = "block";
-
-
-  const percentage =
-    Math.round(
-      (
-        score /
-        quizQuestions.length
-      ) * 100
-    );
-
-
-  document
-    .getElementById("finalScore")
-    .innerHTML =
-    `Your score:<br>${score} / ${quizQuestions.length}`;
-
-
-  document
-    .getElementById("finalPercent")
-    .textContent =
-    `${percentage}%`;
+    .style.display =
+    "block";
 
 
   document
     .getElementById("restartButton")
-    .style.display = "inline-block";
+    .style.display =
+    "inline-block";
+
+
+  document
+    .getElementById("menuButton")
+    .style.display =
+    "inline-block";
+
+
+  if (currentMode === "quiz") {
+
+    const percentage =
+      Math.round(
+        (
+          score /
+          activeQuestions.length
+        ) * 100
+      );
+
+
+    document
+      .getElementById("practiceFinished")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("finalScore")
+      .style.display =
+      "block";
+
+
+    document
+      .getElementById("finalPercent")
+      .style.display =
+      "block";
+
+
+    document
+      .getElementById("finalScore")
+      .innerHTML =
+      `Your score:<br>${score} / ${activeQuestions.length}`;
+
+
+    document
+      .getElementById("finalPercent")
+      .textContent =
+      `${percentage}%`;
+
+  }
+
+  else {
+
+    /*
+      Practice has no score.
+    */
+
+    document
+      .getElementById("finalScore")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("finalPercent")
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("practiceFinished")
+      .style.display =
+      "block";
+  }
 }
 
 
 /* =========================================================
-   START
+   RESTART SAME MODE
    ========================================================= */
 
-startQuiz();
+function restartCurrentMode() {
+
+  if (currentMode === "quiz") {
+
+    startQuizMode();
+
+  } else {
+
+    startPracticeMode();
+  }
+}
+
+
+/* =========================================================
+   RETURN TO MENU
+   ========================================================= */
+
+function showMenu() {
+
+  currentMode = null;
+
+  document
+    .getElementById("resultsArea")
+    .style.display =
+    "none";
+
+  document
+    .getElementById("quizArea")
+    .style.display =
+    "none";
+
+  document
+    .getElementById("modeMenu")
+    .style.display =
+    "block";
+}
 
 </script>
 
