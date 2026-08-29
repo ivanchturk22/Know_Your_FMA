@@ -112,6 +112,28 @@ h1 {
 
 
 /* =========================
+   DIFFICULTY OPTIONS
+   ========================= */
+
+.difficulty-note {
+    margin-top: 5px;
+    margin-bottom: 18px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #444 !important;
+}
+
+.armed-mode-button {
+    background: #8a4eb8;
+    color: white;
+}
+
+.active-only-button {
+    background: #3877d6;
+    color: white;
+}
+
+/* =========================
    TOP ROW
    ========================= */
 
@@ -264,11 +286,60 @@ h1 {
 
 
 /* =========================
+   ARMED MODE FIELDS
+   ========================= */
+
+.armed-placeholder {
+    grid-column: 1;
+}
+
+.armed-field {
+    text-align: center;
+    padding-top: 5px;
+}
+
+.armed-field.roll-armed {
+    grid-column: 2;
+}
+
+.armed-field.pitch-armed {
+    grid-column: 3;
+}
+
+.armed-label {
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    letter-spacing: 0.4px;
+
+    text-shadow:
+        0 1px 2px rgba(0,0,0,0.8);
+}
+
+.fma .armed-select {
+    height: 44px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.fma .armed-select:focus {
+    outline: 2px solid #ffffff;
+}
+
+.armed-hidden {
+    display: none !important;
+}
+
+
+/* =========================
    AFDS BELOW ROLL
    ========================= */
 
 .afds-label {
     grid-column: 2;
+    grid-row: 3;
     text-align: center;
     color: white;
     font-size: 13px;
@@ -281,6 +352,7 @@ h1 {
 
 #afds {
     grid-column: 2;
+    grid-row: 4;
 }
 
 
@@ -387,6 +459,7 @@ button {
 
 /* =========================
    CHECK / NEXT / FINISH
+   Reduced vertical distance
    ========================= */
 
 .button-row {
@@ -409,6 +482,9 @@ button {
     background: #3877d6;
     color: white;
 }
+
+
+/* FINISH ON LAST QUIZ QUESTION */
 
 #finishLastQuizButton {
     display: none;
@@ -456,6 +532,7 @@ button {
 
 /* =========================
    FEEDBACK
+   Reduced empty spacing
    ========================= */
 
 .feedback {
@@ -528,6 +605,23 @@ button {
     grid-column: 2;
     font-size: 20px;
     font-weight: bold;
+}
+
+.correct-answer-armed-label {
+    font-size: 10px;
+    color: #777;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.correct-answer-armed-mode {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 2px 5px 5px;
+}
+
+.armed-answer-white {
+    color: #777;
 }
 
 
@@ -670,6 +764,15 @@ button {
         height: 62px;
     }
 
+    .fma .armed-select {
+        font-size: 11px;
+        height: 40px;
+    }
+
+    .armed-label {
+        font-size: 9px;
+    }
+
     .fma-labels {
         font-size: 11px;
     }
@@ -738,7 +841,7 @@ button {
 
     <button
         class="mode-button quiz-mode-button"
-        onclick="startQuizMode()">
+        onclick="showQuizOptionsMenu()">
 
         QUIZ MODE
 
@@ -749,6 +852,96 @@ button {
         onclick="showPracticeMenu()">
 
         PRACTICE MODE
+
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     QUIZ OPTIONS
+     ===================================================== -->
+
+<div
+    id="quizOptionsMenu"
+    class="mode-select"
+    style="display:none;">
+
+    <h2>Quiz Mode</h2>
+
+    <p class="difficulty-note">
+        Feeling confident? Include ARMED modes?
+    </p>
+
+    <button
+        class="mode-button active-only-button"
+        onclick="startQuizMode(false)">
+
+        ACTIVE MODES ONLY
+
+    </button>
+
+    <button
+        class="mode-button armed-mode-button"
+        onclick="startQuizMode(true)">
+
+        ACTIVE + ARMED MODES
+
+    </button>
+
+    <br>
+
+    <button
+        class="mode-button back-button"
+        onclick="showMainMenu()">
+
+        BACK
+
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     PRACTICE OPTIONS
+     ===================================================== -->
+
+<div
+    id="practiceOptionsMenu"
+    class="mode-select"
+    style="display:none;">
+
+    <h2>Practice Mode</h2>
+
+    <p class="difficulty-note">
+        Feeling confident? Include ARMED modes?
+    </p>
+
+    <button
+        class="mode-button active-only-button"
+        onclick="selectPracticeDifficulty(false)">
+
+        ACTIVE MODES ONLY
+
+    </button>
+
+    <button
+        class="mode-button armed-mode-button"
+        onclick="selectPracticeDifficulty(true)">
+
+        ACTIVE + ARMED MODES
+
+    </button>
+
+    <br>
+
+    <button
+        class="mode-button back-button"
+        onclick="showMainMenu()">
+
+        BACK
 
     </button>
 
@@ -791,7 +984,7 @@ button {
 
     <button
         class="mode-button back-button"
-        onclick="showMainMenu()">
+        onclick="showPracticeOptionsMenu()">
 
         BACK
 
@@ -928,14 +1121,24 @@ button {
 
 
 
+    <!-- =================================================
+         PFD
+         ================================================= -->
+
     <div class="pfd-area">
 
+
+        <!-- BLUE SKY -->
+
         <div class="pfd-sky">
+
 
             <div class="fma-labels">
 
                 <div>AUTOTHROTTLE</div>
+
                 <div>ROLL</div>
+
                 <div>PITCH</div>
 
             </div>
@@ -943,6 +1146,8 @@ button {
 
             <div class="fma">
 
+
+                <!-- AUTOTHROTTLE -->
 
                 <select
                     id="at"
@@ -960,6 +1165,9 @@ button {
                 </select>
 
 
+
+                <!-- ROLL -->
+
                 <select
                     id="roll"
                     onchange="updateModeColor(this)">
@@ -974,6 +1182,9 @@ button {
 
                 </select>
 
+
+
+                <!-- PITCH -->
 
                 <select
                     id="pitch"
@@ -996,6 +1207,62 @@ button {
                 </select>
 
 
+
+                <!-- ARMED MODES -->
+
+                <div
+                    id="armedPlaceholder"
+                    class="armed-placeholder armed-mode-ui">
+                </div>
+
+
+                <div
+                    id="armedRollField"
+                    class="armed-field roll-armed armed-mode-ui">
+
+                    <div class="armed-label">ARMED ROLL</div>
+
+                    <select
+                        id="armedRoll"
+                        class="armed-select"
+                        onchange="updateArmedColor(this)">
+
+                        <option value="">---</option>
+                        <option>LNAV</option>
+                        <option>VOR/LOC</option>
+                        <option>FAC</option>
+                        <option>ROLLOUT</option>
+
+                    </select>
+
+                </div>
+
+
+                <div
+                    id="armedPitchField"
+                    class="armed-field pitch-armed armed-mode-ui">
+
+                    <div class="armed-label">ARMED PITCH</div>
+
+                    <select
+                        id="armedPitch"
+                        class="armed-select"
+                        onchange="updateArmedColor(this)">
+
+                        <option value="">---</option>
+                        <option>VNAV</option>
+                        <option>G/S</option>
+                        <option>G/P</option>
+                        <option>FLARE</option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- AFDS -->
+
                 <div class="afds-label">
                     AFDS
                 </div>
@@ -1013,10 +1280,14 @@ button {
 
                 </select>
 
+
             </div>
 
         </div>
 
+
+
+        <!-- BROWN GROUND -->
 
         <div class="pfd-ground">
 
@@ -1030,11 +1301,21 @@ button {
     </div>
 
 
+
+    <!-- =================================================
+         FEEDBACK
+         ================================================= -->
+
     <div
         class="feedback"
         id="feedback">
     </div>
 
+
+
+    <!-- =================================================
+         MAIN ACTION
+         ================================================= -->
 
     <div class="button-row">
 
@@ -1067,6 +1348,11 @@ button {
     </div>
 
 
+
+    <!-- =================================================
+         EXIT / BACK
+         ================================================= -->
+
     <div class="exit-row">
 
         <button
@@ -1087,6 +1373,7 @@ button {
         </button>
 
     </div>
+
 
 </div>
 
@@ -1224,10 +1511,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
     horizontal: "Wings level option",
+    armedCondition: "LNAV and VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "N1",
     roll: "",
     pitch: "TO/GA",
+    armedRoll: "LNAV",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1235,10 +1525,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Takeoff — TO/GA just pushed, beginning takeoff roll",
     horizontal: "HDG SEL option",
+    armedCondition: "VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "N1",
     roll: "HDG SEL",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1246,10 +1539,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Takeoff roll — passing 84 kt",
     horizontal: "Wings level option",
+    armedCondition: "LNAV and VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "THR HLD",
     roll: "",
     pitch: "TO/GA",
+    armedRoll: "LNAV",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1257,10 +1553,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Takeoff roll — passing 84 kt",
     horizontal: "HDG SEL option",
+    armedCondition: "VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "THR HLD",
     roll: "HDG SEL",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1268,10 +1567,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "After liftoff — below LNAV engagement altitude",
     horizontal: "Wings level option",
+    armedCondition: "LNAV and VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "THR HLD",
     roll: "",
     pitch: "TO/GA",
+    armedRoll: "LNAV",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1279,10 +1581,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "After liftoff — below LNAV engagement altitude",
     horizontal: "HDG SEL option",
+    armedCondition: "VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "THR HLD",
     roll: "HDG SEL",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1290,10 +1595,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Initial climb — below 800 ft RA",
     horizontal: "LNAV engaged",
+    armedCondition: "VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "THR HLD",
     roll: "LNAV",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1301,10 +1609,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Initial climb — above 800 ft RA, before climb thrust engages",
     horizontal: "LNAV engaged",
+    armedCondition: "VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "ARM",
     roll: "LNAV",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1312,10 +1623,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Climb — climb thrust selected, still in TO/GA pitch mode",
     horizontal: "LNAV engaged",
+    armedCondition: "VNAV armed",
     afdsCondition: "Manual flight with FD",
     at: "N1",
     roll: "LNAV",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "VNAV",
     afds: "FD"
 },
 
@@ -1323,10 +1637,13 @@ const questionBank = [
     stage: "TAKEOFF",
     vertical: "Climb — VNAV engaged after takeoff, no restrictions",
     horizontal: "LNAV engaged",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "N1",
     roll: "LNAV",
     pitch: "VNAV SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1340,10 +1657,13 @@ const questionBank = [
     stage: "CLIMB",
     vertical: "LVL CHG climb",
     horizontal: "HDG SEL",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "N1",
     roll: "HDG SEL",
     pitch: "MCP SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1351,10 +1671,13 @@ const questionBank = [
     stage: "CLIMB",
     vertical: "V/S climb",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
     roll: "LNAV",
     pitch: "V/S",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1362,10 +1685,13 @@ const questionBank = [
     stage: "CLIMB",
     vertical: "VNAV climb — no altitude restrictions",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "N1",
     roll: "LNAV",
     pitch: "VNAV SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1373,10 +1699,13 @@ const questionBank = [
     stage: "CLIMB",
     vertical: "VNAV climb — no altitude restrictions",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "Manual flight with FD",
     at: "N1",
     roll: "LNAV",
     pitch: "VNAV SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1390,10 +1719,13 @@ const questionBank = [
     stage: "LEVEL / CAPTURE",
     vertical: "VNAV climb — just started capturing an FMC altitude restriction",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "ALT ACQ",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1401,10 +1733,13 @@ const questionBank = [
     stage: "LEVEL / CAPTURE",
     vertical: "VNAV climb — level at FMC altitude restriction, established level",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1412,10 +1747,13 @@ const questionBank = [
     stage: "LEVEL / CAPTURE",
     vertical: "VNAV climb — level at MCP altitude due to ATC restriction, established level",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV ALT",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1423,10 +1761,13 @@ const questionBank = [
     stage: "LEVEL / CAPTURE",
     vertical: "LVL CHG climb — just started capturing selected altitude",
     horizontal: "HDG SEL",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "ALT ACQ",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1434,10 +1775,13 @@ const questionBank = [
     stage: "LEVEL / CAPTURE",
     vertical: "After LVL CHG level-off — established at selected altitude",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "LNAV",
     pitch: "ALT HOLD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1445,10 +1789,13 @@ const questionBank = [
     stage: "LEVEL / CAPTURE",
     vertical: "VNAV — established at FMC cruise altitude",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1462,10 +1809,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "LVL CHG descent — just initiated",
     horizontal: "HDG SEL",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "RETARD",
     roll: "HDG SEL",
     pitch: "MCP SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1473,10 +1823,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "LVL CHG descent — established with thrust at idle",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "ARM",
     roll: "LNAV",
     pitch: "MCP SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1484,10 +1837,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "V/S descent",
     horizontal: "HDG SEL",
+    armedCondition: "NONE",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "V/S",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1495,10 +1851,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "VNAV descent — established on FMC path",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1506,10 +1865,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "VNAV descent above path — descent just initiated",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "RETARD",
     roll: "LNAV",
     pitch: "VNAV SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1517,10 +1879,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "VNAV descent above path — established with thrust at idle",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "ARM",
     roll: "LNAV",
     pitch: "VNAV SPD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1528,10 +1893,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "VNAV descent — just started capturing an FMC altitude restriction",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "ALT ACQ",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1539,10 +1907,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "VNAV descent — level at FMC altitude restriction, established level",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV PTH",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1550,10 +1921,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "VNAV descent — level at MCP altitude due to ATC restriction, established level",
     horizontal: "LNAV",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "LNAV",
     pitch: "VNAV ALT",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1561,10 +1935,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "V/S descent — just started capturing selected altitude",
     horizontal: "HDG SEL",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "ALT ACQ",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1572,10 +1949,13 @@ const questionBank = [
     stage: "DESCENT",
     vertical: "After V/S level-off — established at selected altitude",
     horizontal: "HDG SEL",
+    armedCondition: "NONE",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "HDG SEL",
     pitch: "ALT HOLD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1589,10 +1969,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "Maintaining altitude in ALT HLD",
     horizontal: "ILS — LOC captured",
+    armedCondition: "ILS APP mode armed",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "ALT HOLD",
+    armedRoll: "",
+    armedPitch: "G/S",
     afds: "FD"
 },
 
@@ -1600,10 +1983,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "Maintaining altitude in ALT HLD",
     horizontal: "ILS — LOC captured",
+    armedCondition: "ILS APP mode armed",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "ALT HOLD",
+    armedRoll: "",
+    armedPitch: "G/S",
     afds: "SINGLE CH"
 },
 
@@ -1611,10 +1997,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "ILS — G/S captured",
     horizontal: "LOC captured",
+    armedCondition: "LNAV armed for missed approach",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "G/S",
+    armedRoll: "LNAV",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1622,10 +2011,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "ILS — G/S captured",
     horizontal: "LOC captured",
+    armedCondition: "LNAV armed for missed approach",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "G/S",
+    armedRoll: "LNAV",
+    armedPitch: "",
     afds: "SINGLE CH"
 },
 
@@ -1633,10 +2025,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "IAN — G/P captured",
     horizontal: "FAC captured",
+    armedCondition: "LNAV armed for missed approach",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
     roll: "FAC",
     pitch: "G/P",
+    armedRoll: "LNAV",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1644,10 +2039,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "Maintaining FMC calculated altitude in VNAV",
     horizontal: "FAC captured",
+    armedCondition: "IAN APP mode armed",
     afdsCondition: "One AP engaged",
     at: "FMC SPD",
     roll: "FAC",
     pitch: "VNAV PTH",
+    armedRoll: "",
+    armedPitch: "G/P",
     afds: "CMD"
 },
 
@@ -1655,10 +2053,13 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "IAN — G/P captured",
     horizontal: "FAC captured",
+    armedCondition: "LNAV armed for missed approach",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "FAC",
     pitch: "G/P",
+    armedRoll: "LNAV",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1666,21 +2067,69 @@ const questionBank = [
     stage: "APPROACH",
     vertical: "Maintaining altitude in ALT HLD",
     horizontal: "VOR captured",
+    armedCondition: "NONE",
     afdsCondition: "Manual flight with FD",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "ALT HOLD",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
 {
     stage: "APPROACH",
-    vertical: "Maintaining altitude",
+    vertical: "Maintaining altitude in ALT HLD",
     horizontal: "VOR captured",
+    armedCondition: "LNAV armed for missed approach",
     afdsCondition: "One AP engaged",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "ALT HOLD",
+    armedRoll: "LNAV",
+    armedPitch: "",
+    afds: "CMD"
+},
+
+{
+    stage: "APPROACH",
+    vertical: "Maintaining altitude in ALT HLD",
+    horizontal: "HDG SEL",
+    armedCondition: "VOR only armed for approach",
+    afdsCondition: "One AP engaged",
+    at: "MCP SPD",
+    roll: "HDG SEL",
+    pitch: "ALT HOLD",
+    armedRoll: "VOR/LOC",
+    armedPitch: "",
+    afds: "CMD"
+},
+
+{
+    stage: "APPROACH",
+    vertical: "VNAV PTH — established on FMC vertical path",
+    horizontal: "LNAV",
+    armedCondition: "IAN APP mode armed",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "LNAV",
+    pitch: "VNAV PTH",
+    armedRoll: "FAC",
+    armedPitch: "G/P",
+    afds: "CMD"
+},
+
+{
+    stage: "APPROACH",
+    vertical: "VNAV PTH — established on FMC vertical path",
+    horizontal: "LNAV",
+    armedCondition: "ILS APP mode armed",
+    afdsCondition: "One AP engaged",
+    at: "FMC SPD",
+    roll: "LNAV",
+    pitch: "VNAV PTH",
+    armedRoll: "VOR/LOC",
+    armedPitch: "G/S",
     afds: "CMD"
 },
 
@@ -1694,10 +2143,13 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "Wings level / ground-track option",
+    armedCondition: "NONE",
     afdsCondition: "After manual flight with FD",
     at: "",
     roll: "",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1705,10 +2157,13 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "LNAV option",
+    armedCondition: "NONE",
     afdsCondition: "After manual flight with FD",
     at: "",
     roll: "LNAV",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1716,10 +2171,13 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "LNAV option",
+    armedCondition: "NONE",
     afdsCondition: "After single channel AP approach",
     at: "GA",
     roll: "LNAV",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "",
     afds: "FD"
 },
 
@@ -1727,10 +2185,13 @@ const questionBank = [
     stage: "GO-AROUND",
     vertical: "Go-around — TO/GA switches just pushed",
     horizontal: "LNAV option",
+    armedCondition: "NONE",
     afdsCondition: "After DUAL channel approach, self-test passed",
     at: "GA",
     roll: "LNAV",
     pitch: "TO/GA",
+    armedRoll: "",
+    armedPitch: "",
     afds: "CMD"
 },
 
@@ -1744,10 +2205,13 @@ const questionBank = [
     stage: "AUTOLAND",
     vertical: "ILS — G/S captured, self-test not passed yet",
     horizontal: "LOC captured",
+    armedCondition: "Modes armed according to autoland procedure",
     afdsCondition: "Dual Channel AP, Fail-Operational",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "G/S",
+    armedRoll: "",
+    armedPitch: "",
     afds: "SINGLE CH"
 },
 
@@ -1755,10 +2219,13 @@ const questionBank = [
     stage: "AUTOLAND",
     vertical: "ILS — G/S captured, self-test passed",
     horizontal: "LOC captured",
+    armedCondition: "Modes armed according to autoland procedure",
     afdsCondition: "Dual Channel AP, Fail-Operational",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "G/S",
+    armedRoll: "ROLLOUT",
+    armedPitch: "FLARE",
     afds: "LAND 3"
 },
 
@@ -1766,10 +2233,13 @@ const questionBank = [
     stage: "AUTOLAND",
     vertical: "ILS — 50 ft RA, flare initiated",
     horizontal: "LOC captured",
+    armedCondition: "Modes armed according to autoland procedure",
     afdsCondition: "Dual Channel AP, Fail-Operational",
     at: "MCP SPD",
     roll: "VOR/LOC",
     pitch: "FLARE",
+    armedRoll: "ROLLOUT",
+    armedPitch: "",
     afds: "LAND 3"
 },
 
@@ -1777,10 +2247,13 @@ const questionBank = [
     stage: "AUTOLAND",
     vertical: "ILS — 27 ft RA, FLARE engaged, thrust reducing toward idle",
     horizontal: "LOC captured",
+    armedCondition: "Modes armed according to autoland procedure",
     afdsCondition: "Dual Channel AP, Fail-Operational",
     at: "RETARD",
     roll: "VOR/LOC",
     pitch: "FLARE",
+    armedRoll: "ROLLOUT",
+    armedPitch: "",
     afds: "LAND 3"
 },
 
@@ -1788,10 +2261,13 @@ const questionBank = [
     stage: "AUTOLAND",
     vertical: "Autoland — touchdown, ROLLOUT engaged",
     horizontal: "ROLLOUT engaged",
+    armedCondition: "Modes armed according to autoland procedure",
     afdsCondition: "Dual Channel AP, Fail-Operational",
     at: "RETARD",
     roll: "ROLLOUT",
     pitch: "FLARE",
+    armedRoll: "",
+    armedPitch: "",
     afds: "LAND 3"
 },
 
@@ -1799,10 +2275,13 @@ const questionBank = [
     stage: "AUTOLAND",
     vertical: "Autoland — 2 seconds after touchdown, established in rollout",
     horizontal: "ROLLOUT engaged",
+    armedCondition: "Modes armed according to autoland procedure",
     afdsCondition: "Dual Channel AP, Fail-Operational",
     at: "",
     roll: "ROLLOUT",
     pitch: "FLARE",
+    armedRoll: "",
+    armedPitch: "",
     afds: "LAND 3"
 }
 
@@ -1845,6 +2324,10 @@ let quizFinishedByTimeout =
 
 let speedBonus =
     0;
+
+
+let includeArmedModes =
+    false;
 
 
 
@@ -2007,8 +2490,7 @@ function updateQuizTimerDisplay() {
 function getModeColorClass(mode) {
 
     if (
-        mode === "ARM" ||
-        mode === "THR HLD"
+        mode === "ARM"
     ) {
 
         return "mode-white";
@@ -2051,6 +2533,29 @@ function updateModeColor(element) {
         getModeColorClass(
             element.value
         )
+    );
+}
+
+
+function updateArmedColor(element) {
+
+    element.classList.remove(
+        "mode-green",
+        "mode-white",
+        "mode-amber"
+    );
+
+
+    if (
+        element.value === ""
+    ) {
+
+        return;
+    }
+
+
+    element.classList.add(
+        "mode-white"
     );
 }
 
@@ -2119,6 +2624,38 @@ function answerModeHTML(mode) {
 
 function correctAnswerHTML(q) {
 
+    const armedRows =
+        includeArmedModes
+        ? `
+
+        <div></div>
+
+        <div class="correct-answer-armed-label">
+            ARMED ROLL
+        </div>
+
+        <div class="correct-answer-armed-label">
+            ARMED PITCH
+        </div>
+
+
+        <div></div>
+
+        <div class="correct-answer-armed-mode">
+            <span class="armed-answer-white">
+                ${q.armedRoll || "---"}
+            </span>
+        </div>
+
+        <div class="correct-answer-armed-mode">
+            <span class="armed-answer-white">
+                ${q.armedPitch || "---"}
+            </span>
+        </div>
+        `
+        : "";
+
+
     return `
 
     Correct FMA:
@@ -2150,6 +2687,7 @@ function correctAnswerHTML(q) {
             ${answerModeHTML(q.pitch)}
         </div>
 
+        ${armedRows}
 
         <div class="correct-answer-afds-label">
             AFDS
@@ -2163,7 +2701,6 @@ function correctAnswerHTML(q) {
 
     `;
 }
-
 
 
 /* =========================================================
@@ -2257,6 +2794,18 @@ function showMainMenu() {
 
 
     document
+        .getElementById("quizOptionsMenu")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("practiceOptionsMenu")
+        .style.display =
+        "none";
+
+
+    document
         .getElementById("modeMenu")
         .style.display =
         "block";
@@ -2268,10 +2817,37 @@ function showMainMenu() {
    PRACTICE MENUS
    ========================================================= */
 
-function showPracticeMenu() {
+function showQuizOptionsMenu() {
 
     document
         .getElementById("modeMenu")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("quizOptionsMenu")
+        .style.display =
+        "block";
+}
+
+
+function showPracticeMenu() {
+
+    showPracticeOptionsMenu();
+}
+
+
+function showPracticeOptionsMenu() {
+
+    document
+        .getElementById("modeMenu")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("practiceMenu")
         .style.display =
         "none";
 
@@ -2283,11 +2859,29 @@ function showPracticeMenu() {
 
 
     document
-        .getElementById("practiceMenu")
+        .getElementById("practiceOptionsMenu")
         .style.display =
         "block";
 }
 
+
+function selectPracticeDifficulty(withArmedModes) {
+
+    includeArmedModes =
+        withArmedModes;
+
+
+    document
+        .getElementById("practiceOptionsMenu")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("practiceMenu")
+        .style.display =
+        "block";
+}
 
 
 function showPracticeMenuFromStage() {
@@ -2323,7 +2917,11 @@ function showStageMenu() {
 
 
 /* =========================================================
-   QUIZ QUESTION GENERATOR
+   QUIZ
+   ========================================================= */
+
+/* =========================================================
+   QUIZ
    ========================================================= */
 
 function generateQuizQuestions() {
@@ -2357,7 +2955,6 @@ function generateQuizQuestions() {
         "APPROACH"
     ];
 
-
     extraStages.forEach(stage => {
 
         const alreadySelected =
@@ -2386,21 +2983,23 @@ function generateQuizQuestions() {
 }
 
 
+function startQuizMode(withArmedModes = includeArmedModes) {
 
-/* =========================================================
-   QUIZ
-   ========================================================= */
+    includeArmedModes =
+        withArmedModes;
 
-function startQuizMode() {
 
-    currentMode =
-        "quiz";
+    document
+        .getElementById("quizOptionsMenu")
+        .style.display =
+        "none";
 
-    selectedStage =
-        null;
 
-    speedBonus =
-        0;
+    currentMode = "quiz";
+
+    selectedStage = null;
+
+    speedBonus = 0;
 
     activeQuestions =
         generateQuizQuestions();
@@ -2409,7 +3008,6 @@ function startQuizMode() {
 
     startQuizTimer();
 }
-
 
 
 /* =========================================================
@@ -2503,7 +3101,7 @@ function startSingleStage(stage) {
     activeQuestions =
         questionBank.filter(
             question =>
-                question.stage === stage
+            question.stage === stage
         );
 
 
@@ -2539,6 +3137,18 @@ function startSession() {
 
     document
         .getElementById("stageMenu")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("quizOptionsMenu")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("practiceOptionsMenu")
         .style.display =
         "none";
 
@@ -2668,6 +3278,21 @@ function loadQuestion() {
         </div>
 
 
+        ${includeArmedModes ? `
+        <div class="scenario-line">
+
+            <span class="scenario-label">
+            ARMED MODES:
+            </span>
+
+            <span class="scenario-condition">
+            ${q.armedCondition}
+            </span>
+
+        </div>
+        ` : ""}
+
+
         <div class="scenario-line">
 
             <span class="scenario-label">
@@ -2775,6 +3400,8 @@ function loadQuestion() {
         "at",
         "roll",
         "pitch",
+        "armedRoll",
+        "armedPitch",
         "afds"
     ]
     .forEach(
@@ -2799,6 +3426,24 @@ function loadQuestion() {
             );
         }
     );
+
+
+
+    /* =====================
+       ARMED MODE VISIBILITY
+       ===================== */
+
+    document
+        .querySelectorAll(".armed-mode-ui")
+        .forEach(
+            element => {
+
+                element.classList.toggle(
+                    "armed-hidden",
+                    !includeArmedModes
+                );
+            }
+        );
 
 
 
@@ -2828,7 +3473,7 @@ function loadQuestion() {
     document
         .getElementById("checkButton")
         .style.display =
-        "inline-block";
+        "none";
 
 
     document
@@ -2843,6 +3488,41 @@ function loadQuestion() {
         )
         .style.display =
         "none";
+
+
+
+    /* =====================
+       QUIZ LAST QUESTION
+       ===================== */
+
+    const isLastQuizQuestion =
+        currentMode === "quiz" &&
+        currentQuestion ===
+        activeQuestions.length - 1;
+
+
+    if (
+        isLastQuizQuestion
+    ) {
+
+        document
+            .getElementById(
+                "finishLastQuizButton"
+            )
+            .style.display =
+            "inline-block";
+
+    }
+
+    else {
+
+        document
+            .getElementById(
+                "checkButton"
+            )
+            .style.display =
+            "inline-block";
+    }
 }
 
 
@@ -2862,6 +3542,12 @@ function requiredFieldsSelected(q) {
     const pitch =
         document.getElementById("pitch");
 
+    const armedRoll =
+        document.getElementById("armedRoll");
+
+    const armedPitch =
+        document.getElementById("armedPitch");
+
     const afds =
         document.getElementById("afds");
 
@@ -2870,7 +3556,14 @@ function requiredFieldsSelected(q) {
         (q.at !== "" && !at.value) ||
         (q.roll !== "" && !roll.value) ||
         (q.pitch !== "" && !pitch.value) ||
-        (q.afds !== "" && !afds.value)
+        (q.afds !== "" && !afds.value) ||
+        (
+            includeArmedModes &&
+            (
+                (q.armedRoll !== "" && !armedRoll.value) ||
+                (q.armedPitch !== "" && !armedPitch.value)
+            )
+        )
     ) {
 
         document
@@ -2885,7 +3578,6 @@ function requiredFieldsSelected(q) {
 
     return true;
 }
-
 
 
 /* =========================================================
@@ -2917,107 +3609,93 @@ function evaluateCurrentAnswer() {
     const pitch =
         document.getElementById("pitch");
 
+    const armedRoll =
+        document.getElementById("armedRoll");
+
+    const armedPitch =
+        document.getElementById("armedPitch");
+
     const afds =
         document.getElementById("afds");
 
 
-    clearSelectStyle(at);
-    clearSelectStyle(roll);
-    clearSelectStyle(pitch);
-    clearSelectStyle(afds);
+    [
+        at,
+        roll,
+        pitch,
+        armedRoll,
+        armedPitch,
+        afds
+    ]
+    .forEach(
+        element =>
+            clearSelectStyle(element)
+    );
 
 
     let completelyCorrect =
         true;
 
 
+    function markAnswer(element, correctValue) {
 
-    if (
-        at.value === q.at
-    ) {
+        if (
+            element.value === correctValue
+        ) {
 
-        at.classList.add(
-            "correct"
-        );
+            element.classList.add(
+                "correct"
+            );
 
-    }
+        }
 
-    else {
+        else {
 
-        at.classList.add(
-            "wrong"
-        );
+            element.classList.add(
+                "wrong"
+            );
 
-        completelyCorrect =
-            false;
-    }
-
-
-
-    if (
-        roll.value === q.roll
-    ) {
-
-        roll.classList.add(
-            "correct"
-        );
-
-    }
-
-    else {
-
-        roll.classList.add(
-            "wrong"
-        );
-
-        completelyCorrect =
-            false;
+            completelyCorrect =
+                false;
+        }
     }
 
 
+    markAnswer(
+        at,
+        q.at
+    );
 
-    if (
-        pitch.value === q.pitch
-    ) {
+    markAnswer(
+        roll,
+        q.roll
+    );
 
-        pitch.classList.add(
-            "correct"
-        );
+    markAnswer(
+        pitch,
+        q.pitch
+    );
 
-    }
-
-    else {
-
-        pitch.classList.add(
-            "wrong"
-        );
-
-        completelyCorrect =
-            false;
-    }
-
+    markAnswer(
+        afds,
+        q.afds
+    );
 
 
     if (
-        afds.value === q.afds
+        includeArmedModes
     ) {
 
-        afds.classList.add(
-            "correct"
+        markAnswer(
+            armedRoll,
+            q.armedRoll
         );
 
-    }
-
-    else {
-
-        afds.classList.add(
-            "wrong"
+        markAnswer(
+            armedPitch,
+            q.armedPitch
         );
-
-        completelyCorrect =
-            false;
     }
-
 
 
     at.disabled =
@@ -3032,6 +3710,11 @@ function evaluateCurrentAnswer() {
     afds.disabled =
         true;
 
+    armedRoll.disabled =
+        true;
+
+    armedPitch.disabled =
+        true;
 
 
     if (
@@ -3041,7 +3724,6 @@ function evaluateCurrentAnswer() {
 
         score++;
     }
-
 
 
     return {
@@ -3054,9 +3736,8 @@ function evaluateCurrentAnswer() {
 }
 
 
-
 /* =========================================================
-   CHECK ANSWER
+   NORMAL CHECK
    ========================================================= */
 
 function checkAnswer() {
@@ -3118,78 +3799,16 @@ function checkAnswer() {
 
 
 
-    /* Hide CHECK */
-
     document
         .getElementById("checkButton")
         .style.display =
         "none";
 
 
-
-    /* Is this the last question in Quiz? */
-
-    const isLastQuizQuestion =
-        currentMode === "quiz" &&
-        currentQuestion ===
-        activeQuestions.length - 1;
-
-
-
-    if (
-        isLastQuizQuestion
-    ) {
-
-        /*
-        Last Quiz question:
-
-        CHECK
-        ↓
-        Correct / Wrong
-        ↓
-        FINISH
-        */
-
-        document
-            .getElementById("nextButton")
-            .style.display =
-            "none";
-
-
-        document
-            .getElementById(
-                "finishLastQuizButton"
-            )
-            .style.display =
-            "inline-block";
-
-    }
-
-    else {
-
-        /*
-        Normal question:
-
-        CHECK
-        ↓
-        Correct / Wrong
-        ↓
-        NEXT
-        */
-
-        document
-            .getElementById(
-                "finishLastQuizButton"
-            )
-            .style.display =
-            "none";
-
-
-        document
-            .getElementById("nextButton")
-            .style.display =
-            "inline-block";
-    }
+    document
+        .getElementById("nextButton")
+        .style.display =
+        "inline-block";
 }
 
 
@@ -3208,11 +3827,21 @@ function finishLastQuizQuestion() {
     }
 
 
-    /*
-    Last answer has already been checked.
+    const result =
+        evaluateCurrentAnswer();
 
+
+    if (
+        result === null
+    ) {
+
+        return;
+    }
+
+
+    /*
     Move index beyond final question so
-    finishSession knows Quiz was completed.
+    finishSession knows the quiz was completed.
     */
 
     currentQuestion =
@@ -3617,7 +4246,9 @@ function restartCurrentMode() {
         currentMode === "quiz"
     ) {
 
-        startQuizMode();
+        startQuizMode(
+            includeArmedModes
+        );
     }
 
 
